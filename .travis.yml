@@ -5,3 +5,21 @@ android:
     - build-tools-28.0.3
     - android-28
 
+jobs:
+  include:
+    - stage: test
+      script: ./gradlew test
+    - stage: lint
+      script:
+    - stage: build
+      script: ./gradlew AssembleRelease
+
+#deploy:
+#  provider: releases
+#  api_key:
+#  file: "./app/build/outputs/apk/debug/app-release-signed.apk"
+#  skip_cleanup: true
+#  on:
+#    tags: true
+
+
