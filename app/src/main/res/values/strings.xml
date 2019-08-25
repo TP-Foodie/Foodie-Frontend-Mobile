@@ -2,4 +2,5 @@
     <string name="app_name">Foodie</string>
     <string name="username_message">Username</string>
     <string name="button_login">Login</string>
+    <string name="welcome">Bienvenido a Foodie!</string>
 </resources>
