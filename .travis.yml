@@ -5,12 +5,18 @@ android:
     - build-tools-28.0.3
     - android-28
 
+cache:
+  directories:
+    # Android SDK
+    - $HOME/android-sdk-dl
+    - $HOME/android-sdk
+
 jobs:
   include:
     - stage: test
       script: ./gradlew test
-    - stage: lint
-      script:
+#    - stage: lint
+#      script:
     - stage: build
       script: ./gradlew AssembleRelease
 
