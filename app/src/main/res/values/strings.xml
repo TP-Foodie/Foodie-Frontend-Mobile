@@ -3,4 +3,6 @@
     <string name="username_message">Username</string>
     <string name="button_login">Login</string>
     <string name="welcome">Bienvenido a Foodie!</string>
+    <string name="call_method_get">Server GET</string>
+    <string name="call_method_post">Server POST</string>
 </resources>
