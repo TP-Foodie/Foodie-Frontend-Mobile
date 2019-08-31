@@ -1,7 +1,6 @@
 package com.taller.tp.foodie.services
 
 import android.content.Context
-import android.os.AsyncTask
 import android.util.Log
 import com.android.volley.Request
 import com.android.volley.Response
@@ -11,7 +10,15 @@ import org.json.JSONObject
 import java.util.*
 
 open class BackService(ctx: Context){
-    val url = "http://10.0.2.2:8090" // TODO HACER ALGO PARA Q LEA DE ALGUNA PROPERTY
+    val url = getUrl(ctx)
+
+    private fun getUrl(ctx: Context): String {
+        val stream = ctx.assets.open("environment.properties")
+        val properties = Properties()
+        properties.load(stream)
+        return properties.getProperty("foodie-back.url")
+    }
+
     val context = ctx
 
     fun doGet(
