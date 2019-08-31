@@ -1,7 +1,6 @@
 package com.taller.tp.foodie.ui
 
 import android.os.Bundle
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.taller.tp.foodie.R
@@ -29,9 +28,7 @@ class PlaceChoice : AppCompatActivity() {
     }
 
     private fun placeClicked(item : Place) {
-        Place.choosePlace(this,item){r ->
-            findViewById<TextView>(R.id.place_item_name).text = r
-        }
+        Place.choosePlace(this,item){}
 
     }
 
