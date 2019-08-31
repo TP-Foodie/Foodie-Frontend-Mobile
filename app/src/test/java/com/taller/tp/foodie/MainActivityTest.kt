@@ -1,6 +1,7 @@
 package com.taller.tp.foodie
 
 import android.widget.TextView
+import com.taller.tp.foodie.ui.MainActivity
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import org.junit.runner.RunWith
