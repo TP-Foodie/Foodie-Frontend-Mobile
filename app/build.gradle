@@ -14,6 +14,10 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        release
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -21,14 +25,11 @@ android {
             signingConfig signingConfigs.release
         }
     }
+
     testOptions {
         unitTests {
             includeAndroidResources = true
         }
-    }
-
-    signingConfigs {
-        release
     }
 
     def isRunningOnTravis = System.getenv("CI") == "true"
