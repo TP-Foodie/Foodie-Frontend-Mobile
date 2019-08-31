@@ -10,6 +10,8 @@ cache:
   - "$HOME/android-sdk"
 jobs:
   include:
+  - stage: lint
+    script: "./gradlew lint"
   - stage: test
     script: "./gradlew test"
   - stage: assemble
