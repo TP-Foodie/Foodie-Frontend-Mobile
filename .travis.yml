@@ -8,6 +8,7 @@ cache:
   directories:
   - "$HOME/android-sdk-dl"
   - "$HOME/android-sdk"
+  - "$HOME/.gradle"
 jobs:
   include:
   - stage: lint
