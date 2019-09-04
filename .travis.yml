@@ -17,16 +17,18 @@ jobs:
     script: "./gradlew test"
   - stage: assemble
     script: "./gradlew AssembleRelease"
-deploy:
-  provider: releases
-  api_key:
-    secure: "$GITHUB_API_KEY"
-  file: app/build/outputs/apk/release/*
-  on:
-    branch: master
-    repo: TP-Foodie/Foodie-Frontend-Mobile
 after_success:
 - sh ./scripts/set_tags.sh
 before_install:
-- openssl aes-256-cbc -K $encrypted_49c41553f342_key -iv $encrypted_49c41553f342_iv
-  -in keystore.jks.enc -out ./app/keystore.jks -d
+- openssl aes-256-cbc -K $encrypted_067a1f634b2a_key -iv $encrypted_067a1f634b2a_iv
+  -in keystore.jks.enc -out app/keystore.jks -d
+deploy:
+  provider: releases
+  api_key:
+    secure: JItMJ0KP1TIZ7UvAmpwalF5vETtgTU+S9vvE9dLMPwtJeGAXQ0vKZ5qPU56f45OinUtit6Q7X7yELShrOgttdeBRiURBb9h9Jw3ieUr+yIQrAir1HSOwG9h4JhtGh8CYHw8Tm622OkjspgSVXCBCBPriaUajmeFhUUJFYGze7vAdyRRW52RgX984krOL/kDGrsSB2grUBm47Z9jbxXNv6S++fbWWiE6HURb1zH+5CKRVfv0iL+YJtVa36BDsvtcaX8hX7p4VRg/1LeDcTvgJSKiIcipF0XQ44YMbR0fyo6FvkWA6lxDqShcikjljvoX5VeZWUduA14HcIowy8WfOn2w7uyP6m/pwQb9JJbwaOtRcI7TIUro6+sKGZCbzmobSHAhgPK5G4onMJfSNKpv0EUrKqnRbIAslDKEjq2N6ePAfs3YVq7CqatEfMq2fWX1N/p1TdPAhJyYh/ZhGHg4wRedV9FOWMV0MZx5EuFQdvWPyDxxwUfQwqpCnbpIvV5wsk5HZYrYAQBv8wRomuE8SSkF7QvDDxFRXjz2p9jcQjWd/YsPATyxYIfjjq7tUVKMgLfMHa2Vh5d/hnNPkMhlH4fa7+qOiOL9Dm8yRRV4ZZifOTlCcqLoXEd6TwJeoSP4xEiWyOTy2oT0ii+N85/yy0/EHb+3izho2w8/V39EmU88=
+  file: app/build/outputs/apk/release/*
+  file_glob: 'true'
+  skip_cleanup: true
+  on:
+    branch: master
+    repo: TP-Foodie/Foodie-Frontend-Mobile
