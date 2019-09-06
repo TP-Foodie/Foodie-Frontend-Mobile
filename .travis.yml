@@ -20,7 +20,7 @@ jobs:
 after_success:
 - sh ./scripts/set_tags.sh
 before_install:
-- openssl aes-256-cbc -K $encrypted_067a1f634b2a_key -iv $encrypted_067a1f634b2a_iv
+- openssl aes-256-cbc -K $encrypted_49c41553f342_key -iv $encrypted_49c41553f342_iv
   -in keystore.jks.enc -out app/keystore.jks -d
 deploy:
   provider: releases
