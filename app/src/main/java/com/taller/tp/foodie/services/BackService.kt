@@ -25,35 +25,43 @@ open class BackService(ctx: Context){
         method: String,
         listener: Response.Listener<JSONObject>
     ){
-        val queue = Volley.newRequestQueue(context)
-        val finalUrl = url+method
-        val getRequest = JsonObjectRequest(
-            Request.Method.GET,
-            finalUrl, null,
-            listener,
-            Response.ErrorListener { error ->
-                Log.d("Error.Response", error.toString())
-            }
-        )
-        queue.add(getRequest)
+        try{
+            val queue = Volley.newRequestQueue(context)
+            val finalUrl = url+method
+            val getRequest = JsonObjectRequest(
+                Request.Method.GET,
+                finalUrl, null,
+                listener,
+                Response.ErrorListener { error ->
+                    Log.d("Error.Response", error.toString())
+                }
+            )
+            queue.add(getRequest)
+        } catch (e: Throwable){
+            Log.e(BackService::class.java.name, "Back service error", e)
+        }
     }
 
     fun doPost(
         method: String,
         listener: Response.Listener<JSONObject>,
         jsonRequest: JSONObject?
-    ){
-        val queue = Volley.newRequestQueue(context)
-        val finalUrl = url+method
-        val getRequest = JsonObjectRequest(
-            Request.Method.POST,
-            finalUrl, jsonRequest,
-            listener,
-            Response.ErrorListener { error ->
-                Log.d("Error.Response", error.toString())
-            }
-        )
-        queue.add(getRequest)
+    ) {
+        try {
+            val queue = Volley.newRequestQueue(context)
+            val finalUrl = url + method
+            val getRequest = JsonObjectRequest(
+                Request.Method.POST,
+                finalUrl, jsonRequest,
+                listener,
+                Response.ErrorListener { error ->
+                    Log.d("Error.Response", error.toString())
+                }
+            )
+            queue.add(getRequest)
+        } catch (e: Throwable) {
+            Log.e(BackService::class.java.name, "Back service error", e)
+        }
     }
 
 }

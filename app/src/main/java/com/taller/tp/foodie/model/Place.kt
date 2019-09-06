@@ -9,7 +9,7 @@ class Place(val id: String, val name: String, val coordinate: Coordinate){
             PlaceService(ctx).list(onResponse)
         }
 
-        fun choosePlace(ctx: Context, place: Place, onResponse: (String) -> Unit) {
+        fun choosePlace(ctx: Context, place: Place, onResponse: (Any) -> Unit) {
             PlaceService(ctx).choosePlace(place, onResponse)
         }
     }

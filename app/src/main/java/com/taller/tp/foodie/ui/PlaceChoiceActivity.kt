@@ -7,7 +7,7 @@ import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.Place
 import kotlinx.android.synthetic.main.activity_place_choice.*
 
-class PlaceChoice : AppCompatActivity() {
+class PlaceChoiceActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,19 +17,20 @@ class PlaceChoice : AppCompatActivity() {
     }
 
     fun loadPlaces(){
-        Place.listPlaces(this) { places ->
-            // Creates a vertical Layout Manager
-            rv_place_list.layoutManager = LinearLayoutManager(this)
+        Place.listPlaces(this){ populatePlaces(it) }
+    }
 
-            // Access the RecyclerView Adapter and load the data into it
-            rv_place_list.adapter = PlaceAdapter(places, this,
-                { item: Place -> placeClicked(item) })
-        }
+    fun populatePlaces(places: ArrayList<Place>) {
+        // Creates a vertical Layout Manager
+        rv_place_list.layoutManager = LinearLayoutManager(this)
+
+        // Access the RecyclerView Adapter and load the data into it
+        rv_place_list.adapter = PlaceAdapter(places, this,
+            { item: Place -> placeClicked(item) })
     }
 
     private fun placeClicked(item : Place) {
         Place.choosePlace(this,item){}
-
     }
 
 }

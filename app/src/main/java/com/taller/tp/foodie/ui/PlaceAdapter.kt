@@ -24,10 +24,7 @@ class PlaceAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.bind(places.get(position), onClickListener)
-//        holder.placeItemId?.text = places.get(position).name
-//        holder.placeItemId.bin
     }
-
 
 }
 

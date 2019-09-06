@@ -5,9 +5,10 @@ import com.android.volley.Response
 import com.taller.tp.foodie.model.Place
 import org.json.JSONObject
 
-class PlaceService(ctx: Context): BackService(ctx) {
+class PlaceService(ctx: Context) {
+    val backService = BackService(ctx)
 
-    fun list(function: (ArrayList<Place>) -> Unit){
+    fun list(onResponse: (ArrayList<Place>) -> Unit) {
         val listener = Response.Listener<JSONObject> { response ->
             val places : ArrayList<Place> = ArrayList()
             val jsonArray = response.getJSONArray("places")
@@ -15,17 +16,17 @@ class PlaceService(ctx: Context): BackService(ctx) {
                 val placeJson = jsonArray.getJSONObject(i)
                 places.add(fromPlaceJson(placeJson))
             }
-            function.invoke(places)
+            onResponse.invoke(places)
         }
-        doGet("/place/list", listener)
+        backService.doGet("/place/list", listener)
     }
 
-    fun choosePlace(place: Place, onResponse: (String) -> Unit) {
+    fun choosePlace(place: Place, onResponse: (Any) -> Unit) {
         val listener = Response.Listener<JSONObject> { response ->
-            onResponse(fromPlaceJson(response).name)
+            onResponse(fromPlaceJson(response))
         }
         val toPlaceJson = toPlaceJson(place)
-        doPost("/place/choose", listener, toPlaceJson)
+        backService.doPost("/place/choose", listener, toPlaceJson)
     }
 
     companion object {
