@@ -9,4 +9,5 @@
     <string name="password_field">PASSWORD</string>
     <string name="password_confirm_field">PASSWORD (CONFIRMACIÓN)</string>
     <string name="confim_register_btn">REGISTRAR</string>
+    <string name="logo">logo</string>
 </resources>
