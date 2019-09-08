@@ -19,4 +19,8 @@ class MainActivity : AppCompatActivity() {
         startActivity(placeChoice)
     }
 
+    fun onRegister(view: View) {
+        startActivity(Intent(this, RegisterActivity::class.java))
+    }
+
 }
