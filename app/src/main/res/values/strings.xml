@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Foodie</string>
+    <string name="welcome">Bienvenido a Foodie!</string>
+    <string name="but_get_places">Get Places</string>
+</resources>
