@@ -12,16 +12,24 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class RegisterActivityTest {
 
-    val activity = Robolectric.buildActivity<RegisterActivity>(RegisterActivity::class.java).setup().get()
+    private val activity = Robolectric.buildActivity<RegisterActivity>(RegisterActivity::class.java).setup().get()!!
+    private val emailField = activity.findViewById<TextView>(R.id.email_field)
+    private val setEmail = { text: String -> emailField.text = text }
+    private val onClick = { activity.findViewById<Button>(R.id.register_submit_btn).performClick() }
 
     @Test
     fun should_show_email_errors() {
-        val emailField = activity.findViewById<TextView>(R.id.email_field)
-        emailField.text = "saraza"
+        setEmail("")
+        onClick()
 
-        activity.findViewById<Button>(R.id.register_submit_btn).performClick()
-
-        assertEquals("Por favor ingrese un email valido", emailField.error)
+        assertEquals("Por favor ingrese un email válido", emailField.error)
     }
 
+    @Test
+    fun should_not_show_errors_if_its_valid_email() {
+        setEmail("unemail@undominio.com")
+        onClick()
+
+        assertEquals(null, emailField.error)
+    }
 }
