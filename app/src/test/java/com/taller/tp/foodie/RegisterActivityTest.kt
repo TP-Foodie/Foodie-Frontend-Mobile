@@ -12,7 +12,7 @@ import org.robolectric.RobolectricTestRunner
 @RunWith(RobolectricTestRunner::class)
 class RegisterActivityTest {
 
-    private val activity = Robolectric.buildActivity<RegisterActivity>(RegisterActivity::class.java).setup().get()!!
+    private val activity = Robolectric.buildActivity(RegisterActivity::class.java).setup().get()!!
 
     private val emailField = activity.findViewById<TextView>(R.id.email_field)
     private val passwordField = activity.findViewById<TextView>(R.id.password_field)
