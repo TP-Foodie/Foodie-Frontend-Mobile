@@ -3,9 +3,11 @@ package com.taller.tp.foodie.model.validators
 import android.widget.TextView
 
 abstract class Validator(error: String) {
-    val errorMessage = error
+    private val errorMessage = error
 
-    abstract fun validate(field: TextView)
+    fun validate(field: TextView) {
+        if (!isValid(field.text.toString())) field.error = errorMessage
+    }
 
     protected abstract fun isValid(value: String) : Boolean
 }

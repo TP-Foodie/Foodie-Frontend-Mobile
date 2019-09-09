@@ -6,13 +6,17 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import com.taller.tp.foodie.R
+import com.taller.tp.foodie.model.validators.AtSymbolValidator
 import com.taller.tp.foodie.model.validators.EmptyValidator
 
 val EMAIL_ERROR = "Por favor ingrese un email válido"
 
 class RegisterActivity : AppCompatActivity() {
 
-    private val emailValidators = arrayOf(EmptyValidator(EMAIL_ERROR))
+    private val emailValidators = arrayOf(
+        EmptyValidator(EMAIL_ERROR),
+        AtSymbolValidator(EMAIL_ERROR)
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
