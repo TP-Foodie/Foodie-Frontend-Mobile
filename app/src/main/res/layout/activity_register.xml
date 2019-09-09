@@ -90,6 +90,7 @@
             app:boxCornerRadiusTopStart="4dp">
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/password_confirmation_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawablePadding="0dp"

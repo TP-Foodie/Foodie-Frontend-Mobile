@@ -8,21 +8,20 @@ import android.widget.TextView
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.validators.AtSymbolValidator
 import com.taller.tp.foodie.model.validators.EmptyValidator
-import com.taller.tp.foodie.model.validators.LengthValidator
-import com.taller.tp.foodie.model.validators.Validator
+import com.taller.tp.foodie.model.validators.MatchValidator
 
+const val EMAIL_ERROR = "Por favor ingrese un email válido"
+const val PASSWORD_ERROR = "Por favor ingrese una contraseña válida"
+const val PASSWORD_CONFIRM_ERROR = "Las contraseñas no coinciden"
 
 class RegisterActivity : AppCompatActivity() {
 
     private val emailValidators = arrayOf(
-        EmptyValidator(),
-        AtSymbolValidator()
+        EmptyValidator(EMAIL_ERROR),
+        AtSymbolValidator(EMAIL_ERROR)
     )
 
-    private val passwordValidators = arrayOf(
-        LengthValidator(),
-        AtSymbolValidator()
-    )
+    private val passwordValidator = EmptyValidator(PASSWORD_ERROR)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,23 +30,23 @@ class RegisterActivity : AppCompatActivity() {
 
         val emailField = findViewById<TextView>(R.id.email_field)
         val passwordField = findViewById<TextView>(R.id.password_field)
+        val passwordConfirmationField = findViewById<TextView>(R.id.password_confirmation_field)
+
         val registerButton = findViewById<Button>(R.id.register_submit_btn)
 
         registerButton.setOnClickListener {
             validateEmail(emailField)
-            validatePassword(passwordField)
+            validatePassword(passwordField, passwordConfirmationField)
         }
     }
 
-    private fun validateWith(field: TextView, validators: Array<Validator>) {
-        validators.forEach { validator -> validator.validate(field) }
-    }
-
-    private fun validatePassword(passwordField: TextView) {
-        validateWith(passwordField, passwordValidators)
+    private fun validatePassword(passwordField: TextView, passwordConfirmationField: TextView) {
+        passwordValidator.validate(passwordField)
+        MatchValidator(passwordField.text.toString(), PASSWORD_CONFIRM_ERROR)
+            .validate(passwordConfirmationField)
     }
 
     private fun validateEmail(emailField: TextView) {
-        validateWith(emailField, emailValidators)
+        emailValidators.forEach { validator -> validator.validate(emailField) }
     }
 }
