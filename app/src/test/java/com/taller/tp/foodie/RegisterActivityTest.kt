@@ -15,8 +15,10 @@ class RegisterActivityTest {
     private val activity = Robolectric.buildActivity<RegisterActivity>(RegisterActivity::class.java).setup().get()!!
 
     private val emailField = activity.findViewById<TextView>(R.id.email_field)
+    private val passwordField = activity.findViewById<TextView>(R.id.password_field)
 
     private val setEmail = { text: String -> emailField.text = text }
+    private val setPassword = { text: String -> passwordField.text = text }
 
     private val onClick = { activity.findViewById<Button>(R.id.register_submit_btn).performClick() }
 
@@ -46,5 +48,13 @@ class RegisterActivityTest {
         onClick()
 
         assertEmailError()
+    }
+
+    @Test
+    fun shouldShowPasswordErrorIfItsShorterThanFourCharacters() {
+        setPassword("123")
+        onClick()
+
+        assertEquals("La contraseña debe ser mayor a 4 caracteres", passwordField.error)
     }
 }
