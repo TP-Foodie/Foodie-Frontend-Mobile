@@ -2,6 +2,7 @@ package com.taller.tp.foodie
 
 import android.widget.Button
 import android.widget.TextView
+import com.google.android.material.textfield.TextInputLayout
 import com.taller.tp.foodie.ui.RegisterActivity
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -25,6 +26,8 @@ class RegisterActivityTest {
     private val onClick = { activity.findViewById<Button>(R.id.register_submit_btn).performClick() }
 
     private fun assertEmailError() {
+        val emailField = activity.findViewById<TextInputLayout>(R.id.email_field_layout)
+
         return assertEquals("Por favor ingrese un email válido", emailField.error)
     }
 
@@ -57,6 +60,8 @@ class RegisterActivityTest {
         setPassword("")
         onClick()
 
+        val passwordField = activity.findViewById<TextInputLayout>(R.id.password_field_layout)
+
         assertEquals("Por favor ingrese una contraseña válida", passwordField.error)
     }
 
@@ -65,6 +70,8 @@ class RegisterActivityTest {
         setPassword("abcd1")
         setPasswordConfirm("abcd12")
         onClick()
+
+        val passwordConfirmField = activity.findViewById<TextInputLayout>(R.id.password_confirm_layout)
 
         assertEquals("Las contraseñas no coinciden", passwordConfirmField.error)
     }

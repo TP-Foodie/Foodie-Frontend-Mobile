@@ -5,10 +5,8 @@ import android.os.Bundle
 
 import android.widget.Button
 import android.widget.TextView
+import com.google.android.material.textfield.TextInputLayout
 import com.taller.tp.foodie.R
-import com.taller.tp.foodie.model.validators.AtSymbolValidator
-import com.taller.tp.foodie.model.validators.EmptyValidator
-import com.taller.tp.foodie.model.validators.MatchValidator
 
 const val EMAIL_ERROR = "Por favor ingrese un email válido"
 const val PASSWORD_ERROR = "Por favor ingrese una contraseña válida"
@@ -16,37 +14,37 @@ const val PASSWORD_CONFIRM_ERROR = "Las contraseñas no coinciden"
 
 class RegisterActivity : AppCompatActivity() {
 
-    private val emailValidators = arrayOf(
-        EmptyValidator(EMAIL_ERROR),
-        AtSymbolValidator(EMAIL_ERROR)
-    )
-
-    private val passwordValidator = EmptyValidator(PASSWORD_ERROR)
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
         supportActionBar!!.hide()
 
-        val emailField = findViewById<TextView>(R.id.email_field)
-        val passwordField = findViewById<TextView>(R.id.password_field)
-        val passwordConfirmationField = findViewById<TextView>(R.id.password_confirmation_field)
-
         val registerButton = findViewById<Button>(R.id.register_submit_btn)
 
         registerButton.setOnClickListener {
-            validateEmail(emailField)
-            validatePassword(passwordField, passwordConfirmationField)
+            validateEmail()
+            validatePassword()
         }
     }
 
-    private fun validatePassword(passwordField: TextView, passwordConfirmationField: TextView) {
-        passwordValidator.validate(passwordField)
-        MatchValidator(passwordField.text.toString(), PASSWORD_CONFIRM_ERROR)
-            .validate(passwordConfirmationField)
+    private fun validatePassword() {
+        val passwordField = findViewById<TextView>(R.id.password_field)
+        val passwordConfirmationField = findViewById<TextView>(R.id.password_confirmation_field)
+
+        if (passwordField.text.isEmpty()) {
+            findViewById<TextInputLayout>(R.id.password_field_layout).error = PASSWORD_ERROR
+        }
+
+        if (passwordConfirmationField.text != passwordField.text) {
+            findViewById<TextInputLayout>(R.id.password_confirm_layout).error = PASSWORD_CONFIRM_ERROR
+        }
     }
 
-    private fun validateEmail(emailField: TextView) {
-        emailValidators.forEach { validator -> validator.validate(emailField) }
+    private fun validateEmail() {
+        val emailField = findViewById<TextView>(R.id.email_field)
+
+        if (emailField.text.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(emailField.text).matches()) {
+            findViewById<TextInputLayout>(R.id.email_field_layout).error = EMAIL_ERROR
+        }
     }
 }
