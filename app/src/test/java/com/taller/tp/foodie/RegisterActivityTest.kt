@@ -75,4 +75,17 @@ class RegisterActivityTest {
 
         assertEquals("Las contraseñas no coinciden", passwordConfirmField.error)
     }
+
+    @Test
+    fun shouldRemoveEmailErrorAfterFixingIt() {
+        setEmail("")
+        onClick()
+
+        setEmail("unemail@undominio.com")
+        onClick()
+
+        val emailField = activity.findViewById<TextInputLayout>(R.id.email_field_layout)
+        assertEquals(null, emailField.error)
+
+    }
 }

@@ -42,9 +42,12 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun validateEmail() {
         val emailField = findViewById<TextView>(R.id.email_field)
+        val emailLayout = findViewById<TextInputLayout>(R.id.email_field_layout)
+
+        emailLayout.error = null
 
         if (emailField.text.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(emailField.text).matches()) {
-            findViewById<TextInputLayout>(R.id.email_field_layout).error = EMAIL_ERROR
+            emailLayout.error = EMAIL_ERROR
         }
     }
 }
