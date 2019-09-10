@@ -88,4 +88,17 @@ class RegisterActivityTest {
         assertEquals(null, emailField.error)
 
     }
+
+    @Test
+    fun shouldRemovePasswordErrorAfterFixingIt() {
+        setEmail("unemail@valido.com")
+        setPassword("")
+        onClick()
+
+        setPassword("zaraza")
+        onClick()
+
+        val passwordField = activity.findViewById<TextInputLayout>(R.id.email_field_layout)
+        assertEquals(null, passwordField.error)
+    }
 }

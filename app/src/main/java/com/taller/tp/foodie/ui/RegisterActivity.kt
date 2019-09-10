@@ -31,12 +31,18 @@ class RegisterActivity : AppCompatActivity() {
         val passwordField = findViewById<TextView>(R.id.password_field)
         val passwordConfirmationField = findViewById<TextView>(R.id.password_confirmation_field)
 
+        val passwordLayout = findViewById<TextInputLayout>(R.id.password_field_layout)
+        val passwordConfirmLayout = findViewById<TextInputLayout>(R.id.password_confirm_layout)
+
+        passwordLayout.error = null
+        passwordConfirmLayout.error = null
+
         if (passwordField.text.isEmpty()) {
-            findViewById<TextInputLayout>(R.id.password_field_layout).error = PASSWORD_ERROR
+            passwordLayout.error = PASSWORD_ERROR
         }
 
         if (passwordConfirmationField.text != passwordField.text) {
-            findViewById<TextInputLayout>(R.id.password_confirm_layout).error = PASSWORD_CONFIRM_ERROR
+            passwordConfirmLayout.error = PASSWORD_CONFIRM_ERROR
         }
     }
 
