@@ -33,14 +33,14 @@
         <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/email_field"
                 android:id="@+id/email_field_layout" android:layout_marginBottom="10dp"
-                app:errorTextAppearance="@style/error_appearance">
+                app:errorTextAppearance="@style/error_appearance" app:hintEnabled="false">
 
             <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/email_field"/>
+                    android:id="@+id/email_field"
+                    android:hint="@string/email_field"/>
 
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -48,14 +48,14 @@
         <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/password_field"
                 android:id="@+id/password_field_layout" android:layout_marginBottom="10dp"
-                app:errorTextAppearance="@style/error_appearance">
+                app:errorTextAppearance="@style/error_appearance" app:hintEnabled="false">
 
             <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/password_field"/>
+                    android:id="@+id/password_field"
+                    android:hint="@string/password_field"/>
 
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -63,14 +63,14 @@
         <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/password_confirm_field"
                 android:id="@+id/password_confirm_layout" android:layout_marginBottom="10dp"
-                app:errorTextAppearance="@style/error_appearance">
+                app:errorTextAppearance="@style/error_appearance" app:hintEnabled="false">
 
             <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/password_confirmation_field"/>
+                    android:id="@+id/password_confirmation_field"
+                    android:hint="@string/password_confirm_field"/>
 
 
         </com.google.android.material.textfield.TextInputLayout>
