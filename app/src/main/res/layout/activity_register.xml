@@ -1,126 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@drawable/linear_gradient"
-    android:isScrollContainer="true"
-    android:theme="@style/AppTheme"
-    app:layout_constraintVertical_chainStyle="packed"
-    tools:context=".ui.RegisterActivity">
-
-    <Button
-        android:id="@+id/register_submit_btn"
-        android:layout_width="250dp"
-        android:layout_height="wrap_content"
-        android:background="@drawable/rounded_btn"
-        android:fontFamily="@font/raleway"
-        android:text="@string/confim_register_btn"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
-
-    <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="300dp"
-        android:layout_height="179dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="32dp"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/register_submit_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView"
-        app:layout_constraintVertical_bias="0.167">
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/email_field_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="300dp"
-            android:layout_height="59dp"
-            app:boxBackgroundColor="#37000000"
-            app:boxCornerRadiusTopEnd="4dp"
-            app:boxCornerRadiusTopStart="4dp"
-            app:errorEnabled="true">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/email_field"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawablePadding="0dp"
-                android:fontFamily="@font/raleway"
-                android:hint="@string/email_field"
-                android:inputType="textEmailAddress"
-                android:textColor="#000000"
-                android:textColorHighlight="#03A9F4"
-                android:textColorHint="#000000"
-                android:textColorLink="#2196F3"
-                android:textStyle="bold" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/password_field_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="300dp"
-            android:layout_height="60dp"
-            app:boxBackgroundColor="#37000000"
-            app:boxCornerRadiusTopEnd="4dp"
-            app:boxCornerRadiusTopStart="4dp"
-            app:errorEnabled="true">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/password_field"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawablePadding="0dp"
-                android:fontFamily="@font/raleway"
-                android:hint="@string/password_field"
-                android:inputType="textPassword"
-                android:textColorHighlight="#03A9F4"
-                android:textColorLink="#2196F3"
-                android:textStyle="bold" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/password_confirm_layout"
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-            android:layout_width="300dp"
-            android:layout_height="60dp"
-            android:orientation="vertical"
-            app:boxBackgroundColor="#37000000"
-            app:boxCornerRadiusTopEnd="4dp"
-            app:boxCornerRadiusTopStart="4dp"
-            app:errorEnabled="true">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/password_confirmation_field"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:drawablePadding="0dp"
-                android:fontFamily="@font/raleway"
-                android:hint="@string/password_confirm_field"
-                android:inputType="textPassword"
-                android:textColorHighlight="#03A9F4"
-                android:textColorLink="#2196F3"
-                android:textStyle="bold" />
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   android:background="@drawable/linear_gradient"
+                                                   android:isScrollContainer="true"
+                                                   android:theme="@style/AppTheme"
+                                                   app:layout_constraintVertical_chainStyle="packed"
+                                                   tools:context=".ui.RegisterActivity">
 
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="328dp"
-        android:layout_height="112dp"
-        android:contentDescription="@string/logo"
-        android:src="@drawable/logo"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            android:id="@+id/imageView"
+            android:layout_width="328dp"
+            android:layout_height="112dp"
+            android:contentDescription="@string/logo"
+            android:src="@drawable/logo"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="85dp" android:layout_marginBottom="486dp"
+            app:layout_constraintBottom_toTopOf="@+id/register_submit_btn" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+    />
+
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="273dp"
+            android:layout_height="310dp" app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toBottomOf="@+id/imageView"
+            app:layout_constraintBottom_toTopOf="@+id/register_submit_btn">
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/email_field"
+                android:id="@+id/email_field_layout" android:layout_marginBottom="10dp"
+                app:errorTextAppearance="@style/error_appearance">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/email_field"/>
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/password_field"
+                android:id="@+id/password_field_layout" android:layout_marginBottom="10dp"
+                app:errorTextAppearance="@style/error_appearance">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/password_field"/>
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/password_confirm_field"
+                android:id="@+id/password_confirm_layout" android:layout_marginBottom="10dp"
+                app:errorTextAppearance="@style/error_appearance">
+
+            <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/password_confirmation_field"/>
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </LinearLayout>
+    <Button
+            android:id="@+id/register_submit_btn"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_btn"
+            android:fontFamily="@font/raleway"
+            android:text="@string/confim_register_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toBottomOf="@+id/imageView"
+            android:layout_marginBottom="90dp" app:layout_constraintHorizontal_bias="0.496"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
