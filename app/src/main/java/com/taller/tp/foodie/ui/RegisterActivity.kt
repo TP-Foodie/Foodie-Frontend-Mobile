@@ -41,7 +41,7 @@ class RegisterActivity : AppCompatActivity() {
             passwordLayout.error = PASSWORD_ERROR
         }
 
-        if (passwordConfirmationField.text != passwordField.text) {
+        if (passwordConfirmationField.text.toString() != passwordField.text.toString()) {
             passwordConfirmLayout.error = PASSWORD_CONFIRM_ERROR
         }
     }
