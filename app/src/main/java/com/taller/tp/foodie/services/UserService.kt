@@ -1,11 +1,14 @@
 package com.taller.tp.foodie.services
 
+import android.content.Context
 import com.android.volley.Response
 import org.json.JSONObject
 
-const val USERS_RESOURCE = "/users"
+const val USERS_RESOURCE = "/users/"
 
-class UserService(private val client: BackService) {
+class UserService(ctx: Context) {
+    val client : BackService = BackService(ctx)
+
     fun register(email: String, password: String) {
         val listener = Response.Listener<JSONObject> { response ->
             handleRequest(response)
@@ -21,7 +24,5 @@ class UserService(private val client: BackService) {
         return requestObject
     }
 
-    private fun handleRequest(response: JSONObject) {
-
-    }
+    private fun handleRequest(response: JSONObject) {}
 }
