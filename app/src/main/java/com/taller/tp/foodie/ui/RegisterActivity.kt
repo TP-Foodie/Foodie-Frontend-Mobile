@@ -2,11 +2,14 @@ package com.taller.tp.foodie.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 
 import android.widget.Button
+import android.widget.ProgressBar
 import android.widget.TextView
 import com.google.android.material.textfield.TextInputLayout
 import com.taller.tp.foodie.R
+import com.taller.tp.foodie.model.requestHandlers.RegisterRequestHandler
 import com.taller.tp.foodie.services.UserService
 
 const val EMAIL_ERROR = "Por favor ingrese un email válido"
@@ -36,7 +39,14 @@ class RegisterActivity : AppCompatActivity() {
         val passwordField = findViewById<TextView>(R.id.password_field)
         val emailField = findViewById<TextView>(R.id.email_field)
 
-        UserService(this).register(emailField.text.toString(), passwordField.text.toString())
+        findViewById<Button>(R.id.register_submit_btn).text = null
+
+        val loadingBar = findViewById<ProgressBar>(R.id.loading_bar)
+        loadingBar.visibility = View.VISIBLE
+
+        val requestHandler = RegisterRequestHandler(loadingBar)
+
+        UserService(this, requestHandler).register(emailField.text.toString(), passwordField.text.toString())
     }
 
     private fun validatePassword() : Boolean {

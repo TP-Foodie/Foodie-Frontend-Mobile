@@ -2,19 +2,19 @@ package com.taller.tp.foodie.services
 
 import android.content.Context
 import com.android.volley.Response
+import com.taller.tp.foodie.model.requestHandlers.RequestHandler
 import org.json.JSONObject
 
 const val USERS_RESOURCE = "/users/"
 
-class UserService(ctx: Context) {
-    val client : BackService = BackService(ctx)
+class UserService(ctx: Context, private val requestHandler: RequestHandler) {
+    private val client : BackService = BackService(ctx)
 
     fun register(email: String, password: String) {
-        val listener = Response.Listener<JSONObject> { response ->
-            handleRequest(response)
-        }
+        val listener = Response.Listener<JSONObject> { requestHandler.onSuccess() }
+        val errorListener = Response.ErrorListener { requestHandler.onError() }
 
-        client.doPost(USERS_RESOURCE, listener, buildRequest(email, password))
+        client.doPost(USERS_RESOURCE, listener, buildRequest(email, password), errorListener)
     }
 
     private fun buildRequest(email: String, password: String) : JSONObject {
@@ -23,6 +23,4 @@ class UserService(ctx: Context) {
         requestObject.put("password", password)
         return requestObject
     }
-
-    private fun handleRequest(response: JSONObject) {}
 }
