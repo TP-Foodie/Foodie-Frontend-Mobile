@@ -2,6 +2,7 @@ package com.taller.tp.foodie.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Layout
 import android.view.View
 
 import android.widget.Button
@@ -35,13 +36,12 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+
     private fun registerUser() {
         val passwordField = findViewById<TextView>(R.id.password_field)
         val emailField = findViewById<TextView>(R.id.email_field)
 
-        val button = findViewById<Button>(R.id.register_submit_btn)
-        val loadingBar = findViewById<ProgressBar>(R.id.loading_bar)
-        val requestHandler = RegisterRequestHandler(loadingBar, button)
+        val requestHandler = RegisterRequestHandler(this)
 
         UserService(this, requestHandler).register(emailField.text.toString(), passwordField.text.toString())
     }

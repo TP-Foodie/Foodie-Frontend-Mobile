@@ -3,9 +3,15 @@ package com.taller.tp.foodie.model.requestHandlers
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
+import com.taller.tp.foodie.R
+import com.taller.tp.foodie.ui.RegisterActivity
+import kotlinx.android.synthetic.main.activity_register.view.*
 
-class RegisterRequestHandler(private val progressBar: ProgressBar, private val button: Button) : RequestHandler {
+class RegisterRequestHandler(private val activity: RegisterActivity) : RequestHandler {
     private lateinit var text : CharSequence
+
+    private val button = activity.findViewById<Button>(R.id.register_submit_btn)
+    private val progressBar = activity.findViewById<ProgressBar>(R.id.loading_bar)
 
     override fun begin() {
         text = button.text
@@ -24,5 +30,6 @@ class RegisterRequestHandler(private val progressBar: ProgressBar, private val b
 
     override fun onSuccess() {
         stopLoading()
+        activity.finish()
     }
 }
