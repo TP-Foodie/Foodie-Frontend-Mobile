@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
+import android.widget.ToggleButton
 import com.google.android.material.textfield.TextInputLayout
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.requestHandlers.RegisterRequestHandler
@@ -16,6 +17,8 @@ import com.taller.tp.foodie.services.UserService
 const val EMAIL_ERROR = "Por favor ingrese un email válido"
 const val PASSWORD_ERROR = "Por favor ingrese una contraseña válida"
 const val PASSWORD_CONFIRM_ERROR = "Las contraseñas no coinciden"
+const val CLIENT_TYPE = "CUSTOMER"
+const val DELIVERY_TYPE = "DELIVERY"
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -36,6 +39,10 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
+    private fun getUserType() : String {
+        val userTypeButton = findViewById<ToggleButton>(R.id.user_type_btn)
+        return if (userTypeButton.isChecked) { DELIVERY_TYPE } else { CLIENT_TYPE }
+    }
 
     private fun registerUser() {
         val passwordField = findViewById<TextView>(R.id.password_field)
@@ -43,7 +50,11 @@ class RegisterActivity : AppCompatActivity() {
 
         val requestHandler = RegisterRequestHandler(this)
 
-        UserService(this, requestHandler).register(emailField.text.toString(), passwordField.text.toString())
+        UserService(this, requestHandler).register(
+            emailField.text.toString(),
+            passwordField.text.toString(),
+            getUserType()
+        )
     }
 
     private fun validatePassword() : Boolean {
