@@ -8,7 +8,7 @@
                                                    android:isScrollContainer="true"
                                                    android:theme="@style/AppTheme"
                                                    app:layout_constraintVertical_chainStyle="packed"
-                                                   tools:context=".ui.RegisterActivity">
+                                                   tools:context=".ui.RegisterActivity" android:id="@+id/context_view">
 
     <ImageView
             android:id="@+id/imageView"

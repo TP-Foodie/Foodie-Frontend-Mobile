@@ -4,8 +4,9 @@ import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import com.taller.tp.foodie.R
+import com.taller.tp.foodie.model.ErrorHandler
 import com.taller.tp.foodie.ui.RegisterActivity
-import kotlinx.android.synthetic.main.activity_register.view.*
+
 
 class RegisterRequestHandler(private val activity: RegisterActivity) : RequestHandler {
     private lateinit var text : CharSequence
@@ -26,6 +27,7 @@ class RegisterRequestHandler(private val activity: RegisterActivity) : RequestHa
 
     override fun onError() {
         stopLoading()
+        ErrorHandler.handleError(activity.findViewById<View>(R.id.context_view))
     }
 
     override fun onSuccess() {
