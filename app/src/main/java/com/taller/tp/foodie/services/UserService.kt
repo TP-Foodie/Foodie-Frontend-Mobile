@@ -11,6 +11,8 @@ class UserService(ctx: Context, private val requestHandler: RequestHandler) {
     private val client : BackService = BackService(ctx)
 
     fun register(email: String, password: String) {
+        requestHandler.begin()
+
         val listener = Response.Listener<JSONObject> { requestHandler.onSuccess() }
         val errorListener = Response.ErrorListener { requestHandler.onError() }
 

@@ -39,12 +39,9 @@ class RegisterActivity : AppCompatActivity() {
         val passwordField = findViewById<TextView>(R.id.password_field)
         val emailField = findViewById<TextView>(R.id.email_field)
 
-        findViewById<Button>(R.id.register_submit_btn).text = null
-
+        val button = findViewById<Button>(R.id.register_submit_btn)
         val loadingBar = findViewById<ProgressBar>(R.id.loading_bar)
-        loadingBar.visibility = View.VISIBLE
-
-        val requestHandler = RegisterRequestHandler(loadingBar)
+        val requestHandler = RegisterRequestHandler(loadingBar, button)
 
         UserService(this, requestHandler).register(emailField.text.toString(), passwordField.text.toString())
     }

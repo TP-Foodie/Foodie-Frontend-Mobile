@@ -1,8 +1,10 @@
 package com.taller.tp.foodie.model.requestHandlers
 
-import android.view.View
 
 interface RequestHandler {
+    fun begin()
+
     fun onSuccess()
+
     fun onError()
 }
