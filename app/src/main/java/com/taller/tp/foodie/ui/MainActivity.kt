@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.taller.tp.foodie.R
 
 
+@Suppress("UNUSED_PARAMETER")
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -14,7 +15,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 
-    fun listPlaces(@Suppress("UNUSED_PARAMETER") view: View){
+    fun listPlaces(view: View){
         val placeChoice = Intent(this, PlaceChoiceActivity::class.java)
         startActivity(placeChoice)
     }
