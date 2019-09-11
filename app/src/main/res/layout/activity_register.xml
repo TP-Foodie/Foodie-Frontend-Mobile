@@ -81,7 +81,9 @@
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_btn"
             android:checked="false"
+            android:elevation="5dp"
             android:fontFamily="@font/raleway"
+            android:shadowDy="5dp"
             android:textOff="@string/client_type"
             android:textOn="@string/delivery_type" />
 
