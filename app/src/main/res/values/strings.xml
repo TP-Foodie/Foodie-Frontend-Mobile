@@ -2,4 +2,15 @@
     <string name="app_name">Foodie</string>
     <string name="welcome">Bienvenido a Foodie!</string>
     <string name="but_get_places">Get Places</string>
+    <string name="btn_register">
+        <u>Soy nuevo</u>
+    </string>
+    <string name="email_field">EMAIL</string>
+    <string name="password_field">PASSWORD</string>
+    <string name="password_confirm_field">PASSWORD (CONFIRMACIÓN)</string>
+    <string name="confim_register_btn">REGISTRAR</string>
+    <string name="logo">logo</string>
+    <string name="general_error">Ups! un errors inesperado a ocurrido</string>
+    <string name="client_type">Quiero comprar</string>
+    <string name="delivery_type">Quiero hacer deliveries</string>
 </resources>

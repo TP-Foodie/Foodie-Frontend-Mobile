@@ -45,7 +45,8 @@ open class BackService(ctx: Context){
     fun doPost(
         method: String,
         listener: Response.Listener<JSONObject>,
-        jsonRequest: JSONObject?
+        jsonRequest: JSONObject?,
+        onError: Response.ErrorListener = Response.ErrorListener { error -> Log.d("Error.Response", error.toString()) }
     ) {
         try {
             val queue = Volley.newRequestQueue(context)
@@ -54,9 +55,7 @@ open class BackService(ctx: Context){
                 Request.Method.POST,
                 finalUrl, jsonRequest,
                 listener,
-                Response.ErrorListener { error ->
-                    Log.d("Error.Response", error.toString())
-                }
+                onError
             )
             queue.add(getRequest)
         } catch (e: Throwable) {
