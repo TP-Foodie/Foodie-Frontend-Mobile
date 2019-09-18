@@ -20,6 +20,10 @@ class MainActivity : AppCompatActivity() {
         startActivity(placeChoice)
     }
 
+    fun login(view: View){
+        startActivity(Intent(this, LoginActivity::class.java))
+    }
+
     fun onRegister(view: View) {
         startActivity(Intent(this, RegisterActivity::class.java))
     }
