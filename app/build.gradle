@@ -70,6 +70,7 @@ dependencies {
     // Authentication
     implementation 'com.google.firebase:firebase-auth:19.0.0'
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
+    implementation 'com.facebook.android:facebook-login:5.5.1'
 
     // Image Caching
     implementation 'com.facebook.fresco:fresco:2.0.0'
