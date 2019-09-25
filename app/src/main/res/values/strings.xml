@@ -2,17 +2,9 @@
     <string name="app_name">Foodie</string>
     <string name="welcome">Bienvenido a Foodie!</string>
     <string name="but_get_places">Get Places</string>
-    <string name="btn_register">
-        <u>Soy nuevo</u>
-    </string>
-    <string name="email_field">EMAIL</string>
-    <string name="password_field">PASSWORD</string>
-    <string name="password_confirm_field">PASSWORD (CONFIRMACIÓN)</string>
-    <string name="confim_register_btn">REGISTRAR</string>
+
     <string name="logo">logo</string>
     <string name="general_error">Ups! un errors inesperado a ocurrido</string>
-    <string name="client_type">Quiero comprar</string>
-    <string name="delivery_type">Quiero hacer deliveries</string>
     <string name="user_field">USER</string>
 
 
@@ -21,8 +13,20 @@
     <string name="tv_user_not_registered">¿Sos nuevo en Foodie? %1$s</string>
 
     <string name="tv_federated_login">Iniciar sesión con Redes Sociales</string>
+    <string name="btn_log_in">Iniciar Sesión</string>
+
+    <!-- Login and Register -->
     <string name="hint_email_et">Email</string>
     <string name="hint_password_et">Contraseña</string>
-    <string name="btn_log_in">Iniciar Sesión</string>
+
+    <!-- Register Activity -->
+    <string name="hint_name_et">Nombre y Apellido</string>
+    <string name="hint_confirm_password_et">Confirmar Contraseña</string>
+    <string name="hint_phone_et">Teléfono</string>
+    <string name="chip_user_type">Usuario</string>
+    <string name="chip_delivery_type">Delivery</string>
+    <string name="chip_subscription_flat">Flat</string>
+    <string name="chip_subscription_premium">Premium</string>
+    <string name="btn_register">Registrar</string>
 
 </resources>

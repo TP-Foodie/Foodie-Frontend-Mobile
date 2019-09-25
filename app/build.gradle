@@ -67,9 +67,15 @@ dependencies {
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
 
-    // For Auth
+    // Authentication
     implementation 'com.google.firebase:firebase-auth:19.0.0'
     implementation 'com.google.android.gms:play-services-auth:17.0.0'
+
+    // Image Caching
+    implementation 'com.facebook.fresco:fresco:2.0.0'
+
+    // Image Cropper
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
 }
 
 // Add to the bottom of the file

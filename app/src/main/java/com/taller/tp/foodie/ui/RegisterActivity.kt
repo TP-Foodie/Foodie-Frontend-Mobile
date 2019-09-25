@@ -1,14 +1,18 @@
 package com.taller.tp.foodie.ui
 
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
-import android.widget.Button
 import android.widget.TextView
-import android.widget.ToggleButton
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputLayout
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.requestHandlers.RegisterRequestHandler
 import com.taller.tp.foodie.services.UserService
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
+import kotlinx.android.synthetic.main.activity_register.*
 
 class RegisterActivity : AppCompatActivity() {
 
@@ -18,15 +22,33 @@ class RegisterActivity : AppCompatActivity() {
         const val PASSWORD_CONFIRM_ERROR = "Las contraseñas no coinciden"
         const val CLIENT_TYPE = "CUSTOMER"
         const val DELIVERY_TYPE = "DELIVERY"
+
+        const val RESULT_OK = -1
+        const val PICK_IMAGE_REQUEST = 111
     }
+
+    private var filePath: Uri? = null
+    private var profileImageIsFromProvider: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
-        val registerButton = findViewById<Button>(R.id.register_submit_btn)
+        setupClickListeners()
+    }
 
-        registerButton.setOnClickListener {
+    private fun setupClickListeners() {
+        edit_profile_image.setOnClickListener {
+            val intent = Intent()
+            intent.type = "image/*"
+            intent.action = Intent.ACTION_PICK
+            startActivityForResult(
+                Intent.createChooser(intent, "Elegir Imagen"),
+                PICK_IMAGE_REQUEST
+            )
+        }
+
+        btn_register.setOnClickListener {
             val validEmail = validateEmail()
             val validPassword = validatePassword()
 
@@ -37,8 +59,11 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun getUserType() : String {
-        val userTypeButton = findViewById<ToggleButton>(R.id.user_type_btn)
-        return if (userTypeButton.isChecked) { DELIVERY_TYPE } else { CLIENT_TYPE }
+        if (type_delivery.isChecked) {
+            return DELIVERY_TYPE
+        }
+
+        return CLIENT_TYPE
     }
 
     private fun registerUser() {
@@ -89,5 +114,38 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         return true
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.data != null) {
+            val image = data.data
+
+            // start cropping activity for pre-acquired image saved on the device
+            CropImage.activity(image)
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setCropShape(CropImageView.CropShape.RECTANGLE)
+                .setAspectRatio(1, 1)
+                .start(this)
+        }
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            val result = CropImage.getActivityResult(data)
+            if (resultCode == RESULT_OK) {
+                // get Uri from result
+                filePath = result.uri
+
+                //Setting image to ImageView
+                profile_image.setImageURI(filePath.toString())
+
+                //Update profile image as NOT from provider
+                profileImageIsFromProvider = false
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                val error = result.error
+                Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 }

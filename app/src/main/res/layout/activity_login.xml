@@ -40,8 +40,8 @@
                 android:id="@+id/email_field"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="@string/hint_email_et" />
-
+                android:hint="@string/hint_email_et"
+                android:inputType="textEmailAddress" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -56,7 +56,8 @@
                 android:id="@+id/password_field"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="@string/hint_password_et" />
+                android:hint="@string/hint_password_et"
+                android:inputType="textPassword" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

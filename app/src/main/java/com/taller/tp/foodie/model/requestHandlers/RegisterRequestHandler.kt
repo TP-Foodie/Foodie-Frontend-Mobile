@@ -11,7 +11,7 @@ import com.taller.tp.foodie.ui.RegisterActivity
 class RegisterRequestHandler(private val activity: RegisterActivity) : RequestHandler {
     private lateinit var text : CharSequence
 
-    private val button = activity.findViewById<Button>(R.id.register_submit_btn)
+    private val button = activity.findViewById<Button>(R.id.btn_register)
     private val progressBar = activity.findViewById<ProgressBar>(R.id.loading_bar)
 
     override fun begin() {
