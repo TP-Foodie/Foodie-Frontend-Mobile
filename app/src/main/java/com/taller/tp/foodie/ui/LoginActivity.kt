@@ -1,9 +1,17 @@
 package com.taller.tp.foodie.ui
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.SpannableStringBuilder
+import android.text.Spanned
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
@@ -36,6 +44,8 @@ class LoginActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        setupGotoRegister()
 
         auth = FirebaseAuth.getInstance()
 
@@ -105,5 +115,37 @@ class LoginActivity : AppCompatActivity() {
                     //Snackbar.make(main_layout, "Authentication Failed.", Snackbar.LENGTH_SHORT).show()
                 }
             }
+    }
+
+
+    private fun setupGotoRegister() {
+        val resources = resources
+        val gotoRegister = resources.getString(R.string.goto_register)
+        val phraseFormatted = resources.getString(R.string.tv_user_not_registered)
+
+        val phrase = String.format(phraseFormatted, gotoRegister)
+        val gotoRegisteStart = phrase.indexOf(gotoRegister)
+
+        val spannable = SpannableStringBuilder(phrase)
+        spannable.setSpan(
+            MyClickableSpan(applicationContext), gotoRegisteStart,
+            gotoRegisteStart + gotoRegister.length, Spanned.SPAN_INCLUSIVE_EXCLUSIVE
+        )
+
+        tv_goto_register.text = spannable
+        tv_goto_register.movementMethod = LinkMovementMethod.getInstance()
+    }
+
+    private inner class MyClickableSpan internal constructor(applicationContext: Context) :
+        ClickableSpan() {
+
+        override fun updateDrawState(ds: TextPaint) {
+            ds.isUnderlineText = false
+            ds.color = ContextCompat.getColor(applicationContext, R.color.colorAccent)
+        }
+
+        override fun onClick(view: View) {
+            startActivity(Intent(applicationContext, RegisterActivity::class.java))
+        }
     }
 }

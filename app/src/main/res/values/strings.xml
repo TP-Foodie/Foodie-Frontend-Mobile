@@ -14,5 +14,15 @@
     <string name="client_type">Quiero comprar</string>
     <string name="delivery_type">Quiero hacer deliveries</string>
     <string name="user_field">USER</string>
-    <string name="log_in">LOG IN</string>
+
+
+    <!-- Login Activity -->
+    <string name="goto_register">Registrate ahora!</string>
+    <string name="tv_user_not_registered">¿Sos nuevo en Foodie? %1$s</string>
+
+    <string name="tv_federated_login">Iniciar sesión con Redes Sociales</string>
+    <string name="hint_email_et">Email</string>
+    <string name="hint_password_et">Contraseña</string>
+    <string name="btn_log_in">Iniciar Sesión</string>
+
 </resources>

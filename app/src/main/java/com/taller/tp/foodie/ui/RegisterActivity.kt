@@ -1,31 +1,28 @@
 package com.taller.tp.foodie.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Layout
-import android.view.View
-
 import android.widget.Button
-import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.ToggleButton
+import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.textfield.TextInputLayout
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.requestHandlers.RegisterRequestHandler
 import com.taller.tp.foodie.services.UserService
 
-const val EMAIL_ERROR = "Por favor ingrese un email válido"
-const val PASSWORD_ERROR = "Por favor ingrese una contraseña válida"
-const val PASSWORD_CONFIRM_ERROR = "Las contraseñas no coinciden"
-const val CLIENT_TYPE = "CUSTOMER"
-const val DELIVERY_TYPE = "DELIVERY"
-
 class RegisterActivity : AppCompatActivity() {
+
+    companion object {
+        const val EMAIL_ERROR = "Por favor ingrese un email válido"
+        const val PASSWORD_ERROR = "Por favor ingrese una contraseña válida"
+        const val PASSWORD_CONFIRM_ERROR = "Las contraseñas no coinciden"
+        const val CLIENT_TYPE = "CUSTOMER"
+        const val DELIVERY_TYPE = "DELIVERY"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
-        supportActionBar!!.hide()
 
         val registerButton = findViewById<Button>(R.id.register_submit_btn)
 
