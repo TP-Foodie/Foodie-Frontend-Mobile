@@ -13,4 +13,6 @@
     <string name="general_error">Ups! un errors inesperado a ocurrido</string>
     <string name="client_type">Quiero comprar</string>
     <string name="delivery_type">Quiero hacer deliveries</string>
+    <string name="user_field">USER</string>
+    <string name="log_in">LOG IN</string>
 </resources>

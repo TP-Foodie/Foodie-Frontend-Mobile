@@ -3,6 +3,7 @@ package com.taller.tp.foodie.ui
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.taller.tp.foodie.R
 
 class LauncherActivity : AppCompatActivity() {
@@ -26,6 +27,11 @@ class LauncherActivity : AppCompatActivity() {
     }
 
     private fun isUserLoggedIn(): Boolean {
+        val account = GoogleSignIn.getLastSignedInAccount(this)
+        if (account != null) {
+            return true
+        }
+
         return false
     }
 
