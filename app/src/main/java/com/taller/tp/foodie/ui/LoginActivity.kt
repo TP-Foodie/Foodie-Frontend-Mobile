@@ -8,6 +8,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
@@ -40,6 +41,7 @@ class LoginActivity : AppCompatActivity() {
 
         configureGoogleSignIn()
 
+        google_signInButton.setSize(SignInButton.SIZE_WIDE)
         google_signInButton.setOnClickListener {
             signInGoogle()
         }
@@ -69,16 +71,25 @@ class LoginActivity : AppCompatActivity() {
         if (requestCode == RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
-                // Google Sign In was successful, authenticate with Firebase
+                // Google Sign In was successful
                 val account = task.getResult(ApiException::class.java)
+
+                // TODO: authenticate with Firebase (es necesario?)
                 firebaseAuthWithGoogle(account)
+
+                // send token id to backend server
+                sendTokenIdToBackendServer(account?.idToken)
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
-                Log.w("Error Google Sign In", e.localizedMessage)
+                Log.w("Error Google Sign In", "Status Code: " + e.statusCode)
                 //Snackbar.make(main_layout, "Authentication Failed: ${e.message}",
                 //    Snackbar.LENGTH_SHORT).show()
             }
         }
+    }
+
+    private fun sendTokenIdToBackendServer(idToken: String?) {
+        TODO("not implemented")
     }
 
     private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount?) {
@@ -88,7 +99,6 @@ class LoginActivity : AppCompatActivity() {
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d("Google Sign In Success", "signInWithCredential:success")
-                    val user = auth.currentUser
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w("Error Google Sign In", "signInWithCredential:failure", task.exception)
