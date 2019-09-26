@@ -40,3 +40,23 @@ fun emailIsValid(email: String?): Boolean {
 
     return true
 }
+
+fun nameIsValid(name: String?): Boolean {
+    if (name.isNullOrEmpty()) {
+        return false
+    }
+
+    return true
+}
+
+fun phoneIsValid(phone: String?): Boolean {
+    if (phone.isNullOrEmpty()) {
+        return false
+    }
+
+    if (phone.length == 12 && phone[0] == '1' && phone[1] == '1') {
+        return true
+    }
+
+    return false
+}

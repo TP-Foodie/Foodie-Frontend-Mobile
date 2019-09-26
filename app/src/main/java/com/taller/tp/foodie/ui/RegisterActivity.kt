@@ -10,13 +10,13 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.common.AuthErrors.EMAIL_ERROR
+import com.taller.tp.foodie.model.common.AuthErrors.NAME_ERROR
 import com.taller.tp.foodie.model.common.AuthErrors.PASSWORD_CONFIRM_ERROR
 import com.taller.tp.foodie.model.common.AuthErrors.PASSWORD_ERROR
+import com.taller.tp.foodie.model.common.AuthErrors.PHONE_ERROR
 import com.taller.tp.foodie.model.requestHandlers.RegisterRequestHandler
 import com.taller.tp.foodie.services.UserService
-import com.taller.tp.foodie.utils.emailIsValid
-import com.taller.tp.foodie.utils.passwordIsValid
-import com.taller.tp.foodie.utils.passwordsAreEqualAndNotEmpty
+import com.taller.tp.foodie.utils.*
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.activity_register.*
@@ -34,11 +34,16 @@ class RegisterActivity : AppCompatActivity() {
         const val LOGIN_TYPE = "login type"
         const val FEDERATED_LOGIN = 0
         const val NOT_FEDERATED_LOGIN = 1
+
+        // extra data of user if federated
+        const val FEDERATED_NAME = "name"
+        const val FEDERATED_EMAIL = "email"
+        const val FEDERATED_URL_PROFILE_IMAGE = "url profile image"
     }
 
     private lateinit var auth: FirebaseAuth
     private var filePath: Uri? = null
-    private var profileImageIsFromProvider: Boolean = false
+    private var profileImageIsFromFederated: Boolean = false
     private var loginType: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -51,7 +56,7 @@ class RegisterActivity : AppCompatActivity() {
 
         setupClickListeners()
 
-        showOrHidePasswords()
+        checkLoginType()
     }
 
     private fun setupClickListeners() {
@@ -66,20 +71,28 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         btn_register.setOnClickListener {
+            val validName = validateName()
+            val validPhone = validatePhone()
             val validEmail = validateEmail()
             val validPassword = validatePassword()
 
-            if (validEmail && validPassword) {
+            if (validName && validPhone && validEmail && validPassword) {
                 registerUser()
             }
         }
     }
 
-    private fun showOrHidePasswords() {
+    private fun checkLoginType() {
         if (loginType == FEDERATED_LOGIN) {
             // hide passwords
             password_field_layout.visibility = View.GONE
             password_confirm_layout.visibility = View.GONE
+
+            // set name, email and profile image
+            name_field.setText(intent.getStringExtra(FEDERATED_NAME))
+            email_field.setText(intent.getStringExtra(FEDERATED_EMAIL))
+            profileImageIsFromFederated = true
+            profile_image.setImageURI(intent.getStringExtra(FEDERATED_URL_PROFILE_IMAGE))
         } else {
             // show passwords
             password_field_layout.visibility = View.VISIBLE
@@ -100,8 +113,7 @@ class RegisterActivity : AppCompatActivity() {
         auth.createUserWithEmailAndPassword(
             email_field.text.toString(),
             password_field.text.toString()
-        )
-            .addOnCompleteListener(this) { task ->
+        ).addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(this.localClassName, "createUserWithEmail:success")
@@ -120,7 +132,30 @@ class RegisterActivity : AppCompatActivity() {
             }
     }
 
-    private fun validatePassword() : Boolean {
+    private fun validateName(): Boolean {
+        name_field_layout.error = null
+
+        if (!nameIsValid(name_field.text.toString())) {
+            name_field_layout.error = NAME_ERROR
+            return false
+        }
+
+        return true
+    }
+
+    private fun validatePhone(): Boolean {
+        phone_field_layout.error = null
+
+        if (!phoneIsValid(phone_field.text.toString())) {
+            phone_field_layout.error = PHONE_ERROR
+            return false
+        }
+
+        return true
+    }
+
+
+    private fun validatePassword(): Boolean {
         password_field_layout.error = null
         password_confirm_layout.error = null
 
@@ -178,7 +213,7 @@ class RegisterActivity : AppCompatActivity() {
                 profile_image.setImageURI(filePath.toString())
 
                 //Update profile image as NOT from provider
-                profileImageIsFromProvider = false
+                profileImageIsFromFederated = false
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 val error = result.error
                 Toast.makeText(this, "Error: ${error.message}", Toast.LENGTH_LONG).show()
