@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
@@ -28,19 +29,29 @@ class RegisterActivity : AppCompatActivity() {
 
         const val RESULT_OK = -1
         const val PICK_IMAGE_REQUEST = 111
+
+        // for making passwords gone if federated
+        const val LOGIN_TYPE = "login type"
+        const val FEDERATED_LOGIN = 0
+        const val NOT_FEDERATED_LOGIN = 1
     }
 
     private lateinit var auth: FirebaseAuth
     private var filePath: Uri? = null
     private var profileImageIsFromProvider: Boolean = false
+    private var loginType: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
+        loginType = intent.getIntExtra(LOGIN_TYPE, NOT_FEDERATED_LOGIN)
+
         auth = FirebaseAuth.getInstance()
 
         setupClickListeners()
+
+        showOrHidePasswords()
     }
 
     private fun setupClickListeners() {
@@ -61,6 +72,18 @@ class RegisterActivity : AppCompatActivity() {
             if (validEmail && validPassword) {
                 registerUser()
             }
+        }
+    }
+
+    private fun showOrHidePasswords() {
+        if (loginType == FEDERATED_LOGIN) {
+            // hide passwords
+            password_field_layout.visibility = View.GONE
+            password_confirm_layout.visibility = View.GONE
+        } else {
+            // show passwords
+            password_field_layout.visibility = View.VISIBLE
+            password_confirm_layout.visibility = View.VISIBLE
         }
     }
 

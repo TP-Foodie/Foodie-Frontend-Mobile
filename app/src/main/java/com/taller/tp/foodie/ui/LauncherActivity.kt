@@ -39,6 +39,8 @@ class LauncherActivity : AppCompatActivity() {
         }
 
         // TODO: Check if backend auth token is ok
+        // por ejemplo el user puede haberse ido entre el login y register
+        // lo puedo ver solo si no es valido el token de auth
 
         //return true
         return false

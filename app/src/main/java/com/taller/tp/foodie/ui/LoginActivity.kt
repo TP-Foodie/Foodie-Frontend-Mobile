@@ -169,11 +169,18 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun sendTokenToBackendServer(token: String?) {
-        TODO("not implemented")
+        // TODO("not implemented")
+        // simulo q el chabon no esta registrado
+        val intent = Intent(applicationContext, RegisterActivity::class.java)
+
+        intent.putExtra(RegisterActivity.LOGIN_TYPE, RegisterActivity.FEDERATED_LOGIN)
+
+        startActivity(intent)
     }
 
     private fun sendEmailAndPasswordToBackendServer(email: String, password: String) {
-        TODO("not implemented")
+        // TODO("not implemented")
+        // si el chabon no esta registrado -> falla
     }
 
     private fun authenticateWithFirebase(credential: AuthCredential, token: String?) {
