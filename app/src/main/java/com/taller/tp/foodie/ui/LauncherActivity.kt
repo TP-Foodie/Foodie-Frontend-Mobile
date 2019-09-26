@@ -3,13 +3,18 @@ package com.taller.tp.foodie.ui
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.firebase.auth.FirebaseAuth
 import com.taller.tp.foodie.R
 
 class LauncherActivity : AppCompatActivity() {
 
+    private lateinit var auth: FirebaseAuth
+
     override fun onStart() {
         super.onStart()
+
+        // Initialize Firebase Auth
+        auth = FirebaseAuth.getInstance()
 
         if (isUserLoggedIn()) {
             // go to main activity
@@ -27,11 +32,15 @@ class LauncherActivity : AppCompatActivity() {
     }
 
     private fun isUserLoggedIn(): Boolean {
-        val account = GoogleSignIn.getLastSignedInAccount(this)
-        if (account != null) {
-            return true
+        // Check if user is signed in (non-null) and update UI accordingly.
+        val currentUser = auth.currentUser
+        if (currentUser == null) {
+            return false
         }
 
+        // TODO: Check if backend auth token is ok
+
+        //return true
         return false
     }
 

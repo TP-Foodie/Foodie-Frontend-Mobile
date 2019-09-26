@@ -11,22 +11,25 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.facebook.AccessToken
 import com.facebook.CallbackManager
 import com.facebook.FacebookCallback
 import com.facebook.FacebookException
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.taller.tp.foodie.R
+import com.taller.tp.foodie.model.common.AuthErrors.EMAIL_ERROR
+import com.taller.tp.foodie.model.common.AuthErrors.PASSWORD_ERROR
+import com.taller.tp.foodie.utils.emailIsValid
+import com.taller.tp.foodie.utils.passwordIsValid
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : AppCompatActivity() {
@@ -49,11 +52,7 @@ class LoginActivity : AppCompatActivity() {
 
         configureGoogleSignIn()
         configureFacebookSignIn()
-
-        google_signInButton.setSize(SignInButton.SIZE_WIDE)
-        google_signInButton.setOnClickListener {
-            signInGoogle()
-        }
+        configurePasswordLogin()
     }
 
     private fun configureGoogleSignIn() {
@@ -67,6 +66,11 @@ class LoginActivity : AppCompatActivity() {
         // Build a GoogleSignInClient with the options specified by gso.
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso)
         mGoogleSignInClient?.signOut()
+
+        google_signInButton.setSize(SignInButton.SIZE_WIDE)
+        google_signInButton.setOnClickListener {
+            signInGoogle()
+        }
     }
 
     private fun signInGoogle() {
@@ -84,10 +88,11 @@ class LoginActivity : AppCompatActivity() {
             mCallbackManager,
             object : FacebookCallback<LoginResult> {
                 override fun onSuccess(loginResult: LoginResult) {
-                    // facebook:onSuccess: loginResult
-
                     // authenticate with Firebase
-                    handleFacebookAccessToken(loginResult.accessToken)
+                    authenticateWithFirebase(
+                        FacebookAuthProvider.getCredential(loginResult.accessToken.token),
+                        loginResult.accessToken.token
+                    )
                 }
 
                 override fun onCancel() {
@@ -105,7 +110,39 @@ class LoginActivity : AppCompatActivity() {
         LoginManager.getInstance().logOut()
     }
 
+    private fun configurePasswordLogin() {
+        btn_login.setOnClickListener {
+            email_field_layout.error = null
+            password_field_layout.error = null
 
+            val email = email_field.text.toString()
+            val password = password_field.text.toString()
+
+            if (!passwordIsValid(password)) {
+                password_field_layout.error = PASSWORD_ERROR
+                return@setOnClickListener
+            }
+
+            if (!emailIsValid(email)) {
+                email_field_layout.error = EMAIL_ERROR
+                return@setOnClickListener
+            }
+
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this) { task ->
+                    if (task.isSuccessful) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(this.localClassName, "signInWithEmail:success")
+
+                        // send email and password to backend server
+                        sendEmailAndPasswordToBackendServer(email, password)
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(this.localClassName, "signInWithEmail:failure", task.exception)
+                    }
+                }
+        }
+    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -117,7 +154,10 @@ class LoginActivity : AppCompatActivity() {
                 val account = task.getResult(ApiException::class.java)
 
                 // authenticate with Firebase
-                firebaseAuthWithGoogle(account)
+                authenticateWithFirebase(
+                    GoogleAuthProvider.getCredential(account?.idToken, null),
+                    account?.idToken
+                )
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
                 Log.w("Error Google Sign In", "Status Code: " + e.statusCode)
@@ -128,39 +168,23 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendTokenIdToBackendServer(idToken: String?) {
+    private fun sendTokenToBackendServer(token: String?) {
         TODO("not implemented")
     }
 
-    private fun firebaseAuthWithGoogle(account: GoogleSignInAccount?) {
-        val credential = GoogleAuthProvider.getCredential(account?.idToken, null)
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d("Google Sign In Success", "signInWithCredential:success")
-
-                    // send token id to backend server
-                    sendTokenIdToBackendServer(account?.idToken)
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.w("Error Google Sign In", "signInWithCredential:failure", task.exception)
-                }
-            }
+    private fun sendEmailAndPasswordToBackendServer(email: String, password: String) {
+        TODO("not implemented")
     }
 
-    private fun handleFacebookAccessToken(token: AccessToken) {
-        Log.d(this.localClassName, "handleFacebookAccessToken:$token")
-
-        val credential = FacebookAuthProvider.getCredential(token.token)
+    private fun authenticateWithFirebase(credential: AuthCredential, token: String?) {
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
+                    // Firebase sign in success
                     Log.d(this.localClassName, "signInWithCredential:success")
 
-                    // send token id to backend server
-                    sendTokenIdToBackendServer(token.token)
+                    // send token to backend server
+                    sendTokenToBackendServer(token)
                 } else {
                     // If sign in fails, display a message to the user.
                     Log.w(this.localClassName, "signInWithCredential:failure", task.exception)

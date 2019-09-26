@@ -3,13 +3,19 @@ package com.taller.tp.foodie.ui
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.widget.TextView
+import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.auth.FirebaseAuth
 import com.taller.tp.foodie.R
+import com.taller.tp.foodie.model.common.AuthErrors.EMAIL_ERROR
+import com.taller.tp.foodie.model.common.AuthErrors.PASSWORD_CONFIRM_ERROR
+import com.taller.tp.foodie.model.common.AuthErrors.PASSWORD_ERROR
 import com.taller.tp.foodie.model.requestHandlers.RegisterRequestHandler
 import com.taller.tp.foodie.services.UserService
+import com.taller.tp.foodie.utils.emailIsValid
+import com.taller.tp.foodie.utils.passwordIsValid
+import com.taller.tp.foodie.utils.passwordsAreEqualAndNotEmpty
 import com.theartofdev.edmodo.cropper.CropImage
 import com.theartofdev.edmodo.cropper.CropImageView
 import kotlinx.android.synthetic.main.activity_register.*
@@ -17,9 +23,6 @@ import kotlinx.android.synthetic.main.activity_register.*
 class RegisterActivity : AppCompatActivity() {
 
     companion object {
-        const val EMAIL_ERROR = "Por favor ingrese un email válido"
-        const val PASSWORD_ERROR = "Por favor ingrese una contraseña válida"
-        const val PASSWORD_CONFIRM_ERROR = "Las contraseñas no coinciden"
         const val CLIENT_TYPE = "CUSTOMER"
         const val DELIVERY_TYPE = "DELIVERY"
 
@@ -27,12 +30,15 @@ class RegisterActivity : AppCompatActivity() {
         const val PICK_IMAGE_REQUEST = 111
     }
 
+    private lateinit var auth: FirebaseAuth
     private var filePath: Uri? = null
     private var profileImageIsFromProvider: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
+
+        auth = FirebaseAuth.getInstance()
 
         setupClickListeners()
     }
@@ -67,35 +73,46 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun registerUser() {
-        val passwordField = findViewById<TextView>(R.id.password_field)
-        val emailField = findViewById<TextView>(R.id.email_field)
-
-        val requestHandler = RegisterRequestHandler(this)
-
-        UserService(this, requestHandler).register(
-            emailField.text.toString(),
-            passwordField.text.toString(),
-            getUserType()
+        // register user in Firebase Auth
+        auth.createUserWithEmailAndPassword(
+            email_field.text.toString(),
+            password_field.text.toString()
         )
+            .addOnCompleteListener(this) { task ->
+                if (task.isSuccessful) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(this.localClassName, "createUserWithEmail:success")
+
+                    // register user in backend
+                    val requestHandler = RegisterRequestHandler(this)
+                    UserService(this, requestHandler).register(
+                        email_field.text.toString(),
+                        password_field.text.toString(),
+                        getUserType()
+                    )
+                } else {
+                    // If sign in fails, display a message to the user.
+                    Log.w(this.localClassName, "createUserWithEmail:failure", task.exception)
+                }
+            }
     }
 
     private fun validatePassword() : Boolean {
-        val passwordField = findViewById<TextView>(R.id.password_field)
-        val passwordConfirmationField = findViewById<TextView>(R.id.password_confirmation_field)
+        password_field_layout.error = null
+        password_confirm_layout.error = null
 
-        val passwordLayout = findViewById<TextInputLayout>(R.id.password_field_layout)
-        val passwordConfirmLayout = findViewById<TextInputLayout>(R.id.password_confirm_layout)
-
-        passwordLayout.error = null
-        passwordConfirmLayout.error = null
-
-        if (passwordField.text.isEmpty()) {
-            passwordLayout.error = PASSWORD_ERROR
+        if (!passwordIsValid(password_field.text.toString())) {
+            password_field_layout.error = PASSWORD_ERROR
             return false
         }
 
-        if (passwordConfirmationField.text.toString() != passwordField.text.toString()) {
-            passwordConfirmLayout.error = PASSWORD_CONFIRM_ERROR
+        if (!passwordsAreEqualAndNotEmpty(
+                password_field.text.toString(),
+                password_confirmation_field.text.toString()
+            )
+        ) {
+            password_field_layout.error = PASSWORD_CONFIRM_ERROR
+            password_confirm_layout.error = PASSWORD_CONFIRM_ERROR
             return false
         }
 
@@ -103,13 +120,10 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun validateEmail() : Boolean {
-        val emailField = findViewById<TextView>(R.id.email_field)
-        val emailLayout = findViewById<TextInputLayout>(R.id.email_field_layout)
+        email_field_layout.error = null
 
-        emailLayout.error = null
-
-        if (emailField.text.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(emailField.text).matches()) {
-            emailLayout.error = EMAIL_ERROR
+        if (!emailIsValid(email_field.text.toString())) {
+            email_field_layout.error = EMAIL_ERROR
             return false
         }
 
