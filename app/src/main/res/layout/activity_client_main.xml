@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/context_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/linear_gradient"
+        android:isScrollContainer="true"
+        android:theme="@style/AppTheme"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:context=".ui.RegisterActivity">
+
+        <include
+            android:id="@+id/include3"
+            layout="@layout/icon"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
+
+        <Button
+            android:id="@+id/build_orden_button"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_marginTop="16dp"
+            android:onClick="buildOrder"
+            android:text="@string/build_order_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/include3" />
+
+        <Button
+            android:id="@+id/profile_button"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:onClick="profile"
+            android:text="@string/profile_btn"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/build_orden_button" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

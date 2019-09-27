@@ -14,7 +14,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(R.layout.activity_login)
     }
 
-    fun profile(view: View){
-        startActivity(Intent(this, ProfileActivity::class.java))
+    fun loggin(@Suppress("UNUSED_PARAMETER") view: View){
+        startActivity(Intent(this, ClientMainActivity::class.java))
     }
 }

@@ -38,13 +38,24 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.MainActivity" />
         </activity>
-        <activity android:name=".ui.ProfileActivity"
+        <activity android:name=".ui.ClientMainActivity"
             android:parentActivityName=".ui.LoginActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.MainActivity" />
+                android:value=".ui.LoginActivity" />
         </activity>
-
+        <activity android:name=".ui.ProfileActivity"
+            android:parentActivityName=".ui.ClientMainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.ClientMainActivity" />
+        </activity>
+        <activity android:name=".ui.ClientOrderActivity"
+            android:parentActivityName=".ui.ClientMainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.ClientMainActivity" />
+        </activity>
         <meta-data android:name="preloaded_fonts" android:resource="@array/preloaded_fonts"/>
     </application>
 
