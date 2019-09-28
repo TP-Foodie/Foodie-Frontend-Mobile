@@ -15,11 +15,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 
-    fun listPlaces(view: View){
-        val placeChoice = Intent(this, PlaceChoiceActivity::class.java)
-        startActivity(placeChoice)
-    }
-
     fun login(view: View){
         startActivity(Intent(this, LoginActivity::class.java))
     }

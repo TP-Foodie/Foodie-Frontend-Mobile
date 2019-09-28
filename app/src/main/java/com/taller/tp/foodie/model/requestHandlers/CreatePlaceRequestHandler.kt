@@ -3,11 +3,12 @@ package com.taller.tp.foodie.model.requestHandlers
 import android.view.View
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.ErrorHandler
+import com.taller.tp.foodie.services.PlaceService
 import com.taller.tp.foodie.ui.ClientMainActivity
 import org.json.JSONObject
 
 
-class ClientOrderRequestHandler(private val activity: ClientMainActivity) : RequestHandler {
+class CreatePlaceRequestHandler(private val activity: ClientMainActivity) : RequestHandler {
 
     override fun begin() {}
 
@@ -16,6 +17,7 @@ class ClientOrderRequestHandler(private val activity: ClientMainActivity) : Requ
     }
 
     override fun onSuccess(response: JSONObject?) {
-        activity.saveOrder(response!!)
+        val place = PlaceService.fromPlaceJson(response!!)
+        activity.doOrder(place)
     }
 }

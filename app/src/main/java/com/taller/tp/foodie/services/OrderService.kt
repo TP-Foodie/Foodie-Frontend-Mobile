@@ -2,6 +2,7 @@ package com.taller.tp.foodie.services
 
 import android.content.Context
 import com.android.volley.Response
+import com.taller.tp.foodie.model.Order
 import com.taller.tp.foodie.model.requestHandlers.RequestHandler
 import org.json.JSONObject
 
@@ -10,24 +11,32 @@ const val ORDER_RESOURCE = "/orders/"
 class OrderService(ctx: Context, private val requestHandler: RequestHandler) {
     private val client : BackService = BackService(ctx)
 
-    fun makeOrder(owner: String, product: String, place: String) {
+    fun makeOrder(order: Order) {
         requestHandler.begin()
 
-        val listener = Response.Listener<JSONObject> { requestHandler.onSuccess() }
+        val listener = Response.Listener<JSONObject> { requestHandler.onSuccess(it) }
         val errorListener = Response.ErrorListener { requestHandler.onError() }
 
-        client.doPost(ORDER_RESOURCE, listener, buildRequest(owner,product, place),
-                      errorListener)
+        client.doPost(ORDER_RESOURCE, listener, toOrderJson(order), errorListener)
     }
 
-    private fun buildRequest(owner: String, product: String, place: String) : JSONObject {
-        val requestObject = JSONObject()
-        requestObject.put("order_type", "NT")
-        requestObject.put("owner", owner)
-        val productRequestObject = JSONObject()
-        productRequestObject.put("name", product)
-        productRequestObject.put("place", place)
-        requestObject.put("product", productRequestObject)
-        return requestObject
+    companion object {
+//        fun fromOrderJson(json:JSONObject) : Place {
+//            val id = json.getString("id")
+//            val name = json.getString("name")
+//            val coordinateJson = json.getJSONObject("coordinate")
+//            val coordinate = CoordinateService.fromCoordinateJson(coordinateJson)
+//            return Place(id,name,coordinate)
+//        }
+        fun toOrderJson(order: Order) : JSONObject{
+            val jsonOrder = JSONObject()
+            jsonOrder.put("order_type", order.orderType)
+            jsonOrder.put("owner", order.owner)
+            val jsonOrderProduct = JSONObject()
+            jsonOrderProduct.put("name", order.orderProduct.product)
+            jsonOrderProduct.put("place", order.orderProduct.place.id)
+            jsonOrder.put("product",jsonOrderProduct)
+            return jsonOrder
+        }
     }
 }
