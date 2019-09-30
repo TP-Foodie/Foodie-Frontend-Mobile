@@ -171,11 +171,7 @@ class LoginActivity : AppCompatActivity() {
     private fun sendTokenToBackendServer(token: String?) {
         // TODO("not implemented")
         // simulo q el chabon no esta registrado
-        val intent = Intent(applicationContext, RegisterActivity::class.java)
-
-        intent.putExtra(RegisterActivity.LOGIN_TYPE, RegisterActivity.FEDERATED_LOGIN)
-
-        startActivity(intent)
+        startActivity(Intent(applicationContext, RegisterActivity::class.java))
     }
 
     private fun sendEmailAndPasswordToBackendServer(email: String, password: String) {

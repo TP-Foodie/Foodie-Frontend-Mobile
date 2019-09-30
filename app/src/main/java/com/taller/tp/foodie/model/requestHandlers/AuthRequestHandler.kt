@@ -7,14 +7,12 @@ import android.widget.ProgressBar
 import com.android.volley.VolleyError
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.ErrorHandler
+import com.taller.tp.foodie.ui.LoginActivity
 import com.taller.tp.foodie.ui.MainActivity
-import com.taller.tp.foodie.ui.RegisterActivity
 import org.json.JSONObject
 import java.lang.ref.WeakReference
 
-
-class RegisterRequestHandler(private val activity: WeakReference<RegisterActivity>) :
-    RequestHandler {
+class AuthRequestHandler(private val activity: WeakReference<LoginActivity>) : RequestHandler {
 
     private val button = activity.get()?.findViewById<Button>(R.id.btn_register)
     private val progressBar = activity.get()?.findViewById<ProgressBar>(R.id.loading_bar)

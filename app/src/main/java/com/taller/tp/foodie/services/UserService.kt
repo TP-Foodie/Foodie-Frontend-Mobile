@@ -5,25 +5,38 @@ import com.android.volley.Response
 import com.taller.tp.foodie.model.requestHandlers.RequestHandler
 import org.json.JSONObject
 
-const val USERS_RESOURCE = "/users/"
-
 class UserService(ctx: Context, private val requestHandler: RequestHandler) {
+
     private val client : BackService = BackService(ctx)
 
-    fun register(email: String, password: String, userType: String) {
-        requestHandler.begin()
+    companion object {
+        // endpoint
+        const val USERS_RESOURCE = "/users/"
 
-        val listener = Response.Listener<JSONObject> { requestHandler.onSuccess() }
-        val errorListener = Response.ErrorListener { requestHandler.onError() }
-
-        client.doPost(USERS_RESOURCE, listener, buildRequest(email, password, userType), errorListener)
+        // email - password register
+        const val EMAIL_FIELD = "email"
+        const val PASSWORD_FIELD = "password"
+        const val NAME_FIELD = "name"
+        const val PHONE_FIELD = "phone"
     }
 
-    private fun buildRequest(email: String, password: String, userType: String) : JSONObject {
+    fun register(email: String, password: String, name: String, phone: String) {
+        requestHandler.begin()
+
+        val listener = Response.Listener<JSONObject> { response: JSONObject? ->
+            requestHandler.onSuccess(response)
+        }
+        val errorListener = Response.ErrorListener { error ->
+            requestHandler.onError(error)
+        }
+
+        // build json request
         val requestObject = JSONObject()
-        requestObject.put("email", email)
-        requestObject.put("password", password)
-        requestObject.put("type", userType)
-        return requestObject
+        requestObject.put(EMAIL_FIELD, email)
+        requestObject.put(PASSWORD_FIELD, password)
+        requestObject.put(NAME_FIELD, name)
+        requestObject.put(PHONE_FIELD, phone)
+
+        client.doPost(USERS_RESOURCE, listener, requestObject, errorListener)
     }
 }
