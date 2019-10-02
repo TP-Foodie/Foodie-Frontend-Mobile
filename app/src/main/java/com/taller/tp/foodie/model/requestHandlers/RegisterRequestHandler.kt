@@ -9,8 +9,8 @@ import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.ErrorHandler
 import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import com.taller.tp.foodie.model.common.auth.ResponseData
-import com.taller.tp.foodie.ui.MainActivity
 import com.taller.tp.foodie.ui.RegisterActivity
+import com.taller.tp.foodie.ui.WelcomeActivity
 import org.json.JSONObject
 import java.lang.ref.WeakReference
 
@@ -44,7 +44,7 @@ class RegisterRequestHandler(private val activity: WeakReference<RegisterActivit
             )
 
         // go to main activity, clear activity task
-        val intent = Intent(activity.get(), MainActivity::class.java)
+        val intent = Intent(activity.get(), WelcomeActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         activity.get()?.startActivity(intent)
 

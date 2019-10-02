@@ -27,10 +27,15 @@
     <string name="hint_last_name_et">Apellido</string>
     <string name="hint_confirm_password_et">Confirmar Contraseña</string>
     <string name="hint_phone_et">Teléfono</string>
-    <string name="chip_user_type">Usuario</string>
-    <string name="chip_delivery_type">Delivery</string>
-    <string name="chip_subscription_flat">Flat</string>
-    <string name="chip_subscription_premium">Premium</string>
     <string name="btn_register">Registrar</string>
 
+    <!-- Welcome Slides -->
+    <string name="first_welcome_title">Bienvenido a Foodie</string>
+    <string name="first_welcome_description">Foodie es la aplicacion que te permite \'chamuyar algo aca\'!</string>
+    <string name="second_welcome_title">Podés elegir entre ser Consumidor o Delivery</string>
+    <string name="chip_consumer_type">Consumidor</string>
+    <string name="chip_delivery_type">Delivery</string>
+    <string name="third_welcome_title">Suscribite al Plan Premium para poder contar con los siguientes beneficios</string>
+    <string name="subscribe">Subscribirse</string>
+    <string name="unsubscribe">Desuscribirse</string>
 </resources>
