@@ -49,6 +49,14 @@ fun nameIsValid(name: String?): Boolean {
     return true
 }
 
+fun lastNameIsValid(lastName: String?): Boolean {
+    if (lastName.isNullOrEmpty()) {
+        return false
+    }
+
+    return true
+}
+
 fun phoneIsValid(phone: String?): Boolean {
     if (phone.isNullOrEmpty()) {
         return false

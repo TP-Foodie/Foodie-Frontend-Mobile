@@ -16,7 +16,7 @@ open class BackService(ctx: Context){
         val stream = ctx.assets.open("environment.properties")
         val properties = Properties()
         properties.load(stream)
-        return properties.getProperty("foodie-back.url")
+        return properties.getProperty("debug-foodie-back.emulator-url")
     }
 
     val context = ctx
@@ -57,6 +57,9 @@ open class BackService(ctx: Context){
                 listener,
                 onError
             )
+
+            Log.d(BackService::class.java.name, "Final url: $finalUrl")
+
             queue.add(getRequest)
         } catch (e: Throwable) {
             Log.e(BackService::class.java.name, "Back service error", e)

@@ -26,11 +26,17 @@ import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.taller.tp.foodie.R
-import com.taller.tp.foodie.model.common.AuthErrors.EMAIL_ERROR
-import com.taller.tp.foodie.model.common.AuthErrors.PASSWORD_ERROR
+import com.taller.tp.foodie.model.ErrorHandler
+import com.taller.tp.foodie.model.common.auth.AuthErrors.EMAIL_OR_PASSWORD_VALUE_ERROR
+import com.taller.tp.foodie.model.common.auth.AuthErrors.INVALID_EMAIL_ERROR
+import com.taller.tp.foodie.model.common.auth.AuthErrors.INVALID_PASSWORD_ERROR
+import com.taller.tp.foodie.model.requestHandlers.EmailAuthRequestHandler
+import com.taller.tp.foodie.model.requestHandlers.FederatedAuthRequestHandler
+import com.taller.tp.foodie.services.AuthService
 import com.taller.tp.foodie.utils.emailIsValid
 import com.taller.tp.foodie.utils.passwordIsValid
 import kotlinx.android.synthetic.main.activity_login.*
+import java.lang.ref.WeakReference
 
 class LoginActivity : AppCompatActivity() {
 
@@ -101,7 +107,9 @@ class LoginActivity : AppCompatActivity() {
 
                 override fun onError(error: FacebookException) {
                     // facebook:onError
-                    Log.w("Error Facebook Login", error.message)
+                    Log.e("Error Facebook Login", error.message)
+
+                    ErrorHandler.handleError(login_layout)
                 }
             })
     }
@@ -119,12 +127,12 @@ class LoginActivity : AppCompatActivity() {
             val password = password_field.text.toString()
 
             if (!passwordIsValid(password)) {
-                password_field_layout.error = PASSWORD_ERROR
+                password_field_layout.error = INVALID_PASSWORD_ERROR
                 return@setOnClickListener
             }
 
             if (!emailIsValid(email)) {
-                email_field_layout.error = EMAIL_ERROR
+                email_field_layout.error = INVALID_EMAIL_ERROR
                 return@setOnClickListener
             }
 
@@ -134,11 +142,13 @@ class LoginActivity : AppCompatActivity() {
                         // Sign in success, update UI with the signed-in user's information
                         Log.d(this.localClassName, "signInWithEmail:success")
 
-                        // send email and password to backend server
-                        sendEmailAndPasswordToBackendServer(email, password)
+                        // send email and password to backend
+                        authenticateWithBackend(email, password)
                     } else {
                         // If sign in fails, display a message to the user.
-                        Log.w(this.localClassName, "signInWithEmail:failure", task.exception)
+                        Log.e(this.localClassName, "signInWithEmail:failure", task.exception)
+
+                        ErrorHandler.handleError(login_layout, EMAIL_OR_PASSWORD_VALUE_ERROR)
                     }
                 }
         }
@@ -160,7 +170,9 @@ class LoginActivity : AppCompatActivity() {
                 )
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
-                Log.w("Error Google Sign In", "Status Code: " + e.statusCode)
+                Log.e("Error Google Sign In", "Status Code: " + e.statusCode)
+
+                ErrorHandler.handleError(login_layout)
             }
         } else {
             // Pass the activity result back to the Facebook SDK
@@ -168,15 +180,19 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun sendTokenToBackendServer(token: String?) {
-        // TODO("not implemented")
-        // simulo q el chabon no esta registrado
-        startActivity(Intent(applicationContext, RegisterActivity::class.java))
+    private fun authenticaWithBackend(token: String?) {
+        if (token.isNullOrEmpty()) {
+            ErrorHandler.handleError(login_layout)
+            return
+        }
+
+        AuthService(this, FederatedAuthRequestHandler(WeakReference(this)))
+            .federatedAuthenticationWithBackend(token)
     }
 
-    private fun sendEmailAndPasswordToBackendServer(email: String, password: String) {
-        // TODO("not implemented")
-        // si el chabon no esta registrado -> falla
+    private fun authenticateWithBackend(email: String, password: String) {
+        AuthService(this, EmailAuthRequestHandler(WeakReference(this)))
+            .emailAndPasswordAuthenticationWithBackend(email, password)
     }
 
     private fun authenticateWithFirebase(credential: AuthCredential, token: String?) {
@@ -186,11 +202,13 @@ class LoginActivity : AppCompatActivity() {
                     // Firebase sign in success
                     Log.d(this.localClassName, "signInWithCredential:success")
 
-                    // send token to backend server
-                    sendTokenToBackendServer(token)
+                    // send token to backend
+                    authenticaWithBackend(token)
                 } else {
                     // If sign in fails, display a message to the user.
-                    Log.w(this.localClassName, "signInWithCredential:failure", task.exception)
+                    Log.e(this.localClassName, "signInWithCredential:failure", task.exception)
+
+                    ErrorHandler.handleError(login_layout)
                 }
             }
     }

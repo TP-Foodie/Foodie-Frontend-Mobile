@@ -5,17 +5,12 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.auth.FirebaseAuth
 import com.taller.tp.foodie.R
+import com.taller.tp.foodie.model.common.UserBackendDataHandler
 
 class LauncherActivity : AppCompatActivity() {
 
-    private lateinit var auth: FirebaseAuth
-
     override fun onStart() {
         super.onStart()
-
-        // Initialize Firebase Auth
-        auth = FirebaseAuth.getInstance()
-
         if (isUserLoggedIn()) {
             // go to main activity
             val intent = Intent(applicationContext, MainActivity::class.java)
@@ -32,16 +27,22 @@ class LauncherActivity : AppCompatActivity() {
     }
 
     private fun isUserLoggedIn(): Boolean {
-        // Check if user is signed in (non-null) and update UI accordingly.
-        val currentUser = auth.currentUser
-        if (currentUser == null) {
+        // check token and user id are not empty
+        val backendDataHandler = UserBackendDataHandler(this)
+        val token = backendDataHandler.getBackendToken()
+        val userId = backendDataHandler.getUserId()
+
+        if (token.isEmpty() || userId.isEmpty()) {
             return false
         }
 
-        // TODO: Check if backend auth token is ok
-        // por ejemplo el user puede haberse ido entre el login y register
-        // lo puedo ver solo si no es valido el token de auth
+        // check firebase auth state
+        val auth = FirebaseAuth.getInstance()
+        if (auth.currentUser == null) {
+            return false
+        }
 
+        // TODO: sacar comentario
         //return true
         return false
     }

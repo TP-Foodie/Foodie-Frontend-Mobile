@@ -7,11 +7,12 @@ import android.widget.ProgressBar
 import com.android.volley.VolleyError
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.ErrorHandler
+import com.taller.tp.foodie.model.common.UserBackendDataHandler
+import com.taller.tp.foodie.model.common.auth.ResponseData
 import com.taller.tp.foodie.ui.MainActivity
 import com.taller.tp.foodie.ui.RegisterActivity
 import org.json.JSONObject
 import java.lang.ref.WeakReference
-
 
 class RegisterRequestHandler(private val activity: WeakReference<RegisterActivity>) :
     RequestHandler {
@@ -31,10 +32,18 @@ class RegisterRequestHandler(private val activity: WeakReference<RegisterActivit
 
     override fun onError(error: VolleyError) {
         stopLoading()
-        ErrorHandler.handleError(activity.get()?.findViewById(R.id.context_view)!!)
+        ErrorHandler.handleError(activity.get()?.findViewById(R.id.register_layout)!!)
     }
 
     override fun onSuccess(response: JSONObject?) {
+        // persist user data
+        UserBackendDataHandler(activity.get()?.applicationContext!!)
+            .persistUserBackendData(
+                response?.getString(ResponseData.TOKEN_FIELD),
+                response?.getString(ResponseData.USER_ID_FIELD)
+            )
+
+        // go to main activity, clear activity task
         val intent = Intent(activity.get(), MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         activity.get()?.startActivity(intent)

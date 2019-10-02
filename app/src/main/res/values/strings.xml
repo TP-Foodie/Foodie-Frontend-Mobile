@@ -23,7 +23,8 @@
     <string name="hint_password_et">Contraseña</string>
 
     <!-- Register Activity -->
-    <string name="hint_name_et">Nombre y Apellido</string>
+    <string name="hint_name_et">Nombre</string>
+    <string name="hint_last_name_et">Apellido</string>
     <string name="hint_confirm_password_et">Confirmar Contraseña</string>
     <string name="hint_phone_et">Teléfono</string>
     <string name="chip_user_type">Usuario</string>

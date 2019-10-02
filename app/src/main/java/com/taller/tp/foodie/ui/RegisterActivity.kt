@@ -1,19 +1,19 @@
 package com.taller.tp.foodie.ui
 
 import android.content.Intent
-import android.graphics.Color
-import android.net.Uri
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.taller.tp.foodie.R
-import com.taller.tp.foodie.model.common.AuthErrors.EMAIL_ERROR
-import com.taller.tp.foodie.model.common.AuthErrors.NAME_ERROR
-import com.taller.tp.foodie.model.common.AuthErrors.PASSWORD_CONFIRM_ERROR
-import com.taller.tp.foodie.model.common.AuthErrors.PASSWORD_ERROR
-import com.taller.tp.foodie.model.common.AuthErrors.PHONE_ERROR
+import com.taller.tp.foodie.model.ErrorHandler
+import com.taller.tp.foodie.model.common.auth.AuthErrors.INVALID_EMAIL_ERROR
+import com.taller.tp.foodie.model.common.auth.AuthErrors.INVALID_PASSWORD_ERROR
+import com.taller.tp.foodie.model.common.auth.AuthErrors.LAST_NAME_ERROR
+import com.taller.tp.foodie.model.common.auth.AuthErrors.NAME_ERROR
+import com.taller.tp.foodie.model.common.auth.AuthErrors.PASSWORD_CONFIRM_ERROR
+import com.taller.tp.foodie.model.common.auth.AuthErrors.PHONE_ERROR
 import com.taller.tp.foodie.model.requestHandlers.RegisterRequestHandler
 import com.taller.tp.foodie.services.UserService
 import com.taller.tp.foodie.utils.*
@@ -30,7 +30,7 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private lateinit var auth: FirebaseAuth
-    private var filePath: Uri? = null
+    private var profileImage: Bitmap? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,12 +53,13 @@ class RegisterActivity : AppCompatActivity() {
         }
 
         btn_register.setOnClickListener {
-            val validName = validateName()
-            val validPhone = validatePhone()
-            val validEmail = validateEmail()
-            val validPassword = validatePassword()
+            val validName = validateNameAndUpdateUi()
+            val validLastName = validateLastNameAndUpdateUi()
+            val validPhone = validatePhoneAndUpdateUi()
+            val validEmail = validateEmailAndUpdateUi()
+            val validPassword = validatePasswordAndUpdateUi()
 
-            if (validName && validPhone && validEmail && validPassword) {
+            if (validName && validLastName && validPhone && validEmail && validPassword) {
                 registerUser()
             }
         }
@@ -74,29 +75,38 @@ class RegisterActivity : AppCompatActivity() {
                     // Sign in success, update UI with the signed-in user's information
                     Log.d(this.localClassName, "createUserWithEmail:success")
 
-                    // register user in backend
-                    val requestHandler = RegisterRequestHandler(WeakReference(this))
-                    UserService(this, requestHandler).register(
+                    // send email and password to backend
+                    authenticateWithBackend(
                         email_field.text.toString(),
-                        password_field.text.toString(),
-                        name_field.text.toString(),
-                        phone_field.text.toString()
+                        password_field.text.toString()
                     )
                 } else {
                     // If sign in fails, display a message to the user.
-                    val snackbar = Snackbar.make(
-                        this.context_view, "Crear usuario falló. Código: ${task.exception}",
-                        Snackbar.LENGTH_SHORT
-                    )
-                    snackbar.view.setBackgroundColor(Color.RED)
-                    snackbar.show()
+                    Log.e(this.localClassName, "createUserWithEmail:failure", task.exception)
 
-                    Log.w(this.localClassName, "createUserWithEmail:failure", task.exception)
+                    ErrorHandler.handleError(register_layout)
                 }
             }
     }
 
-    private fun validateName(): Boolean {
+    private fun authenticateWithBackend(email: String, password: String) {
+        // TODO: authenticate user with backend
+        //AuthService(this, EmailAuthRequestHandler(WeakReference(this)))
+        //    .emailAndPasswordAuthenticationWithBackend(email, password)
+
+        // register user in backend
+        val requestHandler = RegisterRequestHandler(WeakReference(this))
+        UserService(this, requestHandler).register(
+            email_field.text.toString(),
+            password_field.text.toString(),
+            name_field.text.toString(),
+            last_name_field.text.toString(),
+            phone_field.text.toString(),
+            profileImage
+        )
+    }
+
+    private fun validateNameAndUpdateUi(): Boolean {
         name_field_layout.error = null
 
         if (!nameIsValid(name_field.text.toString())) {
@@ -107,7 +117,18 @@ class RegisterActivity : AppCompatActivity() {
         return true
     }
 
-    private fun validatePhone(): Boolean {
+    private fun validateLastNameAndUpdateUi(): Boolean {
+        last_name_field_layout.error = null
+
+        if (!lastNameIsValid(last_name_field.text.toString())) {
+            last_name_field_layout.error = LAST_NAME_ERROR
+            return false
+        }
+
+        return true
+    }
+
+    private fun validatePhoneAndUpdateUi(): Boolean {
         phone_field_layout.error = null
 
         if (!phoneIsValid(phone_field.text.toString())) {
@@ -119,12 +140,12 @@ class RegisterActivity : AppCompatActivity() {
     }
 
 
-    private fun validatePassword(): Boolean {
+    private fun validatePasswordAndUpdateUi(): Boolean {
         password_field_layout.error = null
         password_confirm_layout.error = null
 
         if (!passwordIsValid(password_field.text.toString())) {
-            password_field_layout.error = PASSWORD_ERROR
+            password_field_layout.error = INVALID_PASSWORD_ERROR
             return false
         }
 
@@ -141,11 +162,11 @@ class RegisterActivity : AppCompatActivity() {
         return true
     }
 
-    private fun validateEmail() : Boolean {
+    private fun validateEmailAndUpdateUi(): Boolean {
         email_field_layout.error = null
 
         if (!emailIsValid(email_field.text.toString())) {
-            email_field_layout.error = EMAIL_ERROR
+            email_field_layout.error = INVALID_EMAIL_ERROR
             return false
         }
 
@@ -170,20 +191,16 @@ class RegisterActivity : AppCompatActivity() {
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             val result = CropImage.getActivityResult(data)
             if (resultCode == RESULT_OK) {
-                // get Uri from result
-                filePath = result.uri
+                // Setting image to ImageView
+                profile_image.setImageURI(result.uri.toString())
 
-                //Setting image to ImageView
-                profile_image.setImageURI(filePath.toString())
+                // Save image bitmap
+                profileImage = result.bitmap
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                val error = result.error
-                val snackbar = Snackbar.make(
-                    this.context_view,
-                    "Error: ${error.message}",
-                    Snackbar.LENGTH_SHORT
-                )
-                snackbar.view.setBackgroundColor(Color.RED)
-                snackbar.show()
+                // update UI
+                Log.e(this.localClassName, "Error al hacer crop: ${result.error.message}")
+
+                ErrorHandler.handleError(register_layout)
             }
         }
     }
