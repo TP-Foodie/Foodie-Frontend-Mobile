@@ -1,6 +1,5 @@
 package com.taller.tp.foodie.ui
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -8,10 +7,13 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.taller.tp.foodie.R
+import com.taller.tp.foodie.model.requestHandlers.FinishRegisterRequestHandler
+import com.taller.tp.foodie.services.UserService
 import com.taller.tp.foodie.ui.welcome_fragments.FirstWelcomeSlideFragment
 import com.taller.tp.foodie.ui.welcome_fragments.SecondWelcomeSlideFragment
 import com.taller.tp.foodie.ui.welcome_fragments.ThirdWelcomeSlideFragment
 import kotlinx.android.synthetic.main.activity_welcome.*
+import java.lang.ref.WeakReference
 
 class WelcomeActivity : AppCompatActivity() {
 
@@ -22,6 +24,7 @@ class WelcomeActivity : AppCompatActivity() {
         setContentView(R.layout.activity_welcome)
 
         slide_view_pager.adapter = MyPagerAdapter(supportFragmentManager)
+        slide_view_pager.offscreenPageLimit = 2
 
         slide_view_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {}
@@ -62,13 +65,13 @@ class WelcomeActivity : AppCompatActivity() {
 
         btn_right.setOnClickListener {
             if (currentSliderPosition == 2) {
-                // TODO: PATCH to backend
-
-
-                val intent = Intent(applicationContext, MainActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-                finish()
+                // TODO: USAR UI EN VEZ DE HARDCODEO
+                // finish register user in backend
+                val requestHandler = FinishRegisterRequestHandler(WeakReference(this))
+                UserService(this, requestHandler).finishRegister(
+                    "CUSTOMER",
+                    "FLAT"
+                )
             } else {
                 slide_view_pager.currentItem = currentSliderPosition + 1
             }

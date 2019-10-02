@@ -14,7 +14,9 @@ import com.taller.tp.foodie.model.common.auth.AuthErrors.LAST_NAME_ERROR
 import com.taller.tp.foodie.model.common.auth.AuthErrors.NAME_ERROR
 import com.taller.tp.foodie.model.common.auth.AuthErrors.PASSWORD_CONFIRM_ERROR
 import com.taller.tp.foodie.model.common.auth.AuthErrors.PHONE_ERROR
+import com.taller.tp.foodie.model.requestHandlers.EmailAuthFromRegisterRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.RegisterRequestHandler
+import com.taller.tp.foodie.services.AuthService
 import com.taller.tp.foodie.services.UserService
 import com.taller.tp.foodie.utils.*
 import com.theartofdev.edmodo.cropper.CropImage
@@ -90,10 +92,12 @@ class RegisterActivity : AppCompatActivity() {
     }
 
     private fun authenticateWithBackend(email: String, password: String) {
-        // TODO: authenticate user with backend
-        //AuthService(this, EmailAuthRequestHandler(WeakReference(this)))
-        //    .emailAndPasswordAuthenticationWithBackend(email, password)
+        // authenticate user with backend
+        AuthService(this, EmailAuthFromRegisterRequestHandler(WeakReference(this)))
+            .emailAndPasswordAuthenticationWithBackend(email, password)
+    }
 
+    fun registerUserInBackend() {
         // register user in backend
         val requestHandler = RegisterRequestHandler(WeakReference(this))
         UserService(this, requestHandler).register(

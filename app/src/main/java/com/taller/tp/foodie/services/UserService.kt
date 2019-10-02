@@ -22,6 +22,10 @@ class UserService(ctx: Context, private val requestHandler: RequestHandler) {
         const val LAST_NAME_FIELD = "last_name"
         const val PHONE_FIELD = "phone"
         const val PROFILE_IMAGE_FIELD = "profile_image"
+
+        // type and subcription finish register
+        const val TYPE_FIELD = "type"
+        const val SUBSCRIPTION_FIELD = "subscription"
     }
 
     fun register(
@@ -53,5 +57,23 @@ class UserService(ctx: Context, private val requestHandler: RequestHandler) {
         }
 
         client.doPost(USERS_RESOURCE, listener, requestObject, errorListener)
+    }
+
+    fun finishRegister(userType: String, subscription: String) {
+        requestHandler.begin()
+
+        val listener = Response.Listener<JSONObject> { response ->
+            requestHandler.onSuccess(response)
+        }
+        val errorListener = Response.ErrorListener { error ->
+            requestHandler.onError(error)
+        }
+
+        // build json request
+        val requestObject = JSONObject()
+        requestObject.put(TYPE_FIELD, userType)
+        requestObject.put(SUBSCRIPTION_FIELD, subscription)
+
+        client.doPatch(USERS_RESOURCE, listener, requestObject, errorListener)
     }
 }

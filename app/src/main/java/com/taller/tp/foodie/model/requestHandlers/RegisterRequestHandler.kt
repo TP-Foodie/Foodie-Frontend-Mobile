@@ -43,7 +43,7 @@ class RegisterRequestHandler(private val activity: WeakReference<RegisterActivit
                 response?.getString(ResponseData.USER_ID_FIELD)
             )
 
-        // go to main activity, clear activity task
+        // go to welcome activity, clear activity task
         val intent = Intent(activity.get(), WelcomeActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         activity.get()?.startActivity(intent)

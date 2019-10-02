@@ -30,7 +30,7 @@ import com.taller.tp.foodie.model.ErrorHandler
 import com.taller.tp.foodie.model.common.auth.AuthErrors.EMAIL_OR_PASSWORD_VALUE_ERROR
 import com.taller.tp.foodie.model.common.auth.AuthErrors.INVALID_EMAIL_ERROR
 import com.taller.tp.foodie.model.common.auth.AuthErrors.INVALID_PASSWORD_ERROR
-import com.taller.tp.foodie.model.requestHandlers.EmailAuthRequestHandler
+import com.taller.tp.foodie.model.requestHandlers.EmailAuthFromLoginRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.FederatedAuthRequestHandler
 import com.taller.tp.foodie.services.AuthService
 import com.taller.tp.foodie.utils.emailIsValid
@@ -191,7 +191,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun authenticateWithBackend(email: String, password: String) {
-        AuthService(this, EmailAuthRequestHandler(WeakReference(this)))
+        AuthService(this, EmailAuthFromLoginRequestHandler(WeakReference(this)))
             .emailAndPasswordAuthenticationWithBackend(email, password)
     }
 

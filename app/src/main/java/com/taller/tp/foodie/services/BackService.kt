@@ -10,7 +10,7 @@ import org.json.JSONObject
 import java.util.*
 
 open class BackService(ctx: Context){
-    val url = getUrl(ctx)
+    private val url = getUrl(ctx)
 
     private fun getUrl(ctx: Context): String {
         val stream = ctx.assets.open("environment.properties")
@@ -57,10 +57,33 @@ open class BackService(ctx: Context){
                 listener,
                 onError
             )
-
-            Log.d(BackService::class.java.name, "Final url: $finalUrl")
-
             queue.add(getRequest)
+        } catch (e: Throwable) {
+            Log.e(BackService::class.java.name, "Back service error", e)
+        }
+    }
+
+    fun doPatch(
+        method: String,
+        listener: Response.Listener<JSONObject>,
+        jsonRequest: JSONObject?,
+        onError: Response.ErrorListener = Response.ErrorListener { error ->
+            Log.d(
+                "Error.Response",
+                error.toString()
+            )
+        }
+    ) {
+        try {
+            val queue = Volley.newRequestQueue(context)
+            val finalUrl = url + method
+            val patchRequest = JsonObjectRequest(
+                Request.Method.PATCH,
+                finalUrl, jsonRequest,
+                listener,
+                onError
+            )
+            queue.add(patchRequest)
         } catch (e: Throwable) {
             Log.e(BackService::class.java.name, "Back service error", e)
         }
