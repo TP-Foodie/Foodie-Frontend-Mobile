@@ -9,7 +9,6 @@ import org.json.JSONObject
 
 
 class CreatePlaceRequestHandler(private val activity: ClientMainActivity) : RequestHandler {
-
     override fun begin() {}
 
     override fun onError() {

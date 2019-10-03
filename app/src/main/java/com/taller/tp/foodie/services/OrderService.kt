@@ -3,6 +3,7 @@ package com.taller.tp.foodie.services
 import android.content.Context
 import com.android.volley.Response
 import com.taller.tp.foodie.model.Order
+import com.taller.tp.foodie.model.OrderProduct
 import com.taller.tp.foodie.model.requestHandlers.RequestHandler
 import org.json.JSONObject
 
@@ -21,20 +22,23 @@ class OrderService(ctx: Context, private val requestHandler: RequestHandler) {
     }
 
     companion object {
-//        fun fromOrderJson(json:JSONObject) : Place {
+        fun fromOrderJson(json:JSONObject) : Order {
 //            val id = json.getString("id")
-//            val name = json.getString("name")
-//            val coordinateJson = json.getJSONObject("coordinate")
-//            val coordinate = CoordinateService.fromCoordinateJson(coordinateJson)
-//            return Place(id,name,coordinate)
-//        }
+            val orderType = json.getString("order_type")
+            val owner = json.getString("owner")
+            val product = json.getJSONObject("product")
+            val productName = product.getString("name")
+            val productPlace = product.getString("place")
+            val orderProduct = OrderProduct(productName, productPlace)
+            return Order(orderType, owner, orderProduct)
+        }
         fun toOrderJson(order: Order) : JSONObject{
             val jsonOrder = JSONObject()
             jsonOrder.put("order_type", order.orderType)
             jsonOrder.put("owner", order.owner)
             val jsonOrderProduct = JSONObject()
             jsonOrderProduct.put("name", order.orderProduct.product)
-            jsonOrderProduct.put("place", order.orderProduct.place.id)
+            jsonOrderProduct.put("place", order.orderProduct.placeId)
             jsonOrder.put("product",jsonOrderProduct)
             return jsonOrder
         }

@@ -23,4 +23,6 @@
     <string name="order_as_favour">Pedir como favor</string>
     <string name="hello_user_profile">Hola usuario generico!</string>
     <string name="user_image_desc">imagen</string>
+    <string name="orders">Pedidos</string>
+    <string name="choose_delivery">Elegir Delivery</string>
 </resources>

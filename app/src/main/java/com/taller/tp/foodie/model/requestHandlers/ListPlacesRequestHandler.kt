@@ -5,12 +5,12 @@ import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.ErrorHandler
 import com.taller.tp.foodie.model.Place
 import com.taller.tp.foodie.services.PlaceService
+import com.taller.tp.foodie.services.SERVICE_ARRAY_RESPONSE
 import com.taller.tp.foodie.ui.ClientMainActivity
 import org.json.JSONObject
 
 
 class ListPlacesRequestHandler(private val activity: ClientMainActivity) : RequestHandler {
-
     override fun begin() {}
 
     override fun onError() {
@@ -18,10 +18,10 @@ class ListPlacesRequestHandler(private val activity: ClientMainActivity) : Reque
     }
 
     override fun onSuccess(response: JSONObject?) {
+        val placesResponse = response!!.getJSONArray(SERVICE_ARRAY_RESPONSE)
         val places : ArrayList<Place> = ArrayList()
-        val jsonArray = response!!.getJSONArray("places")
-        for (i in 0..jsonArray.length()-1) {
-            val placeJson = jsonArray.getJSONObject(i)
+        for (i in 0..placesResponse.length()-1) {
+            val placeJson = placesResponse.getJSONObject(i)
             places.add(PlaceService.fromPlaceJson(placeJson))
         }
         activity.configureMapWithPlaces(places)

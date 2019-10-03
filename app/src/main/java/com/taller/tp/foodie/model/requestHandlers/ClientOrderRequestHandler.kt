@@ -8,7 +8,6 @@ import org.json.JSONObject
 
 
 class ClientOrderRequestHandler(private val activity: ClientMainActivity) : RequestHandler {
-
     override fun begin() {}
 
     override fun onError() {
@@ -16,6 +15,6 @@ class ClientOrderRequestHandler(private val activity: ClientMainActivity) : Requ
     }
 
     override fun onSuccess(response: JSONObject?) {
-        activity.saveOrder(response!!)
+        activity.saveAndChooseDelivery(response!!)
     }
 }

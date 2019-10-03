@@ -20,10 +20,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.taller.tp.foodie.R
-import com.taller.tp.foodie.model.Coordinate
-import com.taller.tp.foodie.model.Order
-import com.taller.tp.foodie.model.OrderProduct
-import com.taller.tp.foodie.model.Place
+import com.taller.tp.foodie.model.*
 import com.taller.tp.foodie.model.requestHandlers.ClientOrderRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.CreatePlaceRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.ListPlacesRequestHandler
@@ -39,6 +36,7 @@ const val INIT_ZOOM_LEVEL = 13f
 const val PRODUCT_EMPTY_ERROR = "Por favor, ingrese el producto que desea ordenar"
 const val PLACE_EMPTY_ERROR = "Por favor, elija un lugar donde debemos retirarlo"
 const val CLIENT_NEW_ORDER_KEY = "CLIENT_NEW_ORDER"
+const val COORDINATES_ORDER_KEY = "COORDINATES_ORDER"
 
 class ClientMainActivity : AppCompatActivity(),
     GoogleMap.OnMarkerClickListener,
@@ -49,6 +47,7 @@ class ClientMainActivity : AppCompatActivity(),
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var lastSelectedMarker: Marker? = null
     private var markerPlaceMap: HashMap<Marker, Place> = HashMap()
+    private var placeCoordinate: Coordinate? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -85,7 +84,7 @@ class ClientMainActivity : AppCompatActivity(),
         if (validProduct && validPlace) {
             val marker = lastSelectedMarker!!
             val place = markerPlaceMap[marker]
-            if (place == null){
+            if (place == null){ // Crear el place si no existe en el server?
                 val createPlaceRequestHandler = CreatePlaceRequestHandler(this)
                 val placePosition = Coordinate(marker.position.latitude, marker.position.longitude)
                 val name = findViewById<EditText>(R.id.delivery_place_input).text.toString()
@@ -104,8 +103,11 @@ class ClientMainActivity : AppCompatActivity(),
 //        val ownerId = Session.getCurrentUser ? TODO AFTER AUTHENTICATION
         val ownerId = "1" // TODO AFTER AUTHENTICATION
 
-        val orderProduct = OrderProduct(product.text.toString(), place)
-        val order = Order(isFavour, ownerId, orderProduct)
+        val orderProduct = OrderProduct(product.text.toString(), place.id)
+        placeCoordinate = place.coordinate
+        val orderType: String
+        orderType = if (isFavour) FAVOUR_TYPE else NORMAL_TYPE
+        val order = Order(orderType, ownerId, orderProduct)
         OrderService(this, requestHandler).makeOrder(order)
     }
 
@@ -148,7 +150,7 @@ class ClientMainActivity : AppCompatActivity(),
         fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
             if (location != null) {
                 val current = LatLng(location.latitude, location.longitude)
-                mMap.addMarker(MarkerOptions().position(current).draggable(true))
+//                mMap.addMarker(MarkerOptions().position(current).draggable(true))
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(current, INIT_ZOOM_LEVEL))
             }
         }
@@ -180,6 +182,8 @@ class ClientMainActivity : AppCompatActivity(),
         val deliveryPlaceInput = findViewById<EditText>(R.id.delivery_place_input)
         if (place != null){
             deliveryPlaceInput.setText(place.name)
+            val current = LatLng(place.coordinate.latitude, place.coordinate.longitude)
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(current))
         } else {
             deliveryPlaceInput.isEnabled = true
         }
@@ -223,9 +227,10 @@ class ClientMainActivity : AppCompatActivity(),
 
     override fun onMarkerDrag(marker : Marker) {}
 
-    fun saveOrder(response: JSONObject) {
-        val intent = Intent(this, ClientMainActivity::class.java).apply {
+    fun saveAndChooseDelivery(response: JSONObject) {
+        val intent = Intent(this, ChooseDeliveryActivity::class.java).apply {
             putExtra(CLIENT_NEW_ORDER_KEY, response.toString())
+            putExtra(COORDINATES_ORDER_KEY, placeCoordinate.toString())
         }
         startActivity(intent)
     }

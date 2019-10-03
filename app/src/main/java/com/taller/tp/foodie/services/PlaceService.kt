@@ -17,7 +17,7 @@ class PlaceService(ctx: Context, private val requestHandler: RequestHandler){
 
         val listener = Response.Listener<JSONObject> { requestHandler.onSuccess(it) }
         val errorListener = Response.ErrorListener { requestHandler.onError() }
-        client.doGet(PLACE_RESOURCE, listener, errorListener)
+        client.doGetArray(PLACE_RESOURCE, listener, errorListener)
     }
 
     fun create(coordinate: Coordinate, name: String){
@@ -32,7 +32,7 @@ class PlaceService(ctx: Context, private val requestHandler: RequestHandler){
         fun fromPlaceJson(json:JSONObject) : Place {
             val id = json.getString("id")
             val name = json.getString("name")
-            val coordinateJson = json.getJSONObject("coordinate")
+            val coordinateJson = json.getJSONObject("coordinates")
             val coordinate = CoordinateService.fromCoordinateJson(coordinateJson)
             return Place(id,name,coordinate)
         }

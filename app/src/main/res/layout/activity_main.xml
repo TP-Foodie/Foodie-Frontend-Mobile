@@ -43,7 +43,7 @@
     <Button
         android:id="@+id/btn_register"
         style="@style/button"
-        android:layout_marginBottom="1500dp"
+        android:layout_marginBottom="200dp"
         android:onClick="onRegister"
         android:text="@string/btn_register"
         app:layout_constraintBottom_toBottomOf="parent"
