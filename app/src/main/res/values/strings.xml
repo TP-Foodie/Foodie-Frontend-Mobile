@@ -5,7 +5,6 @@
 
     <string name="logo">logo</string>
     <string name="general_error">Ups! un error inesperado a ocurrido</string>
-    <string name="user_field">USER</string>
 
 
     <!-- Login Activity -->

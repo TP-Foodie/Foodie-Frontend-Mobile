@@ -106,17 +106,17 @@ class WelcomeActivity : AppCompatActivity() {
 
         // Returns the fragment to display for that page
         override fun getItem(position: Int): Fragment? {
-            when (position) {
+            return when (position) {
                 0 -> {
-                    return FirstWelcomeSlideFragment()
+                    FirstWelcomeSlideFragment()
                 }
                 1 -> {
-                    return SecondWelcomeSlideFragment()
+                    SecondWelcomeSlideFragment()
                 }
                 2 -> {
-                    return ThirdWelcomeSlideFragment()
+                    ThirdWelcomeSlideFragment()
                 }
-                else -> return null
+                else -> null
             }
         }
     }
