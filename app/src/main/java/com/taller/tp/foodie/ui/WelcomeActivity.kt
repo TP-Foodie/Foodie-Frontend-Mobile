@@ -13,9 +13,19 @@ import com.taller.tp.foodie.ui.welcome_fragments.FirstWelcomeSlideFragment
 import com.taller.tp.foodie.ui.welcome_fragments.SecondWelcomeSlideFragment
 import com.taller.tp.foodie.ui.welcome_fragments.ThirdWelcomeSlideFragment
 import kotlinx.android.synthetic.main.activity_welcome.*
+import kotlinx.android.synthetic.main.fragment_second_welcome_slide.*
+import kotlinx.android.synthetic.main.fragment_third_welcome_slide.*
 import java.lang.ref.WeakReference
 
 class WelcomeActivity : AppCompatActivity() {
+
+    companion object {
+        const val CUSTOMER_TYPE = "CUSTOMER"
+        const val DELIVERY_TYPE = "DELIVERY"
+
+        const val FLAT_SUBSCRIPTION = "FLAT"
+        const val PREMIUM_SUBSCRIPTION = "PREMIUM"
+    }
 
     private var currentSliderPosition = 0
 
@@ -65,13 +75,23 @@ class WelcomeActivity : AppCompatActivity() {
 
         btn_right.setOnClickListener {
             if (currentSliderPosition == 2) {
-                // TODO: USAR UI EN VEZ DE HARDCODEO
+                // get user type from second slide
+                val userType = if (group_type.checkedChipId == type_customer.id) {
+                    CUSTOMER_TYPE
+                } else {
+                    DELIVERY_TYPE
+                }
+
+                // get subscription from third slide
+                val subscription = if (btn_subscription.isChecked) {
+                    PREMIUM_SUBSCRIPTION
+                } else {
+                    FLAT_SUBSCRIPTION
+                }
+
                 // finish register user in backend
                 val requestHandler = FinishRegisterRequestHandler(WeakReference(this))
-                UserService(this, requestHandler).finishRegister(
-                    "CUSTOMER",
-                    "FLAT"
-                )
+                UserService(this, requestHandler).finishRegister(userType, subscription)
             } else {
                 slide_view_pager.currentItem = currentSliderPosition + 1
             }

@@ -3,13 +3,16 @@ package com.taller.tp.foodie.services
 import android.content.Context
 import android.graphics.Bitmap
 import com.android.volley.Response
-import com.taller.tp.foodie.model.common.ImageConversor
+import com.taller.tp.foodie.model.common.ImageStringConversor
+import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import com.taller.tp.foodie.model.requestHandlers.RequestHandler
 import org.json.JSONObject
+import java.lang.ref.WeakReference
 
 class UserService(ctx: Context, private val requestHandler: RequestHandler) {
 
     private val client : BackService = BackService(ctx)
+    private val context = WeakReference(ctx)
 
     companion object {
         // endpoint
@@ -49,11 +52,11 @@ class UserService(ctx: Context, private val requestHandler: RequestHandler) {
         requestObject.put(LAST_NAME_FIELD, lastName)
         requestObject.put(PHONE_FIELD, phone)
 
-        // TODO: para evitar el 400
-        requestObject.put("type", "CUSTOMER")
-
         if (image != null) {
-            requestObject.put(PROFILE_IMAGE_FIELD, ImageConversor().imageToBase64String(image))
+            requestObject.put(
+                PROFILE_IMAGE_FIELD,
+                ImageStringConversor().imageToBase64String(image)
+            )
         }
 
         client.doPost(USERS_RESOURCE, listener, requestObject, errorListener)
@@ -74,6 +77,9 @@ class UserService(ctx: Context, private val requestHandler: RequestHandler) {
         requestObject.put(TYPE_FIELD, userType)
         requestObject.put(SUBSCRIPTION_FIELD, subscription)
 
-        client.doPatch(USERS_RESOURCE, listener, requestObject, errorListener)
+        // add user id to the users endpoint
+        val userId = UserBackendDataHandler(context.get()!!).getUserId()
+
+        client.doPatch(USERS_RESOURCE + userId, listener, requestObject, errorListener)
     }
 }

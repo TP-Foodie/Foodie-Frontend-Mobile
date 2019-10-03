@@ -26,15 +26,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:checkedChip="@id/type_consumer"
+        app:checkedChip="@id/type_customer"
         app:singleSelection="true">
 
         <com.google.android.material.chip.Chip
-            android:id="@+id/type_consumer"
+            android:id="@+id/type_customer"
             style="@style/Widget.MaterialComponents.Chip.Choice"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/chip_consumer_type" />
+            android:text="@string/chip_customer_type" />
 
         <com.google.android.material.chip.Chip
             android:id="@+id/type_delivery"

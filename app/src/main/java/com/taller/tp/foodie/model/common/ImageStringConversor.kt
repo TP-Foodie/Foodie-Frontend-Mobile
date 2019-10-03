@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory
 import android.util.Base64
 import java.io.ByteArrayOutputStream
 
-class ImageConversor {
+class ImageStringConversor {
 
     fun imageToBase64String(image: Bitmap): String {
         val baos = ByteArrayOutputStream()

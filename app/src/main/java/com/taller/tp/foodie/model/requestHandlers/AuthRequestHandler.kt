@@ -20,7 +20,7 @@ import java.lang.ref.WeakReference
 class FederatedAuthRequestHandler(private val activity: WeakReference<LoginActivity>) :
     RequestHandler {
 
-    private val button = activity.get()?.findViewById<Button>(R.id.btn_register)
+    private val button = activity.get()?.findViewById<Button>(R.id.btn_signout)
     private val progressBar = activity.get()?.findViewById<ProgressBar>(R.id.loading_bar)
 
     override fun begin() {
@@ -55,7 +55,7 @@ class EmailAuthFromLoginRequestHandler(private val activity: WeakReference<Login
         const val UNAUTHORIZED = 401
     }
 
-    private val button = activity.get()?.findViewById<Button>(R.id.btn_register)
+    private val button = activity.get()?.findViewById<Button>(R.id.btn_signout)
     private val progressBar = activity.get()?.findViewById<ProgressBar>(R.id.loading_bar)
 
     override fun begin() {
@@ -107,7 +107,7 @@ class EmailAuthFromRegisterRequestHandler(private val activity: WeakReference<Re
         const val UNAUTHORIZED = 401
     }
 
-    private val button = activity.get()?.findViewById<Button>(R.id.btn_register)
+    private val button = activity.get()?.findViewById<Button>(R.id.btn_signout)
     private val progressBar = activity.get()?.findViewById<ProgressBar>(R.id.loading_bar)
 
     override fun begin() {

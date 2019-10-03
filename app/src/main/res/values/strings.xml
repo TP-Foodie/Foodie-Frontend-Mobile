@@ -4,7 +4,7 @@
     <string name="but_get_places">Get Places</string>
 
     <string name="logo">logo</string>
-    <string name="general_error">Ups! un errors inesperado a ocurrido</string>
+    <string name="general_error">Ups! un error inesperado a ocurrido</string>
     <string name="user_field">USER</string>
 
 
@@ -27,13 +27,13 @@
     <string name="hint_last_name_et">Apellido</string>
     <string name="hint_confirm_password_et">Confirmar Contraseña</string>
     <string name="hint_phone_et">Teléfono</string>
-    <string name="btn_register">Registrar</string>
+    <string name="btn_signout">Sign Out</string>
 
     <!-- Welcome Slides -->
-    <string name="first_welcome_title">Bienvenido a Foodie</string>
+    <string name="first_welcome_title">Bienvenido a Foodie!</string>
     <string name="first_welcome_description">Foodie es la aplicacion que te permite \'chamuyar algo aca\'!</string>
-    <string name="second_welcome_title">Podés elegir entre ser Consumidor o Delivery</string>
-    <string name="chip_consumer_type">Consumidor</string>
+    <string name="second_welcome_title">Podés elegir entre ser Cliente o Delivery</string>
+    <string name="chip_customer_type">Cliente</string>
     <string name="chip_delivery_type">Delivery</string>
     <string name="third_welcome_title">Suscribite al Plan Premium para poder contar con los siguientes beneficios</string>
     <string name="subscribe">Subscribirse</string>

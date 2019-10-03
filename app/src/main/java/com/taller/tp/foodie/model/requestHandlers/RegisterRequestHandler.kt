@@ -17,7 +17,7 @@ import java.lang.ref.WeakReference
 class RegisterRequestHandler(private val activity: WeakReference<RegisterActivity>) :
     RequestHandler {
 
-    private val button = activity.get()?.findViewById<Button>(R.id.btn_register)
+    private val button = activity.get()?.findViewById<Button>(R.id.btn_signout)
     private val progressBar = activity.get()?.findViewById<ProgressBar>(R.id.loading_bar)
 
     override fun begin() {

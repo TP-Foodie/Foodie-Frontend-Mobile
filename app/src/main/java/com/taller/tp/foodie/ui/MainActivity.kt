@@ -4,8 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
 import com.taller.tp.foodie.R
-
+import com.taller.tp.foodie.model.common.UserBackendDataHandler
 
 @Suppress("UNUSED_PARAMETER")
 class MainActivity : AppCompatActivity() {
@@ -20,8 +21,17 @@ class MainActivity : AppCompatActivity() {
         startActivity(placeChoice)
     }
 
-    fun onRegister(view: View) {
-        startActivity(Intent(this, RegisterActivity::class.java))
-    }
+    fun signOut(view: View) {
+        // signOut from firebase
+        FirebaseAuth.getInstance().signOut()
 
+        // clean user backend data
+        UserBackendDataHandler(applicationContext).deleteUserBackendData()
+
+        // go to login and clear task
+        val intent = Intent(applicationContext, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
+    }
 }

@@ -42,9 +42,7 @@ class LauncherActivity : AppCompatActivity() {
             return false
         }
 
-        // TODO: sacar comentario
-        //return true
-        return false
+        return true
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
