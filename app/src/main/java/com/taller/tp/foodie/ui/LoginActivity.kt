@@ -57,6 +57,7 @@ class LoginActivity : AppCompatActivity() {
     private fun configureGoogleSignIn() {
         // Configure Google Sign In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestServerAuthCode("218514362361-nchqu6j59rcskl1vmadfp6gl6ud8a0oo.apps.googleusercontent.com")
             .requestEmail()
             .build()
 
@@ -135,10 +136,11 @@ class LoginActivity : AppCompatActivity() {
         if (requestCode == RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
+                // get account, this can throw exception
+                val account = task.getResult(ApiException::class.java)
+
                 // Google Sign In was successful
                 Log.d(LoginActivity::class.java.simpleName, "Google Sign In was successful")
-
-                val account = task.getResult(ApiException::class.java)
 
                 // send token to backend
                 authenticateWithBackend(account?.idToken)
