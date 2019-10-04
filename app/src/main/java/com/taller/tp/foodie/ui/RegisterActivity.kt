@@ -50,7 +50,7 @@ class RegisterActivity : AppCompatActivity() {
             )
         }
 
-        btn_signout.setOnClickListener {
+        btn_register.setOnClickListener {
             val validName = validateNameAndUpdateUi()
             val validLastName = validateLastNameAndUpdateUi()
             val validPhone = validatePhoneAndUpdateUi()

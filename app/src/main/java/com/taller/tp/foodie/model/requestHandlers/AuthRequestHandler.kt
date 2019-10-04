@@ -90,7 +90,6 @@ class EmailAuthFromLoginRequestHandler(private val activity: WeakReference<Login
                 response?.getString(ResponseData.USER_ID_FIELD)
             )
 
-        // TODO: 2 opciones -> ir a main (viene de login) o ir a welcome (viene de register)
         // go to main activity, clear activity task
         val intent = Intent(activity.get(), MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -103,11 +102,7 @@ class EmailAuthFromLoginRequestHandler(private val activity: WeakReference<Login
 class EmailAuthFromRegisterRequestHandler(private val activity: WeakReference<RegisterActivity>) :
     RequestHandler {
 
-    companion object {
-        const val UNAUTHORIZED = 401
-    }
-
-    private val button = activity.get()?.findViewById<Button>(R.id.btn_signout)
+    private val button = activity.get()?.findViewById<Button>(R.id.btn_register)
     private val progressBar = activity.get()?.findViewById<ProgressBar>(R.id.loading_bar)
 
     override fun begin() {
@@ -122,16 +117,8 @@ class EmailAuthFromRegisterRequestHandler(private val activity: WeakReference<Re
 
     override fun onError(error: VolleyError) {
         stopLoading()
+        ErrorHandler.handleError(activity.get()?.findViewById(R.id.register_layout)!!)
 
-        // print value error only if unauthorized request
-        if (error.networkResponse.statusCode == UNAUTHORIZED) {
-            ErrorHandler.handleError(
-                activity.get()?.findViewById(R.id.login_layout)!!,
-                AuthErrors.EMAIL_OR_PASSWORD_VALUE_ERROR
-            )
-        } else {
-            ErrorHandler.handleError(activity.get()?.findViewById(R.id.login_layout)!!)
-        }
     }
 
     override fun onSuccess(response: JSONObject?) {

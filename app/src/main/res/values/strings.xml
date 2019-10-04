@@ -26,7 +26,7 @@
     <string name="hint_last_name_et">Apellido</string>
     <string name="hint_confirm_password_et">Confirmar Contraseña</string>
     <string name="hint_phone_et">Teléfono</string>
-    <string name="btn_signout">Sign Out</string>
+    <string name="btn_register">Registrarse</string>
 
     <!-- Welcome Slides -->
     <string name="first_welcome_title">Bienvenido a Foodie!</string>
@@ -37,4 +37,7 @@
     <string name="third_welcome_title">Suscribite al Plan Premium para poder contar con los siguientes beneficios</string>
     <string name="subscribe">Subscribirse</string>
     <string name="unsubscribe">Desuscribirse</string>
+
+    <!-- Main -->
+    <string name="btn_signout">Sign Out</string>
 </resources>
