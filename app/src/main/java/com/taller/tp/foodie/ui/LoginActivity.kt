@@ -21,13 +21,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.SignInButton
 import com.google.android.gms.common.api.ApiException
-import com.google.firebase.auth.AuthCredential
-import com.google.firebase.auth.FacebookAuthProvider
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.auth.GoogleAuthProvider
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.ErrorHandler
-import com.taller.tp.foodie.model.common.auth.AuthErrors.EMAIL_OR_PASSWORD_VALUE_ERROR
 import com.taller.tp.foodie.model.common.auth.AuthErrors.INVALID_EMAIL_ERROR
 import com.taller.tp.foodie.model.common.auth.AuthErrors.INVALID_PASSWORD_ERROR
 import com.taller.tp.foodie.model.requestHandlers.EmailAuthFromLoginRequestHandler
@@ -38,13 +33,13 @@ import com.taller.tp.foodie.utils.passwordIsValid
 import kotlinx.android.synthetic.main.activity_login.*
 import java.lang.ref.WeakReference
 
+@Suppress("UNUSED_PARAMETER")
 class LoginActivity : AppCompatActivity() {
 
     companion object {
         const val RC_SIGN_IN = 9001
     }
 
-    private lateinit var auth: FirebaseAuth
     private var mGoogleSignInClient: GoogleSignInClient? = null
     private var mCallbackManager: CallbackManager? = null
 
@@ -54,8 +49,6 @@ class LoginActivity : AppCompatActivity() {
 
         setupGotoRegister()
 
-        auth = FirebaseAuth.getInstance()
-
         configureGoogleSignIn()
         configureFacebookSignIn()
         configurePasswordLogin()
@@ -64,9 +57,7 @@ class LoginActivity : AppCompatActivity() {
     private fun configureGoogleSignIn() {
         // Configure Google Sign In
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
-            .requestProfile()
             .build()
 
         // Build a GoogleSignInClient with the options specified by gso.
@@ -94,11 +85,8 @@ class LoginActivity : AppCompatActivity() {
             mCallbackManager,
             object : FacebookCallback<LoginResult> {
                 override fun onSuccess(loginResult: LoginResult) {
-                    // authenticate with Firebase
-                    authenticateWithFirebase(
-                        FacebookAuthProvider.getCredential(loginResult.accessToken.token),
-                        loginResult.accessToken.token
-                    )
+                    // send token to backend
+                    authenticateWithBackend(loginResult.accessToken.token)
                 }
 
                 override fun onCancel() {
@@ -136,21 +124,8 @@ class LoginActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        // Sign in success, update UI with the signed-in user's information
-                        Log.d(this.localClassName, "signInWithEmail:success")
-
-                        // send email and password to backend
-                        authenticateWithBackend(email, password)
-                    } else {
-                        // If sign in fails, display a message to the user.
-                        Log.e(this.localClassName, "signInWithEmail:failure", task.exception)
-
-                        ErrorHandler.handleError(login_layout, EMAIL_OR_PASSWORD_VALUE_ERROR)
-                    }
-                }
+            // send email and password to backend
+            authenticateWithBackend(email, password)
         }
     }
 
@@ -161,13 +136,12 @@ class LoginActivity : AppCompatActivity() {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 // Google Sign In was successful
+                Log.d(LoginActivity::class.java.simpleName, "Google Sign In was successful")
+
                 val account = task.getResult(ApiException::class.java)
 
-                // authenticate with Firebase
-                authenticateWithFirebase(
-                    GoogleAuthProvider.getCredential(account?.idToken, null),
-                    account?.idToken
-                )
+                // send token to backend
+                authenticateWithBackend(account?.idToken)
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
                 Log.e("Error Google Sign In", "Status Code: " + e.statusCode)
@@ -180,7 +154,7 @@ class LoginActivity : AppCompatActivity() {
         }
     }
 
-    private fun authenticaWithBackend(token: String?) {
+    private fun authenticateWithBackend(token: String?) {
         if (token.isNullOrEmpty()) {
             ErrorHandler.handleError(login_layout)
             return
@@ -193,24 +167,6 @@ class LoginActivity : AppCompatActivity() {
     private fun authenticateWithBackend(email: String, password: String) {
         AuthService(this, EmailAuthFromLoginRequestHandler(WeakReference(this)))
             .emailAndPasswordAuthenticationWithBackend(email, password)
-    }
-
-    private fun authenticateWithFirebase(credential: AuthCredential, token: String?) {
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Firebase sign in success
-                    Log.d(this.localClassName, "signInWithCredential:success")
-
-                    // send token to backend
-                    authenticaWithBackend(token)
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.e(this.localClassName, "signInWithCredential:failure", task.exception)
-
-                    ErrorHandler.handleError(login_layout)
-                }
-            }
     }
 
     private fun setupGotoRegister() {

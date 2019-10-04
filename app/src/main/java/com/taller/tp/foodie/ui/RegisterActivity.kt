@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.FirebaseAuth
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.ErrorHandler
 import com.taller.tp.foodie.model.common.auth.AuthErrors.INVALID_EMAIL_ERROR
@@ -31,14 +30,11 @@ class RegisterActivity : AppCompatActivity() {
         const val PICK_IMAGE_REQUEST = 111
     }
 
-    private lateinit var auth: FirebaseAuth
     private var profileImage: Bitmap? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
-
-        auth = FirebaseAuth.getInstance()
 
         setupClickListeners()
     }
@@ -62,33 +58,13 @@ class RegisterActivity : AppCompatActivity() {
             val validPassword = validatePasswordAndUpdateUi()
 
             if (validName && validLastName && validPhone && validEmail && validPassword) {
-                registerUser()
+                // send email and password to backend
+                authenticateWithBackend(
+                    email_field.text.toString(),
+                    password_field.text.toString()
+                )
             }
         }
-    }
-
-    private fun registerUser() {
-        // register user in Firebase Auth
-        auth.createUserWithEmailAndPassword(
-            email_field.text.toString(),
-            password_field.text.toString()
-        ).addOnCompleteListener(this) { task ->
-                if (task.isSuccessful) {
-                    // Sign in success, update UI with the signed-in user's information
-                    Log.d(this.localClassName, "createUserWithEmail:success")
-
-                    // send email and password to backend
-                    authenticateWithBackend(
-                        email_field.text.toString(),
-                        password_field.text.toString()
-                    )
-                } else {
-                    // If sign in fails, display a message to the user.
-                    Log.e(this.localClassName, "createUserWithEmail:failure", task.exception)
-
-                    ErrorHandler.handleError(register_layout)
-                }
-            }
     }
 
     private fun authenticateWithBackend(email: String, password: String) {
@@ -97,6 +73,10 @@ class RegisterActivity : AppCompatActivity() {
             .emailAndPasswordAuthenticationWithBackend(email, password)
     }
 
+    /*
+    *   Called from AuthRequestHandler onSuccess
+    *
+     */
     fun registerUserInBackend() {
         // register user in backend
         val requestHandler = RegisterRequestHandler(WeakReference(this))

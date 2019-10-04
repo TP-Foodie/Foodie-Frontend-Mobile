@@ -3,7 +3,6 @@ package com.taller.tp.foodie.ui
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.FirebaseAuth
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.common.UserBackendDataHandler
 
@@ -33,12 +32,6 @@ class LauncherActivity : AppCompatActivity() {
         val userId = backendDataHandler.getUserId()
 
         if (token.isEmpty() || userId.isEmpty()) {
-            return false
-        }
-
-        // check firebase auth state
-        val auth = FirebaseAuth.getInstance()
-        if (auth.currentUser == null) {
             return false
         }
 
