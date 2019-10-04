@@ -144,7 +144,10 @@ class LoginActivity : AppCompatActivity() {
                 authenticateWithBackend(account?.idToken)
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
-                Log.e("Error Google Sign In", "Status Code: " + e.statusCode)
+                Log.e(
+                    LoginActivity::class.java.simpleName,
+                    "Error Google Sign In, Status Code: " + e.statusCode
+                )
 
                 ErrorHandler.handleError(login_layout)
             }
