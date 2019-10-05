@@ -1,0 +1,4 @@
+<resources>
+    <!-- Config -->
+    <string name="server_client_id"></string>
+</resources>
