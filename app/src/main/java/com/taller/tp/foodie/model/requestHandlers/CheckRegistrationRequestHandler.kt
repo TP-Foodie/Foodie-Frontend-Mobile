@@ -5,13 +5,13 @@ import android.util.Log
 import com.android.volley.VolleyError
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.ErrorHandler
-import com.taller.tp.foodie.ui.LoginActivity
+import com.taller.tp.foodie.ui.LauncherActivity
 import com.taller.tp.foodie.ui.MainActivity
 import com.taller.tp.foodie.ui.WelcomeActivity
 import org.json.JSONObject
 import java.lang.ref.WeakReference
 
-class FederatedIsRegisteredRequestHandler(private val activity: WeakReference<LoginActivity>) :
+class CheckRegistrationRequestHandler(private val activity: WeakReference<LauncherActivity>) :
     RequestHandler {
 
     companion object {
@@ -24,16 +24,16 @@ class FederatedIsRegisteredRequestHandler(private val activity: WeakReference<Lo
     private fun stopLoading() {}
 
     override fun onError(error: VolleyError) {
-        Log.e("FedIsRegRequestHandler", "Volley error: " + error.localizedMessage)
+        Log.e("CheckRegRequestHandler", "Volley error: " + error.localizedMessage)
         stopLoading()
-        ErrorHandler.handleError(activity.get()?.findViewById(R.id.login_layout)!!)
+        ErrorHandler.handleError(activity.get()?.findViewById(R.id.launcher_layout)!!)
     }
 
     override fun onSuccess(response: JSONObject?) {
         if (response == null) {
-            Log.e("FedIsRegRequestHandler", "Response is null")
+            Log.e("CheckRegRequestHandler", "Response is null")
             stopLoading()
-            ErrorHandler.handleError(activity.get()?.findViewById(R.id.login_layout)!!)
+            ErrorHandler.handleError(activity.get()?.findViewById(R.id.launcher_layout)!!)
             return
         }
 

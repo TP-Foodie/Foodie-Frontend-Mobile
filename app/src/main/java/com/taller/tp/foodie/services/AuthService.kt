@@ -69,4 +69,8 @@ class AuthService(ctx: Context, private val requestHandler: RequestHandler) {
 
         client.doGet(USERS_RESOURCE + userId, listener, errorListener)
     }
+
+    fun checkIfUserIsRegistered(userId: String) {
+        checkIfFederatedIsRegistered(userId)
+    }
 }

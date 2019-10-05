@@ -5,24 +5,30 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.common.UserBackendDataHandler
+import com.taller.tp.foodie.model.requestHandlers.CheckRegistrationRequestHandler
+import com.taller.tp.foodie.services.AuthService
+import java.lang.ref.WeakReference
 
 class LauncherActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        if (isUserLoggedIn()) {
-            // go to main activity
-            val intent = Intent(applicationContext, MainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            startActivity(intent)
-        } else {
+
+        val userIsLogged = isUserLoggedIn()
+
+        if (!userIsLogged) {
             // go to login activity
             val intent = Intent(applicationContext, LoginActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             startActivity(intent)
-        }
+            finish()
+        } else {
+            // check if the user has type field in user object
+            val userId = UserBackendDataHandler(this).getUserId()
 
-        finish()
+            AuthService(this, CheckRegistrationRequestHandler(WeakReference(this)))
+                .checkIfUserIsRegistered(userId)
+        }
     }
 
     private fun isUserLoggedIn(): Boolean {
