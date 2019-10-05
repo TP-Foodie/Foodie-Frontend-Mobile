@@ -34,15 +34,8 @@ class PlaceService(ctx: Context, private val requestHandler: RequestHandler){
             val name = json.getString("name")
             val coordinateJson = json.getJSONObject("coordinates")
             val coordinate = CoordinateService.fromCoordinateJson(coordinateJson)
-            return Place(id,name,coordinate)
+            return Place(name,coordinate).setId(id)
         }
-//        fun toPlaceJson(place: Place) : JSONObject{
-//            val jsonPlace = JSONObject()
-//            jsonPlace.put("id", place.id)
-//            jsonPlace.put("name", place.name)
-//            jsonPlace.put("coordinate",CoordinateService.toCoordinateJson(place.coordinate))
-//            return jsonPlace
-//        }
     }
 
     private fun buildRequest(coordinate: Coordinate, name: String) : JSONObject{

@@ -2,8 +2,10 @@ package com.taller.tp.foodie.ui
 
 import android.Manifest
 import android.content.Intent
+import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
+import android.view.View
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
@@ -19,6 +21,7 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.material.snackbar.Snackbar
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.*
 import com.taller.tp.foodie.model.requestHandlers.ClientOrderRequestHandler
@@ -36,7 +39,6 @@ const val INIT_ZOOM_LEVEL = 13f
 const val PRODUCT_EMPTY_ERROR = "Por favor, ingrese el producto que desea ordenar"
 const val PLACE_EMPTY_ERROR = "Por favor, elija un lugar donde debemos retirarlo"
 const val CLIENT_NEW_ORDER_KEY = "CLIENT_NEW_ORDER"
-const val COORDINATES_ORDER_KEY = "COORDINATES_ORDER"
 
 class ClientMainActivity : AppCompatActivity(),
     GoogleMap.OnMarkerClickListener,
@@ -47,7 +49,6 @@ class ClientMainActivity : AppCompatActivity(),
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var lastSelectedMarker: Marker? = null
     private var markerPlaceMap: HashMap<Marker, Place> = HashMap()
-    private var placeCoordinate: Coordinate? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,6 +63,17 @@ class ClientMainActivity : AppCompatActivity(),
 
         val makeOrderButton = findViewById<Button>(R.id.make_order_button)
         makeOrderButton.setOnClickListener { makeOrderButtonListener() }
+
+        showSuccessfullOrderMessage()
+    }
+
+    private fun showSuccessfullOrderMessage() {
+        if (intent.getBooleanExtra(SUCCESSFUL_ORDER_KEY, false)){
+            val context = findViewById<View>(R.id.map_choice_context)
+            val snackbar = Snackbar.make(context, R.string.general_success, Snackbar.LENGTH_SHORT)
+            snackbar.view.setBackgroundColor(Color.GREEN)
+            snackbar.show()
+        }
     }
 
     private fun createMarker(place: Place): MarkerOptions? {
@@ -101,14 +113,13 @@ class ClientMainActivity : AppCompatActivity(),
 
         val requestHandler = ClientOrderRequestHandler(this)
 //        val ownerId = Session.getCurrentUser ? TODO AFTER AUTHENTICATION
-        val ownerId = "1" // TODO AFTER AUTHENTICATION
+        val ownerId = "5d83bca2d835f963dba8fe2a" // TODO AFTER AUTHENTICATION
 
-        val orderProduct = OrderProduct(product.text.toString(), place.id)
-        placeCoordinate = place.coordinate
-        val orderType: String
-        orderType = if (isFavour) FAVOUR_TYPE else NORMAL_TYPE
-        val order = Order(orderType, ownerId, orderProduct)
-        OrderService(this, requestHandler).makeOrder(order)
+        val orderProduct = OrderService.OrderProductRequest(product.text.toString(), place.getId())
+        val orderType: Order.TYPE
+        orderType = if (isFavour) Order.TYPE.FAVOR_TYPE else Order.TYPE.NORMAL_TYPE
+        val orderRequest = OrderService.OrderRequest(orderType.key, ownerId, orderProduct)
+        OrderService(this, requestHandler).makeOrder(orderRequest)
     }
 
     private fun validateProduct(): Boolean {
@@ -230,7 +241,6 @@ class ClientMainActivity : AppCompatActivity(),
     fun saveAndChooseDelivery(response: JSONObject) {
         val intent = Intent(this, ChooseDeliveryActivity::class.java).apply {
             putExtra(CLIENT_NEW_ORDER_KEY, response.toString())
-            putExtra(COORDINATES_ORDER_KEY, placeCoordinate.toString())
         }
         startActivity(intent)
     }

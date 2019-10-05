@@ -5,7 +5,10 @@ import android.util.Log
 import com.android.volley.NetworkResponse
 import com.android.volley.Request
 import com.android.volley.Response
-import com.android.volley.toolbox.*
+import com.android.volley.toolbox.HttpHeaderParser
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.JsonRequest
+import com.android.volley.toolbox.Volley
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
@@ -23,17 +26,16 @@ open class BackService(ctx: Context){
 
     val context = ctx
 
-    fun doGetArray(
+    fun doGetObject(
         method: String,
         onSuccess: Response.Listener<JSONObject>,
-        jsonRequest: JSONObject?,
         onError: Response.ErrorListener = Response.ErrorListener { error -> Log.d("Error.Response", error.toString()) }
     ){
         try{
             val queue = Volley.newRequestQueue(context)
             val finalUrl = url+method
-            val getRequest = JSONObjectFromArray(Request.Method.GET,
-                finalUrl, jsonRequest.toString(),
+            val getRequest = JsonObjectRequest(Request.Method.GET,
+                finalUrl, null,
                 onSuccess,
                 onError)
             queue.add(getRequest)
@@ -47,7 +49,17 @@ open class BackService(ctx: Context){
         onSuccess: Response.Listener<JSONObject>,
         onError: Response.ErrorListener = Response.ErrorListener { error -> Log.d("Error.Response", error.toString()) }
     ){
-        return doGetArray(method, onSuccess, null, onError)
+        try{
+            val queue = Volley.newRequestQueue(context)
+            val finalUrl = url+method
+            val getRequest = JSONObjectFromArray(Request.Method.GET,
+                finalUrl, null,
+                onSuccess,
+                onError)
+            queue.add(getRequest)
+        } catch (e: Throwable){
+            Log.e(BackService::class.java.name, "Back service error", e)
+        }
     }
 
     fun doPost(
@@ -61,6 +73,27 @@ open class BackService(ctx: Context){
             val finalUrl = url + method
             val getRequest = JsonObjectRequest(
                 Request.Method.POST,
+                finalUrl, jsonRequest,
+                listener,
+                onError
+            )
+            queue.add(getRequest)
+        } catch (e: Throwable) {
+            Log.e(BackService::class.java.name, "Back service error", e)
+        }
+    }
+
+    fun doPatch(
+        method: String,
+        listener: Response.Listener<JSONObject>,
+        jsonRequest: JSONObject?,
+        onError: Response.ErrorListener = Response.ErrorListener { error -> Log.d("Error.Response", error.toString()) }
+    ) {
+        try {
+            val queue = Volley.newRequestQueue(context)
+            val finalUrl = url + method
+            val getRequest = JsonObjectRequest(
+                Request.Method.PATCH,
                 finalUrl, jsonRequest,
                 listener,
                 onError

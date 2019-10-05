@@ -39,7 +39,8 @@
 
         <activity
             android:name=".ui.ChooseDeliveryActivity"
-            android:label="@string/choose_delivery">
+            android:label="@string/choose_delivery"
+            android:parentActivityName=".ui.ClientMainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.ClientMainActivity" />

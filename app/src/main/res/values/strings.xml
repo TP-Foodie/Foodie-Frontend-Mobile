@@ -25,4 +25,6 @@
     <string name="user_image_desc">imagen</string>
     <string name="orders">Pedidos</string>
     <string name="choose_delivery">Elegir Delivery</string>
+    <string name="delivery_photo">Foto del Delivery</string>
+    <string name="general_success">Operación Exitosa!</string>
 </resources>

@@ -1,5 +1,3 @@
 package com.taller.tp.foodie.model
 
-class OrderProduct(val product: String, val placeId: String){
-
-}
+class OrderProduct(val name: String, val place: Place)
