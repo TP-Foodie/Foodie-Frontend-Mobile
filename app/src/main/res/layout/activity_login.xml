@@ -12,6 +12,14 @@
     <include
         android:id="@+id/include3"
         layout="@layout/icon" />
+    <LinearLayout
+        android:id="@+id/header_layout"
+        android:layout_width="355dp"
+        android:layout_height="223dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
@@ -20,9 +28,9 @@
         android:layout_marginTop="150dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/include3"
-        app:layout_constraintStart_toStartOf="@+id/include3"
-        app:layout_constraintTop_toTopOf="@+id/include3">
+        app:layout_constraintEnd_toEndOf="@+id/header_layout"
+        app:layout_constraintStart_toStartOf="@+id/header_layout"
+        app:layout_constraintTop_toTopOf="@+id/header_layout">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/email_field_layout"

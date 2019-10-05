@@ -15,8 +15,9 @@ class BitmapLoader(imageView: ImageView, val url: URL) : AsyncTask<Int, Void, Bi
         imageViewReference = WeakReference(imageView)
     }
 
-    override fun doInBackground(vararg params: Int?): Bitmap {
-        return BitmapFactory.decodeStream(url.openConnection().getInputStream())
+    override fun doInBackground(vararg params: Int?): Bitmap? {
+        val inputStream = url.openConnection().getInputStream() ?: return null
+        return BitmapFactory.decodeStream(inputStream)
     }
 
     override fun onPostExecute(result: Bitmap?) {

@@ -9,7 +9,7 @@
     <string name="password_confirm_field">PASSWORD (CONFIRMACIÓN)</string>
     <string name="confim_register_btn">REGISTRAR</string>
     <string name="logo">logo</string>
-    <string name="general_error">Ups! un errors inesperado a ocurrido</string>
+    <string name="general_error">Ups! Un error inesperado ha ocurrido</string>
     <string name="client_type">Quiero comprar</string>
     <string name="delivery_type">Quiero hacer deliveries</string>
     <string name="user_field">USER</string>
