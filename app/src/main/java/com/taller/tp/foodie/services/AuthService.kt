@@ -13,6 +13,7 @@ class AuthService(ctx: Context, private val requestHandler: RequestHandler) {
         // endpoints
         const val GOOGLE_AUTH_RESOURCE = "/auth/google"
         const val AUTH_RESOURCE = "/auth/"
+        const val USERS_RESOURCE = "/users/"
 
         // federated auth
         const val GOOGLE_TOKEN_FIELD = "google_token"
@@ -54,5 +55,18 @@ class AuthService(ctx: Context, private val requestHandler: RequestHandler) {
         requestObject.put(PASSWORD_FIELD, password)
 
         client.doPost(AUTH_RESOURCE, listener, requestObject, errorListener)
+    }
+
+    fun checkIfFederatedIsRegistered(userId: String?) {
+        requestHandler.begin()
+
+        val listener = Response.Listener<JSONObject> { response: JSONObject? ->
+            requestHandler.onSuccess(response)
+        }
+        val errorListener = Response.ErrorListener { error ->
+            requestHandler.onError(error)
+        }
+
+        client.doGet(USERS_RESOURCE + userId, listener, errorListener)
     }
 }

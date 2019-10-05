@@ -54,4 +54,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/bottom_background" />
 
+    <ProgressBar
+        android:id="@+id/loading_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:indeterminateTint="@android:color/white"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@id/btn_right"
+        app:layout_constraintEnd_toEndOf="@id/btn_right"
+        app:layout_constraintStart_toStartOf="@id/btn_right"
+        app:layout_constraintTop_toTopOf="@id/btn_right" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

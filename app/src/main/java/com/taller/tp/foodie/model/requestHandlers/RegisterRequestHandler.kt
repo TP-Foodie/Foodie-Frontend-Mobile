@@ -1,5 +1,6 @@
 package com.taller.tp.foodie.model.requestHandlers
 
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
@@ -13,20 +14,23 @@ import java.lang.ref.WeakReference
 class RegisterRequestHandler(private val activity: WeakReference<RegisterActivity>) :
     RequestHandler {
 
-    private val button = activity.get()?.findViewById<Button>(R.id.btn_signout)
+    private var text: CharSequence? = null
+    private val button = activity.get()?.findViewById<Button>(R.id.btn_register)
     private val progressBar = activity.get()?.findViewById<ProgressBar>(R.id.loading_bar)
 
     override fun begin() {
-        button?.visibility = View.INVISIBLE
+        text = button?.text
+        button?.text = null
         progressBar?.visibility = View.VISIBLE
     }
 
     private fun stopLoading() {
         progressBar?.visibility = View.INVISIBLE
-        button?.visibility = View.VISIBLE
+        button?.text = text
     }
 
     override fun onError(error: VolleyError) {
+        Log.e("RegisterRequestHandler", "Volley error: " + error.localizedMessage)
         stopLoading()
         ErrorHandler.handleError(activity.get()?.findViewById(R.id.register_layout)!!)
     }

@@ -21,31 +21,26 @@ import java.lang.ref.WeakReference
 class FederatedAuthRequestHandler(private val activity: WeakReference<LoginActivity>) :
     RequestHandler {
 
-    private val button = activity.get()?.findViewById<Button>(R.id.btn_signout)
-    private val progressBar = activity.get()?.findViewById<ProgressBar>(R.id.loading_bar)
+    override fun begin() {}
 
-    override fun begin() {
-        button?.visibility = View.INVISIBLE
-        progressBar?.visibility = View.VISIBLE
-    }
-
-    private fun stopLoading() {
-        progressBar?.visibility = View.INVISIBLE
-        button?.visibility = View.VISIBLE
-    }
+    private fun stopLoading() {}
 
     override fun onError(error: VolleyError) {
-        Log.e("Voley Error", "Error: " + error.localizedMessage)
+        Log.e("AuthRequestHandler", "Volley error: " + error.localizedMessage)
         stopLoading()
         ErrorHandler.handleError(activity.get()?.findViewById(R.id.login_layout)!!)
     }
 
     override fun onSuccess(response: JSONObject?) {
-        val intent = Intent(activity.get(), MainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        activity.get()?.startActivity(intent)
+        // persist user data
+        UserBackendDataHandler(activity.get()?.applicationContext!!)
+            .persistUserBackendData(
+                response?.getString(ResponseData.TOKEN_FIELD),
+                response?.getString(ResponseData.USER_ID_FIELD)
+            )
 
-        activity.get()?.finish()
+        activity.get()
+            ?.checkIfFederatedIsRegistered(response?.getString(ResponseData.USER_ID_FIELD))
     }
 }
 
@@ -56,20 +51,12 @@ class EmailAuthFromLoginRequestHandler(private val activity: WeakReference<Login
         const val UNAUTHORIZED = 401
     }
 
-    private val button = activity.get()?.findViewById<Button>(R.id.btn_signout)
-    private val progressBar = activity.get()?.findViewById<ProgressBar>(R.id.loading_bar)
+    override fun begin() {}
 
-    override fun begin() {
-        button?.visibility = View.INVISIBLE
-        progressBar?.visibility = View.VISIBLE
-    }
-
-    private fun stopLoading() {
-        progressBar?.visibility = View.INVISIBLE
-        button?.visibility = View.VISIBLE
-    }
+    private fun stopLoading() {}
 
     override fun onError(error: VolleyError) {
+        Log.e("AuthRequestHandler", "Volley error: " + error.localizedMessage)
         stopLoading()
 
         // print value error only if unauthorized request
@@ -103,20 +90,23 @@ class EmailAuthFromLoginRequestHandler(private val activity: WeakReference<Login
 class EmailAuthFromRegisterRequestHandler(private val activity: WeakReference<RegisterActivity>) :
     RequestHandler {
 
+    private var text: CharSequence? = null
     private val button = activity.get()?.findViewById<Button>(R.id.btn_register)
     private val progressBar = activity.get()?.findViewById<ProgressBar>(R.id.loading_bar)
 
     override fun begin() {
-        button?.visibility = View.INVISIBLE
+        text = button?.text
+        button?.text = null
         progressBar?.visibility = View.VISIBLE
     }
 
     private fun stopLoading() {
         progressBar?.visibility = View.INVISIBLE
-        button?.visibility = View.VISIBLE
+        button?.text = text
     }
 
     override fun onError(error: VolleyError) {
+        Log.e("AuthRequestHandler", "Volley error: " + error.localizedMessage)
         stopLoading()
         ErrorHandler.handleError(activity.get()?.findViewById(R.id.register_layout)!!)
 

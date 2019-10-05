@@ -27,6 +27,7 @@ import com.taller.tp.foodie.model.common.auth.AuthErrors.INVALID_EMAIL_ERROR
 import com.taller.tp.foodie.model.common.auth.AuthErrors.INVALID_PASSWORD_ERROR
 import com.taller.tp.foodie.model.requestHandlers.EmailAuthFromLoginRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.FederatedAuthRequestHandler
+import com.taller.tp.foodie.model.requestHandlers.FederatedIsRegisteredRequestHandler
 import com.taller.tp.foodie.services.AuthService
 import com.taller.tp.foodie.utils.emailIsValid
 import com.taller.tp.foodie.utils.passwordIsValid
@@ -172,6 +173,11 @@ class LoginActivity : AppCompatActivity() {
 
         AuthService(this, FederatedAuthRequestHandler(WeakReference(this)))
             .federatedAuthenticationWithBackend(token)
+    }
+
+    fun checkIfFederatedIsRegistered(userId: String?) {
+        AuthService(this, FederatedIsRegisteredRequestHandler(WeakReference(this)))
+            .checkIfFederatedIsRegistered(userId)
     }
 
     private fun authenticateWithBackend(email: String, password: String) {
