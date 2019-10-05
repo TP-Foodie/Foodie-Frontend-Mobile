@@ -36,6 +36,9 @@ class WelcomeActivity : AppCompatActivity() {
         slide_view_pager.adapter = MyPagerAdapter(supportFragmentManager)
         slide_view_pager.offscreenPageLimit = 2
 
+        // init
+        btn_right.text = "siguiente"
+
         slide_view_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
             override fun onPageScrollStateChanged(state: Int) {}
             override fun onPageScrolled(

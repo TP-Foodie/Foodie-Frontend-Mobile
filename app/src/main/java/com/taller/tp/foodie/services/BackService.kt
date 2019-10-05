@@ -6,6 +6,7 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import org.json.JSONObject
 import java.util.*
 
@@ -77,12 +78,22 @@ open class BackService(ctx: Context){
         try {
             val queue = Volley.newRequestQueue(context)
             val finalUrl = url + method
-            val patchRequest = JsonObjectRequest(
-                Request.Method.PATCH,
+
+            val authToken = UserBackendDataHandler(context).getBackendToken()
+
+            val patchRequest = object : JsonObjectRequest(
+                Method.PATCH,
                 finalUrl, jsonRequest,
                 listener,
                 onError
-            )
+            ) {
+                override fun getHeaders(): MutableMap<String, String> {
+                    val headers = HashMap<String, String>()
+                    headers["Authorization"] = "Bearer $authToken"
+                    return headers
+                }
+            }
+
             queue.add(patchRequest)
         } catch (e: Throwable) {
             Log.e(BackService::class.java.name, "Back service error", e)

@@ -14,6 +14,7 @@ import com.taller.tp.foodie.model.common.auth.ResponseData
 import com.taller.tp.foodie.ui.LoginActivity
 import com.taller.tp.foodie.ui.MainActivity
 import com.taller.tp.foodie.ui.RegisterActivity
+import com.taller.tp.foodie.ui.WelcomeActivity
 import org.json.JSONObject
 import java.lang.ref.WeakReference
 
@@ -129,7 +130,11 @@ class EmailAuthFromRegisterRequestHandler(private val activity: WeakReference<Re
                 response?.getString(ResponseData.USER_ID_FIELD)
             )
 
-        // register user in backend
-        activity.get()?.registerUserInBackend()
+        // go to welcome activity, clear activity task
+        val intent = Intent(activity.get(), WelcomeActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        activity.get()?.startActivity(intent)
+
+        activity.get()?.finish()
     }
 }

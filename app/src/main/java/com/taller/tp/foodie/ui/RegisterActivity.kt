@@ -59,25 +59,12 @@ class RegisterActivity : AppCompatActivity() {
 
             if (validName && validLastName && validPhone && validEmail && validPassword) {
                 // send email and password to backend
-                authenticateWithBackend(
-                    email_field.text.toString(),
-                    password_field.text.toString()
-                )
+                registerUserInBackend()
             }
         }
     }
 
-    private fun authenticateWithBackend(email: String, password: String) {
-        // authenticate user with backend
-        AuthService(this, EmailAuthFromRegisterRequestHandler(WeakReference(this)))
-            .emailAndPasswordAuthenticationWithBackend(email, password)
-    }
-
-    /*
-    *   Called from AuthRequestHandler onSuccess
-    *
-     */
-    fun registerUserInBackend() {
+    private fun registerUserInBackend() {
         // register user in backend
         val requestHandler = RegisterRequestHandler(WeakReference(this))
         UserService(this, requestHandler).register(
@@ -88,6 +75,19 @@ class RegisterActivity : AppCompatActivity() {
             phone_field.text.toString(),
             profileImage
         )
+    }
+
+    /*
+    *   Called from AuthRequestHandler onSuccess
+    *
+     */
+    fun authenticateWithBackend() {
+        // authenticate user with backend
+        AuthService(this, EmailAuthFromRegisterRequestHandler(WeakReference(this)))
+            .emailAndPasswordAuthenticationWithBackend(
+                email_field.text.toString(),
+                password_field.text.toString()
+            )
     }
 
     private fun validateNameAndUpdateUi(): Boolean {
