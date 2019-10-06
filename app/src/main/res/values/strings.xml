@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Foodie</string>
     <string name="welcome">Bienvenido a Foodie!</string>
-    <string name="but_get_places">Get Places</string>
     <string name="btn_register">
         <u>Soy nuevo</u>
     </string>
@@ -10,7 +9,22 @@
     <string name="password_confirm_field">PASSWORD (CONFIRMACIÓN)</string>
     <string name="confim_register_btn">REGISTRAR</string>
     <string name="logo">logo</string>
-    <string name="general_error">Ups! un errors inesperado a ocurrido</string>
+    <string name="general_error">Ups! Un error inesperado ha ocurrido</string>
     <string name="client_type">Quiero comprar</string>
     <string name="delivery_type">Quiero hacer deliveries</string>
+    <string name="user_field">USER</string>
+    <string name="log_in">LOG IN</string>
+    <string name="build_order_btn">Pedir</string>
+    <string name="profile_btn">Perfil</string>
+    <string name="delivery_what">Que querés pedir?</string>
+    <string name="delivery_place">Elegí donde lo buscamos</string>
+    <string name="map_place_choice">Pedido</string>
+    <string name="location">Necesitamos acceder a tu ubicación</string>
+    <string name="order_as_favour">Pedir como favor</string>
+    <string name="hello_user_profile">Hola usuario generico!</string>
+    <string name="user_image_desc">imagen</string>
+    <string name="orders">Pedidos</string>
+    <string name="choose_delivery">Elegir Delivery</string>
+    <string name="delivery_photo">Foto del Delivery</string>
+    <string name="general_success">Operación Exitosa!</string>
 </resources>

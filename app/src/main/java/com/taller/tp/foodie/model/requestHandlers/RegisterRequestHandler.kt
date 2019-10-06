@@ -6,6 +6,7 @@ import android.widget.ProgressBar
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.ErrorHandler
 import com.taller.tp.foodie.ui.RegisterActivity
+import org.json.JSONObject
 
 
 class RegisterRequestHandler(private val activity: RegisterActivity) : RequestHandler {
@@ -30,8 +31,9 @@ class RegisterRequestHandler(private val activity: RegisterActivity) : RequestHa
         ErrorHandler.handleError(activity.findViewById<View>(R.id.context_view))
     }
 
-    override fun onSuccess() {
+    override fun onSuccess(response: JSONObject?) {
         stopLoading()
         activity.finish()
     }
+
 }

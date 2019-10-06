@@ -2,48 +2,47 @@ package com.taller.tp.foodie.services
 
 import android.content.Context
 import com.android.volley.Response
+import com.taller.tp.foodie.model.Coordinate
 import com.taller.tp.foodie.model.Place
+import com.taller.tp.foodie.model.requestHandlers.RequestHandler
 import org.json.JSONObject
 
-class PlaceService(ctx: Context) {
-    val backService = BackService(ctx)
+const val PLACE_RESOURCE = "/places/"
 
-    fun list(onResponse: (ArrayList<Place>) -> Unit) {
-        val listener = Response.Listener<JSONObject> { response ->
-            val places : ArrayList<Place> = ArrayList()
-            val jsonArray = response.getJSONArray("places")
-            for (i in 0..jsonArray.length()-1) {
-                val placeJson = jsonArray.getJSONObject(i)
-                places.add(fromPlaceJson(placeJson))
-            }
-            onResponse.invoke(places)
-        }
-        backService.doGet("/place/list", listener)
+class PlaceService(ctx: Context, private val requestHandler: RequestHandler){
+    private val client : BackService = BackService(ctx)
+
+    fun list(){
+        requestHandler.begin()
+
+        val listener = Response.Listener<JSONObject> { requestHandler.onSuccess(it) }
+        val errorListener = Response.ErrorListener { requestHandler.onError() }
+        client.doGetArray(PLACE_RESOURCE, listener, errorListener)
     }
 
-    fun choosePlace(place: Place, onResponse: (Any) -> Unit) {
-        val listener = Response.Listener<JSONObject> { response ->
-            onResponse(fromPlaceJson(response))
-        }
-        val toPlaceJson = toPlaceJson(place)
-        backService.doPost("/place/choose", listener, toPlaceJson)
+    fun create(coordinate: Coordinate, name: String){
+        requestHandler.begin()
+
+        val onSuccess = Response.Listener<JSONObject> { requestHandler.onSuccess(it) }
+        val onError = Response.ErrorListener { requestHandler.onError() }
+        client.doPost(PLACE_RESOURCE, onSuccess, buildRequest(coordinate, name), onError)
     }
 
     companion object {
         fun fromPlaceJson(json:JSONObject) : Place {
             val id = json.getString("id")
             val name = json.getString("name")
-            val coordinateJson = json.getJSONObject("coordinate")
+            val coordinateJson = json.getJSONObject("coordinates")
             val coordinate = CoordinateService.fromCoordinateJson(coordinateJson)
-            return Place(id,name,coordinate)
+            return Place(name,coordinate).setId(id)
         }
-        fun toPlaceJson(place: Place) : JSONObject{
-            val json = JSONObject()
-            json.put("id", place.id)
-            json.put("name", place.name)
-            json.put("coordinate",CoordinateService.toCoordinateJson(place.coordinate))
-            return json
-        }
+    }
+
+    private fun buildRequest(coordinate: Coordinate, name: String) : JSONObject{
+        val place = JSONObject()
+        place.put("name", name)
+        place.put("coordinate",CoordinateService.toCoordinateJson(coordinate))
+        return place
     }
 
 

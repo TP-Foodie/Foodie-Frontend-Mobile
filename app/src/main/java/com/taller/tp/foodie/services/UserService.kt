@@ -13,7 +13,7 @@ class UserService(ctx: Context, private val requestHandler: RequestHandler) {
     fun register(email: String, password: String, userType: String) {
         requestHandler.begin()
 
-        val listener = Response.Listener<JSONObject> { requestHandler.onSuccess() }
+        val listener = Response.Listener<JSONObject> { requestHandler.onSuccess(it) }
         val errorListener = Response.ErrorListener { requestHandler.onError() }
 
         client.doPost(USERS_RESOURCE, listener, buildRequest(email, password, userType), errorListener)

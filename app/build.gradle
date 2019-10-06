@@ -6,6 +6,7 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 28
+
     defaultConfig {
         applicationId "com.taller.tp.foodie"
         minSdkVersion 23
@@ -14,6 +15,8 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        def map_api_key = System.getenv("MAP_API_KEY") == null ? "" : System.getenv("MAP_API_KEY")
+        manifestPlaceholders = [ MAP_API_KEY:map_api_key ]
     }
     signingConfigs {
         release
@@ -66,4 +69,7 @@ dependencies {
     testImplementation 'org.robolectric:robolectric:4.3'
     implementation 'androidx.recyclerview:recyclerview:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation 'pub.devrel:easypermissions:1.1.1'
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
 }
