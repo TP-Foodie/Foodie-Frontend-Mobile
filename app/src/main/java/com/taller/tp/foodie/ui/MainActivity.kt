@@ -15,11 +15,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 
-    fun listPlaces(view: View){
-        val placeChoice = Intent(this, PlaceChoiceActivity::class.java)
-        startActivity(placeChoice)
-    }
-
     fun signOut(view: View) {
         // clean user backend data
         UserBackendDataHandler(applicationContext).deleteUserBackendData()

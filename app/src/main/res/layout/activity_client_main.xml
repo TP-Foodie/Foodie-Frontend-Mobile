@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/map_choice_context"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/map_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="UselessParent">
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".ui.ClientMainActivity" />
+
+        <LinearLayout
+            android:id="@+id/order_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="650dp"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_signout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="signOut"
+                android:text="@string/btn_signout" />
+
+            <Button
+                android:id="@+id/profile_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/profile_btn" />
+
+            <Button
+                android:id="@+id/orders_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/orders" />
+
+            <LinearLayout
+                android:id="@+id/dummy"
+                android:layout_width="417dp"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="326dp"
+                android:layout_height="112dp"
+                android:background="@android:drawable/dialog_holo_light_frame"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/delivery_what_input"
+                        android:layout_width="180dp"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/delivery_what"
+                        android:textColor="@android:color/background_dark"
+                        android:textColorHint="@android:color/background_dark"/>
+
+                    <CheckBox
+                        android:id="@+id/delivery_favour_check"
+                        android:layout_width="match_parent"
+                        android:layout_height="43dp"
+                        android:text="@string/order_as_favour"
+                        android:textColor="@android:color/background_dark"
+                        android:buttonTint="@android:color/background_dark"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/delivery_place_input"
+                        style="@style/Widget.AppCompat.EditText"
+                        android:layout_width="230dp"
+                        android:layout_height="match_parent"
+                        android:autofillHints=""
+                        android:enabled="false"
+                        android:hint="@string/delivery_place"
+                        android:inputType="text"
+                        android:textColor="@android:color/background_dark"
+                        android:textColorHint="@android:color/background_dark"
+                        tools:targetApi="o" />
+
+                    <Button
+                        android:id="@+id/make_order_button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="end"
+                        android:layout_weight="1"
+                        android:text="@string/build_order_btn" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </FrameLayout>
+</LinearLayout>

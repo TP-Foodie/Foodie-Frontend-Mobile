@@ -67,7 +67,7 @@ class AuthService(ctx: Context, private val requestHandler: RequestHandler) {
             requestHandler.onError(error)
         }
 
-        client.doGet(USERS_RESOURCE + userId, listener, errorListener)
+        client.doGetObject(USERS_RESOURCE + userId, listener, errorListener)
     }
 
     fun checkIfUserIsRegistered(userId: String) {
