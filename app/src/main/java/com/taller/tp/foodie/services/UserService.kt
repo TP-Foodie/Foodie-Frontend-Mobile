@@ -80,6 +80,6 @@ class UserService(ctx: Context, private val requestHandler: RequestHandler) {
         // add user id to the users endpoint
         val userId = UserBackendDataHandler(context.get()!!).getUserId()
 
-        client.doPatchWithAuth(USERS_RESOURCE + userId, listener, requestObject, errorListener)
+        client.doPatch(USERS_RESOURCE + userId, listener, requestObject, errorListener)
     }
 }

@@ -23,7 +23,9 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import com.taller.tp.foodie.R
-import com.taller.tp.foodie.model.*
+import com.taller.tp.foodie.model.Coordinate
+import com.taller.tp.foodie.model.Order
+import com.taller.tp.foodie.model.Place
 import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import com.taller.tp.foodie.model.requestHandlers.ClientOrderRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.CreatePlaceRequestHandler
@@ -71,7 +73,7 @@ class ClientMainActivity : AppCompatActivity(),
         showSuccessfullOrderMessage()
     }
 
-    fun signOut() {
+    private fun signOut() {
         // clean user backend data
         UserBackendDataHandler(applicationContext).deleteUserBackendData()
 
