@@ -43,17 +43,6 @@
             app:layout_constraintVertical_bias="0.312"
             android:contentDescription="@string/user_image_desc" />
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="92dp"
-            android:text="@string/hello_user_profile"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageView2"
-            tools:text="Hola usuario generico!" />
-
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

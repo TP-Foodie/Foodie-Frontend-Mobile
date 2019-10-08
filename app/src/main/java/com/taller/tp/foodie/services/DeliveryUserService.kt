@@ -16,7 +16,7 @@ class DeliveryUserService(ctx: Context, private val requestHandler: RequestHandl
         requestHandler.begin()
 
         val listener = Response.Listener<JSONObject> { requestHandler.onSuccess(it) }
-        val errorListener = Response.ErrorListener { requestHandler.onError() }
+        val errorListener = Response.ErrorListener { requestHandler.onError(it) }
 
         val resource = String.format("%s%s", AVAILABLE_DELIVERY_RESOURCE,
                                                     buildURIParams(coordinates))

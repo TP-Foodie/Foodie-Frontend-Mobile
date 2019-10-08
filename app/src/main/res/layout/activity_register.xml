@@ -1,39 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:fresco="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/context_view"
+    android:id="@+id/register_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/linear_gradient"
-    android:isScrollContainer="true"
-    android:theme="@style/AppTheme"
-    app:layout_constraintVertical_chainStyle="packed"
     tools:context=".ui.RegisterActivity">
 
-    <include
-        android:id="@+id/include3"
-        layout="@layout/icon" />
-
-    <LinearLayout
-        android:id="@+id/header_layout"
-        android:layout_width="355dp"
-        android:layout_height="223dp"
-        android:orientation="vertical"
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/profile_image"
+        android:layout_width="140dp"
+        android:layout_height="140dp"
+        android:layout_marginTop="20dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        fresco:placeholderImage="@drawable/default_profile_image"
+        fresco:roundAsCircle="true"
+        fresco:roundingBorderColor="@color/colorAccent"
+        fresco:roundingBorderWidth="3dp" />
+
+    <ImageButton
+        android:id="@+id/edit_profile_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@id/profile_image"
+        android:layout_alignBottom="@id/profile_image"
+        android:background="@drawable/back_edit_pencil"
+        android:contentDescription="@null"
+        app:layout_constraintBottom_toBottomOf="@id/profile_image"
+        app:layout_constraintEnd_toEndOf="@id/profile_image"
+        app:srcCompat="@drawable/ic_edit_white_24dp" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="270dp"
-        android:layout_height="235dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginEnd="32dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/register_submit_btn"
-        app:layout_constraintStart_toStartOf="@+id/register_submit_btn"
-        app:layout_constraintTop_toBottomOf="@+id/header_layout"
-        app:layout_constraintVertical_bias="0.17">
+        app:layout_constraintBottom_toTopOf="@id/btn_register"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/profile_image">
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/name_field_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            app:errorTextAppearance="@style/error_appearance"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/name_field"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/hint_name_et"
+                android:inputType="textPersonName" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/last_name_field_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            app:errorTextAppearance="@style/error_appearance"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/last_name_field"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/hint_last_name_et"
+                android:inputType="textPersonName" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/phone_field_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            app:errorTextAppearance="@style/error_appearance"
+            app:hintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/phone_field"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="@string/hint_phone_et"
+                android:inputType="phone" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/email_field_layout"
@@ -47,8 +109,8 @@
                 android:id="@+id/email_field"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="@string/email_field" />
-
+                android:hint="@string/hint_email_et"
+                android:inputType="textEmailAddress" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -64,8 +126,8 @@
                 android:id="@+id/password_field"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="@string/password_field" />
-
+                android:hint="@string/hint_password_et"
+                android:inputType="textPassword" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -81,32 +143,25 @@
                 android:id="@+id/password_confirmation_field"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:hint="@string/password_confirm_field" />
-
+                android:hint="@string/hint_confirm_password_et"
+                android:inputType="textPassword" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <ToggleButton
-            android:id="@+id/user_type_btn"
-            style="@style/button"
-            android:layout_width="match_parent"
-            android:checked="false"
-            android:elevation="5dp"
-            android:textOff="@string/client_type"
-            android:textOn="@string/delivery_type" />
-
-
     </LinearLayout>
 
-    <Button
-        android:id="@+id/register_submit_btn"
-        style="@style/button"
-        android:text="@string/confim_register_btn"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btn_register"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginEnd="48dp"
+        android:fontFamily="@font/raleway"
+        android:text="@string/btn_register"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.509"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+        app:layout_constraintTop_toBottomOf="@id/linearLayout" />
 
     <ProgressBar
         android:id="@+id/loading_bar"
@@ -117,9 +172,9 @@
         android:indeterminate="true"
         android:scrollbarSize="4dp"
         android:visibility="invisible"
-        app:layout_constraintBottom_toBottomOf="@+id/register_submit_btn"
-        app:layout_constraintEnd_toEndOf="@+id/register_submit_btn"
-        app:layout_constraintStart_toStartOf="@+id/register_submit_btn"
-        app:layout_constraintTop_toTopOf="@+id/register_submit_btn" />
+        app:layout_constraintBottom_toBottomOf="@+id/btn_register"
+        app:layout_constraintEnd_toEndOf="@+id/btn_register"
+        app:layout_constraintStart_toStartOf="@+id/btn_register"
+        app:layout_constraintTop_toTopOf="@+id/btn_register" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

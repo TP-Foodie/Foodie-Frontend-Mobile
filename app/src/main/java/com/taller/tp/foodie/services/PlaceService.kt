@@ -16,7 +16,7 @@ class PlaceService(ctx: Context, private val requestHandler: RequestHandler){
         requestHandler.begin()
 
         val listener = Response.Listener<JSONObject> { requestHandler.onSuccess(it) }
-        val errorListener = Response.ErrorListener { requestHandler.onError() }
+        val errorListener = Response.ErrorListener { requestHandler.onError(it) }
         client.doGetArray(PLACE_RESOURCE, listener, errorListener)
     }
 
@@ -24,7 +24,7 @@ class PlaceService(ctx: Context, private val requestHandler: RequestHandler){
         requestHandler.begin()
 
         val onSuccess = Response.Listener<JSONObject> { requestHandler.onSuccess(it) }
-        val onError = Response.ErrorListener { requestHandler.onError() }
+        val onError = Response.ErrorListener { requestHandler.onError(it) }
         client.doPost(PLACE_RESOURCE, onSuccess, buildRequest(coordinate, name), onError)
     }
 

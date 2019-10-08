@@ -1,92 +1,191 @@
 package com.taller.tp.foodie.ui
 
-import androidx.appcompat.app.AppCompatActivity
+import android.content.Intent
+import android.graphics.Bitmap
 import android.os.Bundle
-import android.widget.Button
-import android.widget.TextView
-import android.widget.ToggleButton
-import com.google.android.material.textfield.TextInputLayout
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
 import com.taller.tp.foodie.R
+import com.taller.tp.foodie.model.ErrorHandler
+import com.taller.tp.foodie.model.common.auth.AuthErrors.INVALID_EMAIL_ERROR
+import com.taller.tp.foodie.model.common.auth.AuthErrors.INVALID_PASSWORD_ERROR
+import com.taller.tp.foodie.model.common.auth.AuthErrors.LAST_NAME_ERROR
+import com.taller.tp.foodie.model.common.auth.AuthErrors.NAME_ERROR
+import com.taller.tp.foodie.model.common.auth.AuthErrors.PASSWORD_CONFIRM_ERROR
+import com.taller.tp.foodie.model.common.auth.AuthErrors.PHONE_ERROR
+import com.taller.tp.foodie.model.requestHandlers.EmailAuthFromRegisterRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.RegisterRequestHandler
+import com.taller.tp.foodie.services.AuthService
 import com.taller.tp.foodie.services.UserService
-
-const val EMAIL_ERROR = "Por favor ingrese un email válido"
-const val PASSWORD_ERROR = "Por favor ingrese una contraseña válida"
-const val PASSWORD_CONFIRM_ERROR = "Las contraseñas no coinciden"
-const val CLIENT_TYPE = "CUSTOMER"
-const val DELIVERY_TYPE = "DELIVERY"
+import com.taller.tp.foodie.utils.*
+import com.theartofdev.edmodo.cropper.CropImage
+import com.theartofdev.edmodo.cropper.CropImageView
+import kotlinx.android.synthetic.main.activity_register.*
+import java.lang.ref.WeakReference
 
 class RegisterActivity : AppCompatActivity() {
+
+    companion object {
+        const val RESULT_OK = -1
+        const val PICK_IMAGE_REQUEST = 111
+    }
+
+    private var profileImage: Bitmap? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
-        supportActionBar!!.hide()
 
-        val registerButton = findViewById<Button>(R.id.register_submit_btn)
+        setupClickListeners()
+    }
 
-        registerButton.setOnClickListener {
-            val validEmail = validateEmail()
-            val validPassword = validatePassword()
+    private fun setupClickListeners() {
+        edit_profile_image.setOnClickListener {
+            val intent = Intent()
+            intent.type = "image/*"
+            intent.action = Intent.ACTION_PICK
+            startActivityForResult(
+                Intent.createChooser(intent, "Elegir Imagen"),
+                PICK_IMAGE_REQUEST
+            )
+        }
 
-            if (validEmail && validPassword) {
-                registerUser()
+        btn_register.setOnClickListener {
+            val validName = validateNameAndUpdateUi()
+            val validLastName = validateLastNameAndUpdateUi()
+            val validPhone = validatePhoneAndUpdateUi()
+            val validEmail = validateEmailAndUpdateUi()
+            val validPassword = validatePasswordAndUpdateUi()
+
+            if (validName && validLastName && validPhone && validEmail && validPassword) {
+                // send email and password to backend
+                registerUserInBackend()
             }
         }
     }
 
-    private fun getUserType() : String {
-        val userTypeButton = findViewById<ToggleButton>(R.id.user_type_btn)
-        return if (userTypeButton.isChecked) { DELIVERY_TYPE } else { CLIENT_TYPE }
-    }
-
-    private fun registerUser() {
-        val passwordField = findViewById<TextView>(R.id.password_field)
-        val emailField = findViewById<TextView>(R.id.email_field)
-
-        val requestHandler = RegisterRequestHandler(this)
-
+    private fun registerUserInBackend() {
+        // register user in backend
+        val requestHandler = RegisterRequestHandler(WeakReference(this))
         UserService(this, requestHandler).register(
-            emailField.text.toString(),
-            passwordField.text.toString(),
-            getUserType()
+            email_field.text.toString(),
+            password_field.text.toString(),
+            name_field.text.toString(),
+            last_name_field.text.toString(),
+            phone_field.text.toString(),
+            profileImage
         )
     }
 
-    private fun validatePassword() : Boolean {
-        val passwordField = findViewById<TextView>(R.id.password_field)
-        val passwordConfirmationField = findViewById<TextView>(R.id.password_confirmation_field)
+    /*
+    *   Called from AuthRequestHandler onSuccess
+    *
+     */
+    fun authenticateWithBackend() {
+        // authenticate user with backend
+        AuthService(this, EmailAuthFromRegisterRequestHandler(WeakReference(this)))
+            .emailAndPasswordAuthenticationWithBackend(
+                email_field.text.toString(),
+                password_field.text.toString()
+            )
+    }
 
-        val passwordLayout = findViewById<TextInputLayout>(R.id.password_field_layout)
-        val passwordConfirmLayout = findViewById<TextInputLayout>(R.id.password_confirm_layout)
+    private fun validateNameAndUpdateUi(): Boolean {
+        name_field_layout.error = null
 
-        passwordLayout.error = null
-        passwordConfirmLayout.error = null
-
-        if (passwordField.text.isEmpty()) {
-            passwordLayout.error = PASSWORD_ERROR
-            return false
-        }
-
-        if (passwordConfirmationField.text.toString() != passwordField.text.toString()) {
-            passwordConfirmLayout.error = PASSWORD_CONFIRM_ERROR
+        if (!nameIsValid(name_field.text.toString())) {
+            name_field_layout.error = NAME_ERROR
             return false
         }
 
         return true
     }
 
-    private fun validateEmail() : Boolean {
-        val emailField = findViewById<TextView>(R.id.email_field)
-        val emailLayout = findViewById<TextInputLayout>(R.id.email_field_layout)
+    private fun validateLastNameAndUpdateUi(): Boolean {
+        last_name_field_layout.error = null
 
-        emailLayout.error = null
-
-        if (emailField.text.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(emailField.text).matches()) {
-            emailLayout.error = EMAIL_ERROR
+        if (!lastNameIsValid(last_name_field.text.toString())) {
+            last_name_field_layout.error = LAST_NAME_ERROR
             return false
         }
 
         return true
+    }
+
+    private fun validatePhoneAndUpdateUi(): Boolean {
+        phone_field_layout.error = null
+
+        if (!phoneIsValid(phone_field.text.toString())) {
+            phone_field_layout.error = PHONE_ERROR
+            return false
+        }
+
+        return true
+    }
+
+
+    private fun validatePasswordAndUpdateUi(): Boolean {
+        password_field_layout.error = null
+        password_confirm_layout.error = null
+
+        if (!passwordIsValid(password_field.text.toString())) {
+            password_field_layout.error = INVALID_PASSWORD_ERROR
+            return false
+        }
+
+        if (!passwordsAreEqualAndNotEmpty(
+                password_field.text.toString(),
+                password_confirmation_field.text.toString()
+            )
+        ) {
+            password_field_layout.error = PASSWORD_CONFIRM_ERROR
+            password_confirm_layout.error = PASSWORD_CONFIRM_ERROR
+            return false
+        }
+
+        return true
+    }
+
+    private fun validateEmailAndUpdateUi(): Boolean {
+        email_field_layout.error = null
+
+        if (!emailIsValid(email_field.text.toString())) {
+            email_field_layout.error = INVALID_EMAIL_ERROR
+            return false
+        }
+
+        return true
+    }
+
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.data != null) {
+            val image = data.data
+
+            // start cropping activity for pre-acquired image saved on the device
+            CropImage.activity(image)
+                .setGuidelines(CropImageView.Guidelines.ON)
+                .setCropShape(CropImageView.CropShape.RECTANGLE)
+                .setAspectRatio(1, 1)
+                .start(this)
+        }
+
+        if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
+            val result = CropImage.getActivityResult(data)
+            if (resultCode == RESULT_OK) {
+                // Setting image to ImageView
+                profile_image.setImageURI(result.uri.toString())
+
+                // Save image bitmap
+                profileImage = result.bitmap
+            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
+                // update UI
+                Log.e(this.localClassName, "Error al hacer crop: ${result.error.message}")
+
+                ErrorHandler.handleError(register_layout)
+            }
+        }
     }
 }

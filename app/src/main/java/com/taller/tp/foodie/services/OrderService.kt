@@ -15,7 +15,7 @@ class OrderService(ctx: Context, private val requestHandler: RequestHandler) {
         requestHandler.begin()
 
         val listener = Response.Listener<JSONObject> { requestHandler.onSuccess(it) }
-        val errorListener = Response.ErrorListener { requestHandler.onError() }
+        val errorListener = Response.ErrorListener { requestHandler.onError(it) }
 
         client.doPost(ORDER_RESOURCE, listener, toOrderRequestJson(orderRequest), errorListener)
     }
@@ -24,7 +24,7 @@ class OrderService(ctx: Context, private val requestHandler: RequestHandler) {
         requestHandler.begin()
 
         val listener = Response.Listener<JSONObject> { requestHandler.onSuccess(it) }
-        val errorListener = Response.ErrorListener { requestHandler.onError() }
+        val errorListener = Response.ErrorListener { requestHandler.onError(it) }
 
         val resource = String.format("%s%s", ORDER_RESOURCE, order.id)
         client.doPatch(resource, listener, buildAssignDeliveryRequest(deliveryUser), errorListener)

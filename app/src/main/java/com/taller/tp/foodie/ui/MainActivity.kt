@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.taller.tp.foodie.R
-
+import com.taller.tp.foodie.model.common.UserBackendDataHandler
 
 @Suppress("UNUSED_PARAMETER")
 class MainActivity : AppCompatActivity() {
@@ -15,12 +15,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
     }
 
-    fun login(view: View){
-        startActivity(Intent(this, LoginActivity::class.java))
-    }
+    fun signOut(view: View) {
+        // clean user backend data
+        UserBackendDataHandler(applicationContext).deleteUserBackendData()
 
-    fun onRegister(view: View) {
-        startActivity(Intent(this, RegisterActivity::class.java))
+        // go to login and clear task
+        val intent = Intent(applicationContext, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
     }
-
 }

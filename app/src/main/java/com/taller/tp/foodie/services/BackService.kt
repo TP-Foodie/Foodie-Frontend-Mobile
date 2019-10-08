@@ -3,19 +3,21 @@ package com.taller.tp.foodie.services
 import android.content.Context
 import android.util.Log
 import com.android.volley.NetworkResponse
-import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.HttpHeaderParser
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.JsonRequest
 import com.android.volley.toolbox.Volley
+import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import org.json.JSONArray
 import org.json.JSONObject
 import java.util.*
 
 const val SERVICE_ARRAY_RESPONSE = "service-array-response"
 open class BackService(ctx: Context){
+
     private val url = getUrl(ctx)
+    private val authToken = UserBackendDataHandler(ctx).getBackendToken()
 
     private fun getUrl(ctx: Context): String {
         val stream = ctx.assets.open("environment.properties")
@@ -34,10 +36,17 @@ open class BackService(ctx: Context){
         try{
             val queue = Volley.newRequestQueue(context)
             val finalUrl = url+method
-            val getRequest = JsonObjectRequest(Request.Method.GET,
+            val getRequest = object : JsonObjectRequest(
+                Method.GET,
                 finalUrl, null,
                 onSuccess,
-                onError)
+                onError) {
+                override fun getHeaders(): MutableMap<String, String> {
+                    val headers = HashMap<String, String>()
+                    headers["Authorization"] = "Bearer $authToken"
+                    return headers
+                }
+            }
             queue.add(getRequest)
         } catch (e: Throwable){
             Log.e(BackService::class.java.name, "Back service error", e)
@@ -52,10 +61,17 @@ open class BackService(ctx: Context){
         try{
             val queue = Volley.newRequestQueue(context)
             val finalUrl = url+method
-            val getRequest = JSONObjectFromArray(Request.Method.GET,
+            val getRequest = object : JSONObjectFromArray(
+                Method.GET,
                 finalUrl, null,
                 onSuccess,
-                onError)
+                onError) {
+                override fun getHeaders(): MutableMap<String, String> {
+                    val headers = HashMap<String, String>()
+                    headers["Authorization"] = "Bearer $authToken"
+                    return headers
+                }
+            }
             queue.add(getRequest)
         } catch (e: Throwable){
             Log.e(BackService::class.java.name, "Back service error", e)
@@ -71,12 +87,19 @@ open class BackService(ctx: Context){
         try {
             val queue = Volley.newRequestQueue(context)
             val finalUrl = url + method
-            val getRequest = JsonObjectRequest(
-                Request.Method.POST,
+            val getRequest = object : JsonObjectRequest(
+                Method.POST,
                 finalUrl, jsonRequest,
                 listener,
                 onError
-            )
+            ) {
+                override fun getHeaders(): MutableMap<String, String> {
+                    val headers = HashMap<String, String>()
+                    headers["Authorization"] = "Bearer $authToken"
+                    return headers
+                }
+            }
+
             queue.add(getRequest)
         } catch (e: Throwable) {
             Log.e(BackService::class.java.name, "Back service error", e)
@@ -87,26 +110,38 @@ open class BackService(ctx: Context){
         method: String,
         listener: Response.Listener<JSONObject>,
         jsonRequest: JSONObject?,
-        onError: Response.ErrorListener = Response.ErrorListener { error -> Log.d("Error.Response", error.toString()) }
+        onError: Response.ErrorListener = Response.ErrorListener { error ->
+            Log.d(
+                "Error.Response",
+                error.toString()
+            )
+        }
     ) {
         try {
             val queue = Volley.newRequestQueue(context)
             val finalUrl = url + method
-            val getRequest = JsonObjectRequest(
-                Request.Method.PATCH,
+
+            val patchRequest = object : JsonObjectRequest(
+                Method.PATCH,
                 finalUrl, jsonRequest,
                 listener,
                 onError
-            )
-            queue.add(getRequest)
+            ) {
+                override fun getHeaders(): MutableMap<String, String> {
+                    val headers = HashMap<String, String>()
+                    headers["Authorization"] = "Bearer $authToken"
+                    return headers
+                }
+            }
+
+            queue.add(patchRequest)
         } catch (e: Throwable) {
             Log.e(BackService::class.java.name, "Back service error", e)
         }
     }
-
 }
 
-private class JSONObjectFromArray(
+private open class JSONObjectFromArray(
     method: Int,
     url: String?,
     requestBody: String?,

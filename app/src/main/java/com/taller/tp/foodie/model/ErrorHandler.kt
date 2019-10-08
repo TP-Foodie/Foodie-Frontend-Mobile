@@ -12,5 +12,11 @@ class ErrorHandler {
             snackbar.view.setBackgroundColor(Color.RED)
             snackbar.show()
         }
+
+        fun handleError(contextView: View, msg: String) {
+            val snackbar = Snackbar.make(contextView, msg, Snackbar.LENGTH_SHORT)
+            snackbar.view.setBackgroundColor(Color.RED)
+            snackbar.show()
+        }
     }
 }

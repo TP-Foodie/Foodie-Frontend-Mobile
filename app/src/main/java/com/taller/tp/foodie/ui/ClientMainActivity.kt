@@ -23,7 +23,10 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import com.taller.tp.foodie.R
-import com.taller.tp.foodie.model.*
+import com.taller.tp.foodie.model.Coordinate
+import com.taller.tp.foodie.model.Order
+import com.taller.tp.foodie.model.Place
+import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import com.taller.tp.foodie.model.requestHandlers.ClientOrderRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.CreatePlaceRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.ListPlacesRequestHandler
@@ -58,6 +61,9 @@ class ClientMainActivity : AppCompatActivity(),
         mapFragment.getMapAsync(this)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+        val signOutButton = findViewById<Button>(R.id.btn_signout)
+        signOutButton.setOnClickListener { signOut() }
+
         val profileButton = findViewById<Button>(R.id.profile_button)
         profileButton.setOnClickListener { profileButtonListener() }
 
@@ -65,6 +71,17 @@ class ClientMainActivity : AppCompatActivity(),
         makeOrderButton.setOnClickListener { makeOrderButtonListener() }
 
         showSuccessfullOrderMessage()
+    }
+
+    private fun signOut() {
+        // clean user backend data
+        UserBackendDataHandler(applicationContext).deleteUserBackendData()
+
+        // go to login and clear task
+        val intent = Intent(applicationContext, LoginActivity::class.java)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        startActivity(intent)
+        finish()
     }
 
     private fun showSuccessfullOrderMessage() {

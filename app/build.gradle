@@ -6,7 +6,6 @@ apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion 28
-
     defaultConfig {
         applicationId "com.taller.tp.foodie"
         minSdkVersion 23
@@ -23,6 +22,7 @@ android {
     }
 
     lintOptions {
+        textReport = true
         abortOnError true
         warningsAsErrors true
     }
@@ -32,6 +32,9 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+        }
+        customDebugType {
+            debuggable true
         }
     }
 
@@ -72,4 +75,14 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'pub.devrel:easypermissions:1.1.1'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
+
+    // Authentication
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
+    implementation 'com.facebook.android:facebook-login:5.5.1'
+
+    // Image Caching
+    implementation 'com.facebook.fresco:fresco:2.0.0'
+
+    // Image Cropper
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
 }

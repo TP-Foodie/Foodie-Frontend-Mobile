@@ -23,8 +23,14 @@
         <LinearLayout
             android:id="@+id/order_layout"
             android:layout_width="wrap_content"
-            android:layout_height="573dp"
+            android:layout_height="650dp"
             android:orientation="vertical">
+
+            <Button
+                android:id="@+id/btn_signout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/btn_signout" />
 
             <Button
                 android:id="@+id/profile_button"
@@ -43,7 +49,7 @@
                 android:layout_width="417dp"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:orientation="vertical" >
+                android:orientation="vertical">
 
             </LinearLayout>
 
@@ -62,13 +68,17 @@
                         android:id="@+id/delivery_what_input"
                         android:layout_width="180dp"
                         android:layout_height="wrap_content"
-                        android:hint="@string/delivery_what" />
+                        android:hint="@string/delivery_what"
+                        android:textColor="@android:color/background_dark"
+                        android:textColorHint="@android:color/background_dark"/>
 
                     <CheckBox
                         android:id="@+id/delivery_favour_check"
                         android:layout_width="match_parent"
                         android:layout_height="43dp"
-                        android:text="@string/order_as_favour" />
+                        android:text="@string/order_as_favour"
+                        android:textColor="@android:color/background_dark"
+                        android:buttonTint="@android:color/background_dark"/>
 
                 </LinearLayout>
 
@@ -86,15 +96,17 @@
                         android:enabled="false"
                         android:hint="@string/delivery_place"
                         android:inputType="text"
+                        android:textColor="@android:color/background_dark"
+                        android:textColorHint="@android:color/background_dark"
                         tools:targetApi="o" />
 
                     <Button
                         android:id="@+id/make_order_button"
                         android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_gravity="end"
                         android:layout_weight="1"
-                        android:text="@string/build_order_btn"
-                        android:layout_height="wrap_content" />
+                        android:text="@string/build_order_btn" />
                 </LinearLayout>
 
             </LinearLayout>

@@ -1,5 +1,6 @@
 package com.taller.tp.foodie.model.requestHandlers
 
+import com.android.volley.VolleyError
 import org.json.JSONObject
 
 
@@ -8,5 +9,5 @@ interface RequestHandler {
 
     fun onSuccess(response: JSONObject?)
 
-    fun onError()
+    fun onError(error: VolleyError)
 }
