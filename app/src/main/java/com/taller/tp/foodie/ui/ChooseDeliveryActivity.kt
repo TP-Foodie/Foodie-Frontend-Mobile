@@ -40,6 +40,7 @@ class ChooseDeliveryActivity : AppCompatActivity(),
     private lateinit var mMap: GoogleMap
     private var lastSelectedMarker: Marker? = null
     private var markerPlaceMap: HashMap<Marker, DeliveryUser> = HashMap()
+    private var userId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,13 +52,19 @@ class ChooseDeliveryActivity : AppCompatActivity(),
         val confirmDeliveryButton = findViewById<Button>(R.id.confirm_delivery_button)
         confirmDeliveryButton.setOnClickListener { confirmDeliveryButtonListener() }
 
+        initIntentData()
+
+        findViewById<LinearLayout>(R.id.order_layout).visibility = View.INVISIBLE
+    }
+
+    private fun initIntentData() {
         val pendingOrderJson = intent.getStringExtra(CLIENT_NEW_ORDER_KEY)
         if (pendingOrderJson != null) {
             pendingOrder = OrderService.fromOrderJson(JSONObject(pendingOrderJson))
             placeCoordinate = pendingOrder!!.getPlace().coordinate
         }
 
-        findViewById<LinearLayout>(R.id.order_layout).visibility = View.INVISIBLE
+        userId = intent.getStringExtra(CLIENT_ID_KEY)
     }
 
     private fun createMarker(delivery: DeliveryUser): MarkerOptions? {
@@ -158,6 +165,7 @@ class ChooseDeliveryActivity : AppCompatActivity(),
     fun saveAndReturnMain() {
         val intent = Intent(this, ClientMainActivity::class.java).apply {
             putExtra(SUCCESSFUL_ORDER_KEY, true)
+            putExtra(CLIENT_ID_KEY, userId)
         }
         startActivity(intent)
     }

@@ -5,6 +5,8 @@ import android.util.Log
 import com.android.volley.VolleyError
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.ErrorHandler
+import com.taller.tp.foodie.services.AuthService
+import com.taller.tp.foodie.ui.CLIENT_ID_KEY
 import com.taller.tp.foodie.ui.ClientMainActivity
 import com.taller.tp.foodie.ui.LoginActivity
 import com.taller.tp.foodie.ui.WelcomeActivity
@@ -38,7 +40,9 @@ class FederatedIsRegisteredRequestHandler(private val activity: WeakReference<Lo
         }
 
         if (response.has(TYPE_FIELD) && response.has(SUBSCRIPTION_FIELD)) {
-            val intent = Intent(activity.get(), ClientMainActivity::class.java)
+            val intent = Intent(activity.get(), ClientMainActivity::class.java).apply {
+                putExtra(CLIENT_ID_KEY, response.getString(AuthService.ID_FIELD))
+            }
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             activity.get()?.startActivity(intent)
         } else {

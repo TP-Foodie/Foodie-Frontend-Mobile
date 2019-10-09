@@ -30,6 +30,7 @@ import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import com.taller.tp.foodie.model.requestHandlers.ClientOrderRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.CreatePlaceRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.ListPlacesRequestHandler
+import com.taller.tp.foodie.services.AuthService
 import com.taller.tp.foodie.services.OrderService
 import com.taller.tp.foodie.services.PlaceService
 import org.json.JSONObject
@@ -42,6 +43,7 @@ const val INIT_ZOOM_LEVEL = 13f
 const val PRODUCT_EMPTY_ERROR = "Por favor, ingrese el producto que desea ordenar"
 const val PLACE_EMPTY_ERROR = "Por favor, elija un lugar donde debemos retirarlo"
 const val CLIENT_NEW_ORDER_KEY = "CLIENT_NEW_ORDER"
+const val CLIENT_ID_KEY = "CLIENT_ID_KEY"
 
 class ClientMainActivity : AppCompatActivity(),
     GoogleMap.OnMarkerClickListener,
@@ -52,6 +54,7 @@ class ClientMainActivity : AppCompatActivity(),
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var lastSelectedMarker: Marker? = null
     private var markerPlaceMap: HashMap<Marker, Place> = HashMap()
+    private var userId: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -61,6 +64,14 @@ class ClientMainActivity : AppCompatActivity(),
         mapFragment.getMapAsync(this)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
+        initButtonsListeners()
+
+        userId = getIntent().getStringExtra(CLIENT_ID_KEY)
+
+        showSuccessfullOrderMessage()
+    }
+
+    private fun initButtonsListeners() {
         val signOutButton = findViewById<Button>(R.id.btn_signout)
         signOutButton.setOnClickListener { signOut() }
 
@@ -69,8 +80,6 @@ class ClientMainActivity : AppCompatActivity(),
 
         val makeOrderButton = findViewById<Button>(R.id.make_order_button)
         makeOrderButton.setOnClickListener { makeOrderButtonListener() }
-
-        showSuccessfullOrderMessage()
     }
 
     private fun signOut() {
@@ -103,6 +112,9 @@ class ClientMainActivity : AppCompatActivity(),
     }
 
     private fun profileButtonListener(){
+        Intent(this, ProfileActivity::class.java).apply {
+            putExtra(AuthService.ID_FIELD, userId)
+        }
         startActivity(Intent(this, ProfileActivity::class.java))
     }
 
@@ -129,8 +141,7 @@ class ClientMainActivity : AppCompatActivity(),
         val product = findViewById<TextView>(R.id.delivery_what_input)
 
         val requestHandler = ClientOrderRequestHandler(this)
-//        val ownerId = Session.getCurrentUser ? TODO AFTER AUTHENTICATION
-        val ownerId = "5d83bca2d835f963dba8fe2a" // TODO AFTER AUTHENTICATION
+        val ownerId = userId!!
 
         val orderProduct = OrderService.OrderProductRequest(product.text.toString(), place.getId())
         val orderType: Order.TYPE
@@ -258,6 +269,7 @@ class ClientMainActivity : AppCompatActivity(),
     fun saveAndChooseDelivery(response: JSONObject) {
         val intent = Intent(this, ChooseDeliveryActivity::class.java).apply {
             putExtra(CLIENT_NEW_ORDER_KEY, response.toString())
+            putExtra(CLIENT_ID_KEY, userId)
         }
         startActivity(intent)
     }
