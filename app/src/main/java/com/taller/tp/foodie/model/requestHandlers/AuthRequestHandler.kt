@@ -11,7 +11,6 @@ import com.taller.tp.foodie.model.ErrorHandler
 import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import com.taller.tp.foodie.model.common.auth.AuthErrors
 import com.taller.tp.foodie.model.common.auth.ResponseData
-import com.taller.tp.foodie.services.AuthService
 import com.taller.tp.foodie.ui.*
 import org.json.JSONObject
 import java.lang.ref.WeakReference
@@ -77,9 +76,7 @@ class EmailAuthFromLoginRequestHandler(private val activity: WeakReference<Login
             )
 
         // go to main activity, clear activity task
-        val intent = Intent(activity.get(), ClientMainActivity::class.java).apply{
-            putExtra(CLIENT_ID_KEY, response?.getString(AuthService.ID_FIELD))
-        }
+        val intent = Intent(activity.get(), ClientMainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         activity.get()?.startActivity(intent)
 

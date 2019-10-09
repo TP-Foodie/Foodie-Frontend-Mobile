@@ -21,9 +21,6 @@ class AuthService(ctx: Context, private val requestHandler: RequestHandler) {
         // email - password auth
         const val EMAIL_FIELD = "email"
         const val PASSWORD_FIELD = "password"
-
-        // id field
-        const val ID_FIELD = "id"
     }
 
     fun federatedAuthenticationWithBackend(token: String) {
