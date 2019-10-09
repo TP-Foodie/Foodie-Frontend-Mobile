@@ -10,7 +10,8 @@ import org.json.JSONObject
 const val PLACE_RESOURCE = "/places/"
 
 class PlaceService(ctx: Context, private val requestHandler: RequestHandler){
-    private val client : BackService = BackService(ctx)
+
+    private val client = BackService.getInstance(ctx)
 
     fun list(){
         requestHandler.begin()

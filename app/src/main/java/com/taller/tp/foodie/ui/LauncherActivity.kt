@@ -26,7 +26,10 @@ class LauncherActivity : AppCompatActivity() {
             // check if the user has type field in user object
             val userId = UserBackendDataHandler(this).getUserId()
 
-            AuthService(this, CheckRegistrationRequestHandler(WeakReference(this)))
+            AuthService(
+                this.applicationContext,
+                CheckRegistrationRequestHandler(WeakReference(this))
+            )
                 .checkIfUserIsRegistered(userId)
         }
     }

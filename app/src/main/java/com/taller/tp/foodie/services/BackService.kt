@@ -3,6 +3,7 @@ package com.taller.tp.foodie.services
 import android.content.Context
 import android.util.Log
 import com.android.volley.NetworkResponse
+import com.android.volley.RequestQueue
 import com.android.volley.Response
 import com.android.volley.toolbox.HttpHeaderParser
 import com.android.volley.toolbox.JsonObjectRequest
@@ -14,10 +15,29 @@ import org.json.JSONObject
 import java.util.*
 
 const val SERVICE_ARRAY_RESPONSE = "service-array-response"
-open class BackService(ctx: Context){
 
-    private val url = getUrl(ctx)
-    private val authToken = UserBackendDataHandler(ctx).getBackendToken()
+open class BackService constructor(context: Context) {
+
+    companion object {
+        @Volatile
+        private var INSTANCE: BackService? = null
+
+        fun getInstance(context: Context) =
+            INSTANCE ?: synchronized(this) {
+                INSTANCE ?: BackService(context).also {
+                    INSTANCE = it
+                }
+            }
+    }
+
+    private val requestQueue: RequestQueue by lazy {
+        // applicationContext is key, it keeps you from leaking the
+        // Activity or BroadcastReceiver if someone passes one in.
+        Volley.newRequestQueue(context.applicationContext)
+    }
+
+    private val url = getUrl(context)
+    private val authToken = UserBackendDataHandler(context).getBackendToken()
 
     private fun getUrl(ctx: Context): String {
         val stream = ctx.assets.open("environment.properties")
@@ -26,7 +46,6 @@ open class BackService(ctx: Context){
         return properties.getProperty("foodie-back.url")
     }
 
-    val context = ctx
 
     fun doGetObject(
         method: String,
@@ -34,7 +53,6 @@ open class BackService(ctx: Context){
         onError: Response.ErrorListener = Response.ErrorListener { error -> Log.d("Error.Response", error.toString()) }
     ){
         try{
-            val queue = Volley.newRequestQueue(context)
             val finalUrl = url+method
             val getRequest = object : JsonObjectRequest(
                 Method.GET,
@@ -47,7 +65,7 @@ open class BackService(ctx: Context){
                     return headers
                 }
             }
-            queue.add(getRequest)
+            requestQueue.add(getRequest)
         } catch (e: Throwable){
             Log.e(BackService::class.java.name, "Back service error", e)
         }
@@ -59,7 +77,6 @@ open class BackService(ctx: Context){
         onError: Response.ErrorListener = Response.ErrorListener { error -> Log.d("Error.Response", error.toString()) }
     ){
         try{
-            val queue = Volley.newRequestQueue(context)
             val finalUrl = url+method
             val getRequest = object : JSONObjectFromArray(
                 Method.GET,
@@ -72,7 +89,7 @@ open class BackService(ctx: Context){
                     return headers
                 }
             }
-            queue.add(getRequest)
+            requestQueue.add(getRequest)
         } catch (e: Throwable){
             Log.e(BackService::class.java.name, "Back service error", e)
         }
@@ -85,7 +102,6 @@ open class BackService(ctx: Context){
         onError: Response.ErrorListener = Response.ErrorListener { error -> Log.d("Error.Response", error.toString()) }
     ) {
         try {
-            val queue = Volley.newRequestQueue(context)
             val finalUrl = url + method
             val getRequest = object : JsonObjectRequest(
                 Method.POST,
@@ -100,7 +116,7 @@ open class BackService(ctx: Context){
                 }
             }
 
-            queue.add(getRequest)
+            requestQueue.add(getRequest)
         } catch (e: Throwable) {
             Log.e(BackService::class.java.name, "Back service error", e)
         }
@@ -118,7 +134,6 @@ open class BackService(ctx: Context){
         }
     ) {
         try {
-            val queue = Volley.newRequestQueue(context)
             val finalUrl = url + method
 
             val patchRequest = object : JsonObjectRequest(
@@ -134,7 +149,7 @@ open class BackService(ctx: Context){
                 }
             }
 
-            queue.add(patchRequest)
+            requestQueue.add(patchRequest)
         } catch (e: Throwable) {
             Log.e(BackService::class.java.name, "Back service error", e)
         }

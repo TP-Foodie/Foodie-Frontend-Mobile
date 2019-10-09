@@ -11,7 +11,7 @@ import java.lang.ref.WeakReference
 
 class UserService(ctx: Context, private val requestHandler: RequestHandler) {
 
-    private val client : BackService = BackService(ctx)
+    private val client = BackService.getInstance(ctx)
     private val context = WeakReference(ctx)
 
     companion object {

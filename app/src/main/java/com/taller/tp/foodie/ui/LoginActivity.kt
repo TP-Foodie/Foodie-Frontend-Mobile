@@ -171,17 +171,20 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        AuthService(this, FederatedAuthRequestHandler(WeakReference(this)))
+        AuthService(this.applicationContext, FederatedAuthRequestHandler(WeakReference(this)))
             .federatedAuthenticationWithBackend(token)
     }
 
     fun checkIfFederatedIsRegistered(userId: String?) {
-        AuthService(this, FederatedIsRegisteredRequestHandler(WeakReference(this)))
+        AuthService(
+            this.applicationContext,
+            FederatedIsRegisteredRequestHandler(WeakReference(this))
+        )
             .checkIfFederatedIsRegistered(userId)
     }
 
     private fun authenticateWithBackend(email: String, password: String) {
-        AuthService(this, EmailAuthFromLoginRequestHandler(WeakReference(this)))
+        AuthService(this.applicationContext, EmailAuthFromLoginRequestHandler(WeakReference(this)))
             .emailAndPasswordAuthenticationWithBackend(email, password)
     }
 

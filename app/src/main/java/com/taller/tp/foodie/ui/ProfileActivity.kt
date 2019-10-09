@@ -30,7 +30,7 @@ class ProfileActivity : AppCompatActivity() {
     }
 
     private fun getUserProfile() {
-        ProfileService(applicationContext, GetUserProfileRequestHandler(WeakReference(this)))
+        ProfileService(this.applicationContext, GetUserProfileRequestHandler(WeakReference(this)))
             .getUserProfile(userId)
     }
 

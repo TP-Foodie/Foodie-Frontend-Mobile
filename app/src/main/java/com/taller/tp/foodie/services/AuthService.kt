@@ -7,7 +7,7 @@ import org.json.JSONObject
 
 class AuthService(ctx: Context, private val requestHandler: RequestHandler) {
 
-    private val client = BackService(ctx)
+    private val client = BackService.getInstance(ctx)
 
     companion object {
         // endpoints
