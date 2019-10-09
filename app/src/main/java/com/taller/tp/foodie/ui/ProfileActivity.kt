@@ -12,16 +12,26 @@ import java.lang.ref.WeakReference
 
 class ProfileActivity : AppCompatActivity() {
 
+    var userId: String? = null
+
+    companion object {
+        const val USER_ID_EXTRA = "userId"
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
+
+        // TODO: anda si es que queremos mostrar la misma info sin importar si el userId
+        // TODO: no es el del usuario actual.
+        userId = intent.getStringExtra(USER_ID_EXTRA)
 
         getUserProfile()
     }
 
     private fun getUserProfile() {
         ProfileService(applicationContext, GetUserProfileRequestHandler(WeakReference(this)))
-            .getUserProfile()
+            .getUserProfile(userId)
     }
 
     @SuppressLint("SetTextI18n")

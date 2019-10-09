@@ -17,7 +17,7 @@ class ProfileService(ctx: Context, private val requestHandler: RequestHandler) {
         const val PROFILE_RESOURCE = "/profiles/"
     }
 
-    fun getUserProfile() {
+    fun getUserProfile(userId: String?) {
         // setup request handler
         requestHandler.begin()
 
@@ -28,9 +28,13 @@ class ProfileService(ctx: Context, private val requestHandler: RequestHandler) {
             requestHandler.onError(error)
         }
 
-        // add user id to the profiles endpoint
-        val userId = UserBackendDataHandler(context.get()!!).getUserId()
-
-        client.doGetObject(PROFILE_RESOURCE + userId, listener, errorListener)
+        if (userId.isNullOrEmpty()) {
+            client.doGetObject(
+                PROFILE_RESOURCE + UserBackendDataHandler(context.get()!!).getUserId(),
+                listener, errorListener
+            )
+        } else {
+            client.doGetObject(PROFILE_RESOURCE + userId, listener, errorListener)
+        }
     }
 }
