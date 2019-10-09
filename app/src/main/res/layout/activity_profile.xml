@@ -15,6 +15,11 @@
         app:layout_constraintVertical_chainStyle="packed"
         tools:context=".ui.RegisterActivity">
 
+        <include
+            android:id="@+id/include3"
+            layout="@layout/icon"
+            tools:layout_editor_absoluteX="0dp"
+            tools:layout_editor_absoluteY="0dp" />
 
         <LinearLayout
             android:id="@+id/header_layout"
@@ -29,7 +34,6 @@
             android:id="@+id/imageView2"
             android:layout_width="144dp"
             android:layout_height="210dp"
-            android:contentDescription="@string/user_image_desc"
             android:src="@drawable/dog"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -37,7 +41,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/header_layout"
             app:layout_constraintVertical_bias="0.312"
-            app:srcCompat="@drawable/dog" />
+            android:contentDescription="@string/user_image_desc" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
