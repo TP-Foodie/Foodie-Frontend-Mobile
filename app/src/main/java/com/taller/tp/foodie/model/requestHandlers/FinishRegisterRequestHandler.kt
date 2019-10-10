@@ -3,8 +3,8 @@ package com.taller.tp.foodie.model.requestHandlers
 import android.content.Intent
 import android.util.Log
 import android.view.View
-import android.widget.Button
 import android.widget.ProgressBar
+import android.widget.TextView
 import com.android.volley.VolleyError
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.ErrorHandler
@@ -17,7 +17,7 @@ class FinishRegisterRequestHandler(private val activity: WeakReference<WelcomeAc
     RequestHandler {
 
     private var text: CharSequence? = null
-    private val button = activity.get()?.findViewById<Button>(R.id.btn_right)
+    private val button = activity.get()?.findViewById<TextView>(R.id.btn_right)
     private val progressBar = activity.get()?.findViewById<ProgressBar>(R.id.loading_bar)
 
     override fun begin() {

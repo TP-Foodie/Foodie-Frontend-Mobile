@@ -17,6 +17,8 @@ class CheckRegistrationRequestHandler(private val activity: WeakReference<Launch
     companion object {
         const val TYPE_FIELD = "type"
         const val SUBSCRIPTION_FIELD = "subscription"
+
+        const val FIELD_IS_NULL = "null"
     }
 
     override fun begin() {}
@@ -37,7 +39,7 @@ class CheckRegistrationRequestHandler(private val activity: WeakReference<Launch
             return
         }
 
-        if (response.has(TYPE_FIELD) && response.has(SUBSCRIPTION_FIELD)) {
+        if (isRegistered(response)) {
             val intent = Intent(activity.get(), ClientMainActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
             activity.get()?.startActivity(intent)
@@ -48,5 +50,19 @@ class CheckRegistrationRequestHandler(private val activity: WeakReference<Launch
         }
 
         activity.get()?.finish()
+    }
+
+    private fun isRegistered(response: JSONObject): Boolean {
+        if (!response.has(TYPE_FIELD) || !response.has(SUBSCRIPTION_FIELD)) {
+            return false
+        }
+
+        if (response.getString(TYPE_FIELD) == FIELD_IS_NULL ||
+            response.getString(SUBSCRIPTION_FIELD) == FIELD_IS_NULL
+        ) {
+            return false
+        }
+
+        return true
     }
 }
