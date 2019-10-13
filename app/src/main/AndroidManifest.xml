@@ -102,6 +102,13 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".ui.RecoveryPasswordActivity"
+            android:parentActivityName=".ui.TokenActivity" />
+
+        <activity android:name=".ui.TokenActivity"
+            android:parentActivityName=".ui.LoginActivity"/>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

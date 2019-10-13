@@ -215,4 +215,9 @@ class LoginActivity : AppCompatActivity() {
             startActivity(Intent(applicationContext, RegisterActivity::class.java))
         }
     }
+
+    fun tokenPage(view: View) {
+        val intent = Intent(applicationContext, TokenActivity::class.java)
+        startActivity(intent)
+    }
 }

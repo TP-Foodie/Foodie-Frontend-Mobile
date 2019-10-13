@@ -40,7 +40,6 @@
     <string name="btn_signout">Sign Out</string>
 
 
-
     <string name="build_order_btn">Pedir</string>
     <string name="profile_btn">Perfil</string>
     <string name="delivery_what">Que querés pedir?</string>
@@ -53,5 +52,14 @@
     <string name="choose_delivery">Elegir Delivery</string>
     <string name="delivery_photo">Foto del Delivery</string>
     <string name="general_success">Operación Exitosa!</string>
+
+    <string name="title_activity_password_recovery">password_recovery</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="btn_send_token">Enviar token</string>
+    <string name="btn_forgot_password">Olvidaste la contraseña?</string>
+    <string name="hint_token">Token</string>
+    <string name="btn_update_password">Actualizar contraseña</string>
+    <string name="put_token">Introducir token</string>
 
 </resources>
