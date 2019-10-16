@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/token_layout">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/context_view"
@@ -70,6 +71,18 @@
                 android:onClick="tokenPasswordPage"/>
 
         </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/loading_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:indeterminate="true"
+            android:indeterminateTint="@android:color/white"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@id/btn_right"
+            app:layout_constraintEnd_toEndOf="@id/btn_right"
+            app:layout_constraintStart_toStartOf="@id/btn_right"
+            app:layout_constraintTop_toTopOf="@id/btn_right" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
