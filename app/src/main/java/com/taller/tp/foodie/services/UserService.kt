@@ -17,6 +17,7 @@ class UserService(ctx: Context, private val requestHandler: RequestHandler) {
     companion object {
         // endpoint
         const val USERS_RESOURCE = "/users/"
+        const val ME_RESOURCE = "/users/me"
 
         // email - password register
         const val EMAIL_FIELD = "email"
@@ -77,9 +78,6 @@ class UserService(ctx: Context, private val requestHandler: RequestHandler) {
         requestObject.put(TYPE_FIELD, userType)
         requestObject.put(SUBSCRIPTION_FIELD, subscription)
 
-        // add user id to the users endpoint
-        val userId = UserBackendDataHandler(context.get()!!).getUserId()
-
-        client.doPatch(USERS_RESOURCE + userId, listener, requestObject, errorListener)
+        client.doPatch(USERS_RESOURCE, listener, requestObject, errorListener)
     }
 }
