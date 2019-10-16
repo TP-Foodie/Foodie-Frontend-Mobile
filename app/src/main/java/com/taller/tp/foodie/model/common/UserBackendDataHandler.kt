@@ -9,7 +9,6 @@ class UserBackendDataHandler(context: Context) {
         const val USER_DATA_RESOURCE_KEY = "userData"
 
         const val TOKEN = "token"
-        const val USER_ID = "userId"
     }
 
     private val context = WeakReference(context)
@@ -18,30 +17,11 @@ class UserBackendDataHandler(context: Context) {
      * Persist Data
      */
 
-    fun persistUserBackendData(token: String?, userId: String?) {
+    fun persistUserBackendData(token: String?) {
         val sharedPreferences =
             context.get()?.getSharedPreferences(USER_DATA_RESOURCE_KEY, Context.MODE_PRIVATE)
         with(sharedPreferences!!.edit()) {
             putString(TOKEN, token)
-            putString(USER_ID, userId)
-            apply()
-        }
-    }
-
-    fun persistBackendToken(token: String?) {
-        val sharedPreferences =
-            context.get()?.getSharedPreferences(USER_DATA_RESOURCE_KEY, Context.MODE_PRIVATE)
-        with(sharedPreferences!!.edit()) {
-            putString(TOKEN, token)
-            apply()
-        }
-    }
-
-    fun persistUserId(userId: String?) {
-        val sharedPreferences =
-            context.get()?.getSharedPreferences(USER_DATA_RESOURCE_KEY, Context.MODE_PRIVATE)
-        with(sharedPreferences!!.edit()) {
-            putString(USER_ID, userId)
             apply()
         }
     }
@@ -57,12 +37,6 @@ class UserBackendDataHandler(context: Context) {
         return sharedPreferences?.getString(TOKEN, "").toString()
     }
 
-    fun getUserId(): String {
-        val sharedPreferences =
-            context.get()?.getSharedPreferences(USER_DATA_RESOURCE_KEY, Context.MODE_PRIVATE)
-
-        return sharedPreferences?.getString(USER_ID, "").toString()
-    }
 
     /*
      * Delete Data
@@ -73,7 +47,6 @@ class UserBackendDataHandler(context: Context) {
             context.get()?.getSharedPreferences(USER_DATA_RESOURCE_KEY, Context.MODE_PRIVATE)
         with(sharedPreferences!!.edit()) {
             remove(TOKEN)
-            remove(USER_ID)
             apply()
         }
     }

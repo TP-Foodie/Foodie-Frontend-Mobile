@@ -35,12 +35,11 @@ class FederatedAuthRequestHandler(private val activity: WeakReference<LoginActiv
         // persist user data
         UserBackendDataHandler(activity.get()?.applicationContext!!)
             .persistUserBackendData(
-                response?.getString(ResponseData.TOKEN_FIELD),
-                response?.getString(ResponseData.USER_ID_FIELD)
+                response?.getString(ResponseData.TOKEN_FIELD)
             )
 
         activity.get()
-            ?.checkIfFederatedIsRegistered(response?.getString(ResponseData.USER_ID_FIELD))
+            ?.checkIfFederatedIsRegistered(response?.getString(ResponseData.TOKEN_FIELD))
     }
 }
 
@@ -74,8 +73,7 @@ class EmailAuthFromLoginRequestHandler(private val activity: WeakReference<Login
         // persist user data
         UserBackendDataHandler(activity.get()?.applicationContext!!)
             .persistUserBackendData(
-                response?.getString(ResponseData.TOKEN_FIELD),
-                response?.getString(ResponseData.USER_ID_FIELD)
+                response?.getString(ResponseData.TOKEN_FIELD)
             )
 
         // go to main activity, clear activity task
@@ -116,8 +114,7 @@ class EmailAuthFromRegisterRequestHandler(private val activity: WeakReference<Re
         // persist user data
         UserBackendDataHandler(activity.get()?.applicationContext!!)
             .persistUserBackendData(
-                response?.getString(ResponseData.TOKEN_FIELD),
-                response?.getString(ResponseData.USER_ID_FIELD)
+                response?.getString(ResponseData.TOKEN_FIELD)
             )
 
         // go to welcome activity, clear activity task

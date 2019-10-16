@@ -24,10 +24,10 @@ class LauncherActivity : AppCompatActivity() {
             finish()
         } else {
             // check if the user has type field in user object
-            val userId = UserBackendDataHandler(this).getUserId()
+            val userToken = UserBackendDataHandler(this).getBackendToken()
 
             AuthService(this, CheckRegistrationRequestHandler(WeakReference(this)))
-                .checkIfUserIsRegistered(userId)
+                .checkIfUserIsRegistered(userToken)
         }
     }
 
@@ -35,9 +35,8 @@ class LauncherActivity : AppCompatActivity() {
         // check token and user id are not empty
         val backendDataHandler = UserBackendDataHandler(this)
         val token = backendDataHandler.getBackendToken()
-        val userId = backendDataHandler.getUserId()
 
-        if (token.isEmpty() || userId.isEmpty()) {
+        if (token.isEmpty()) {
             return false
         }
 
