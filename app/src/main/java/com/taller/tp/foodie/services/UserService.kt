@@ -78,6 +78,6 @@ class UserService(ctx: Context, private val requestHandler: RequestHandler) {
         requestObject.put(TYPE_FIELD, userType)
         requestObject.put(SUBSCRIPTION_FIELD, subscription)
 
-        client.doPatch(USERS_RESOURCE, listener, requestObject, errorListener)
+        client.doPatch(ME_RESOURCE, listener, requestObject, errorListener)
     }
 }
