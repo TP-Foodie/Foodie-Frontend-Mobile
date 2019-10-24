@@ -2,22 +2,19 @@ package com.taller.tp.foodie.services
 
 import android.content.Context
 import com.android.volley.Response
-import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import com.taller.tp.foodie.model.requestHandlers.RequestHandler
 import org.json.JSONObject
-import java.lang.ref.WeakReference
 
 class ProfileService(ctx: Context, private val requestHandler: RequestHandler) {
 
     private val client = BackService.getInstance(ctx)
-    private val context = WeakReference(ctx)
 
     companion object {
         // endpoint
-        const val PROFILE_RESOURCE = "/profiles/"
+        const val ME_RESOURCE = "/users/me"
     }
 
-    fun getUserProfile(userId: String?) {
+    fun getUserProfile() {
         // setup request handler
         requestHandler.begin()
 
@@ -28,13 +25,6 @@ class ProfileService(ctx: Context, private val requestHandler: RequestHandler) {
             requestHandler.onError(error)
         }
 
-        if (userId.isNullOrEmpty()) {
-            client.doGetObject(
-                PROFILE_RESOURCE + UserBackendDataHandler(context.get()!!).getUserId(),
-                listener, errorListener
-            )
-        } else {
-            client.doGetObject(PROFILE_RESOURCE + userId, listener, errorListener)
-        }
+        client.doGetObject(ME_RESOURCE, listener, errorListener)
     }
 }
