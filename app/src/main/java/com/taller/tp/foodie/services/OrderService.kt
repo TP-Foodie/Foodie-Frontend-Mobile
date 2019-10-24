@@ -2,7 +2,10 @@ package com.taller.tp.foodie.services
 
 import android.content.Context
 import com.android.volley.Response
-import com.taller.tp.foodie.model.*
+import com.taller.tp.foodie.model.DeliveryUser
+import com.taller.tp.foodie.model.Order
+import com.taller.tp.foodie.model.OrderProduct
+import com.taller.tp.foodie.model.Place
 import com.taller.tp.foodie.model.requestHandlers.RequestHandler
 import org.json.JSONObject
 
@@ -47,7 +50,7 @@ class OrderService(ctx: Context, private val requestHandler: RequestHandler) {
                                     .setProduct(orderProduct)
         }
 
-        private fun fromOrderProductJson(json: JSONObject) : OrderProduct {
+        private fun fromOrderProductJson(json: JSONObject): OrderProduct {
             val productName = json.getString("name")
             val placeJson = json.getJSONObject("place")
             val coordinates =
