@@ -175,9 +175,9 @@ class LoginActivity : AppCompatActivity() {
             .federatedAuthenticationWithBackend(token)
     }
 
-    fun checkIfFederatedIsRegistered(userToken: String?) {
+    fun checkIfFederatedIsRegistered() {
         AuthService(this, FederatedIsRegisteredRequestHandler(WeakReference(this)))
-            .checkIfFederatedIsRegistered(userToken)
+            .checkIfFederatedIsRegistered()
     }
 
     private fun authenticateWithBackend(email: String, password: String) {

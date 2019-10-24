@@ -29,7 +29,7 @@ class ProfileActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     fun fillProfile(data: UserProfile) {
         full_name.text = data.name + " " + data.last_name
-        profile_image.setImageURI(data.profile_image, null)
+        profile_image.setImageURI(data.profile_image)
         reputation.rating = data.reputation
 
         email.text = data.email

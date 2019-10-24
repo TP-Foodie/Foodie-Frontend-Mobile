@@ -3,6 +3,7 @@ package com.taller.tp.foodie.ui
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.taller.tp.foodie.R
@@ -181,8 +182,7 @@ class RegisterActivity : AppCompatActivity() {
                 // Setting image to ImageView
                 profile_image.setImageURI(result.uri.toString())
 
-                // Save image bitmap
-                profileImage = result.bitmap
+                profileImage = MediaStore.Images.Media.getBitmap(this.contentResolver, result.uri)
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 // update UI
                 Log.e(this.localClassName, "Error al hacer crop: ${result.error.message}")
