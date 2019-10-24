@@ -3,7 +3,6 @@ package com.taller.tp.foodie.model
 class Order(val id: String){
     private var status: String? = null
     private var type: String? = null
-    private var owner: OrderOwner? = null
     private var product: OrderProduct? = null
 
     enum class STATUS(val key: String) {
@@ -22,11 +21,6 @@ class Order(val id: String){
 
     fun setType(type: String): Order{
         this.type = type
-        return this
-    }
-
-    fun setOwner(owner: OrderOwner): Order{
-        this.owner = owner
         return this
     }
 
