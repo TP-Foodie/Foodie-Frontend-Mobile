@@ -132,14 +132,12 @@ class ClientMainActivity : AppCompatActivity(),
         val product = findViewById<TextView>(R.id.delivery_what_input)
 
         val requestHandler = ClientOrderRequestHandler(this)
-//        val ownerId = Session.getCurrentUser ? TODO AFTER AUTHENTICATION
-        val ownerId = "5d83bca2d835f963dba8fe2a" // TODO AFTER AUTHENTICATION
 
         val orderProduct = OrderService.OrderProductRequest(product.text.toString(), place.getId())
         val orderType: Order.TYPE
         orderType = if (isFavour) Order.TYPE.FAVOR_TYPE else Order.TYPE.NORMAL_TYPE
-        val orderRequest = OrderService.OrderRequest(orderType.key, ownerId, orderProduct)
-        OrderService(this.applicationContext, requestHandler).makeOrder(orderRequest)
+        val orderRequest = OrderService.OrderRequest(orderType.key, orderProduct)
+        OrderService(this, requestHandler).makeOrder(orderRequest)
     }
 
     private fun validateProduct(): Boolean {
@@ -181,7 +179,6 @@ class ClientMainActivity : AppCompatActivity(),
         fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
             if (location != null) {
                 val current = LatLng(location.latitude, location.longitude)
-//                mMap.addMarker(MarkerOptions().position(current).draggable(true))
                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(current, INIT_ZOOM_LEVEL))
             }
         }

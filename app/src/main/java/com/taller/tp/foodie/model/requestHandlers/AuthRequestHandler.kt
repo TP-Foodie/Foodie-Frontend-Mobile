@@ -11,7 +11,10 @@ import com.taller.tp.foodie.model.ErrorHandler
 import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import com.taller.tp.foodie.model.common.auth.AuthErrors
 import com.taller.tp.foodie.model.common.auth.ResponseData
-import com.taller.tp.foodie.ui.*
+import com.taller.tp.foodie.ui.ClientMainActivity
+import com.taller.tp.foodie.ui.LoginActivity
+import com.taller.tp.foodie.ui.RegisterActivity
+import com.taller.tp.foodie.ui.WelcomeActivity
 import org.json.JSONObject
 import java.lang.ref.WeakReference
 
@@ -32,12 +35,11 @@ class FederatedAuthRequestHandler(private val activity: WeakReference<LoginActiv
         // persist user data
         UserBackendDataHandler(activity.get()?.applicationContext!!)
             .persistUserBackendData(
-                response?.getString(ResponseData.TOKEN_FIELD),
-                response?.getString(ResponseData.USER_ID_FIELD)
+                response?.getString(ResponseData.TOKEN_FIELD)
             )
 
         activity.get()
-            ?.checkIfFederatedIsRegistered(response?.getString(ResponseData.USER_ID_FIELD))
+            ?.checkIfFederatedIsRegistered(response?.getString(ResponseData.TOKEN_FIELD))
     }
 }
 
@@ -53,11 +55,11 @@ class EmailAuthFromLoginRequestHandler(private val activity: WeakReference<Login
     private fun stopLoading() {}
 
     override fun onError(error: VolleyError) {
-        Log.e("AuthRequestHandler", "Volley error: " + error.localizedMessage)
+        Log.e("AuthRequestHandler", "Volley error: " + error.message)
         stopLoading()
 
         // print value error only if unauthorized request
-        if (error.networkResponse.statusCode == UNAUTHORIZED) {
+        if (error.networkResponse != null && error.networkResponse.statusCode == UNAUTHORIZED) {
             ErrorHandler.handleError(
                 activity.get()?.findViewById(R.id.login_layout)!!,
                 AuthErrors.EMAIL_OR_PASSWORD_VALUE_ERROR
@@ -71,8 +73,7 @@ class EmailAuthFromLoginRequestHandler(private val activity: WeakReference<Login
         // persist user data
         UserBackendDataHandler(activity.get()?.applicationContext!!)
             .persistUserBackendData(
-                response?.getString(ResponseData.TOKEN_FIELD),
-                response?.getString(ResponseData.USER_ID_FIELD)
+                response?.getString(ResponseData.TOKEN_FIELD)
             )
 
         // go to main activity, clear activity task
@@ -113,8 +114,7 @@ class EmailAuthFromRegisterRequestHandler(private val activity: WeakReference<Re
         // persist user data
         UserBackendDataHandler(activity.get()?.applicationContext!!)
             .persistUserBackendData(
-                response?.getString(ResponseData.TOKEN_FIELD),
-                response?.getString(ResponseData.USER_ID_FIELD)
+                response?.getString(ResponseData.TOKEN_FIELD)
             )
 
         // go to welcome activity, clear activity task

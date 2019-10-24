@@ -42,17 +42,12 @@ class OrderService(ctx: Context, private val requestHandler: RequestHandler) {
             val productJson = json.getJSONObject("product")
             val orderProduct = fromOrderProductJson(productJson)
 
-            // Owner
-            val ownerJson = json.getJSONObject("owner")
-            val owner = fromOrderOwnerJson(ownerJson)
-
             return Order(id).setType(orderType)
                                     .setStatus(status)
-                                    .setOwner(owner)
                                     .setProduct(orderProduct)
         }
 
-        private fun fromOrderProductJson(json: JSONObject) : OrderProduct{
+        private fun fromOrderProductJson(json: JSONObject) : OrderProduct {
             val productName = json.getString("name")
             val placeJson = json.getJSONObject("place")
             val coordinates =
@@ -60,14 +55,6 @@ class OrderService(ctx: Context, private val requestHandler: RequestHandler) {
             val placeName = placeJson.getString("name")
             val place = Place(placeName, coordinates)
             return OrderProduct(productName, place)
-        }
-
-        private fun fromOrderOwnerJson(json: JSONObject) : OrderOwner{
-            val name = json.getString("name")
-            val email = json.getString("email")
-            val phone = json.getString("phone")
-            val image = json.getString("profile_image")
-            return OrderOwner(name).setEmail(email).setPhone(phone).setImage(image)
         }
 
         private fun buildAssignDeliveryRequest(deliveryUser: DeliveryUser) : JSONObject{
@@ -80,7 +67,6 @@ class OrderService(ctx: Context, private val requestHandler: RequestHandler) {
         private fun toOrderRequestJson(orderRequest: OrderRequest) : JSONObject{
             val jsonOrder = JSONObject()
             jsonOrder.put("order_type", orderRequest.orderType)
-            jsonOrder.put("owner", orderRequest.owner)
             val jsonOrderProduct = JSONObject()
             jsonOrderProduct.put("name", orderRequest.orderProduct.product)
             jsonOrderProduct.put("place", orderRequest.orderProduct.placeId)
@@ -89,7 +75,7 @@ class OrderService(ctx: Context, private val requestHandler: RequestHandler) {
         }
     }
 
-    class OrderRequest(val orderType: String, val owner: String, val orderProduct: OrderProductRequest)
+    class OrderRequest(val orderType: String, val orderProduct: OrderProductRequest)
 
     class OrderProductRequest(val product: String, val placeId: String)
 }
