@@ -16,7 +16,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+        <activity android:name=".ui.ChatActivity"></activity>
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAP_API_KEY}" />
@@ -33,7 +38,6 @@
             android:name=".ui.LoginActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
-
         <activity
             android:name=".ui.ClientMainActivity"
             android:label="@string/map_place_choice">
@@ -41,7 +45,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.MainActivity" />
         </activity>
-
         <activity
             android:name=".ui.ChooseDeliveryActivity"
             android:label="@string/choose_delivery"
@@ -50,7 +53,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.ClientMainActivity" />
         </activity>
-
         <activity
             android:name=".ui.ProfileActivity"
             android:label="@string/choose_delivery"
@@ -59,7 +61,6 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.ClientMainActivity" />
         </activity>
-
         <activity
             android:name=".ui.RegisterActivity"
             android:configChanges="orientation"
@@ -75,6 +76,7 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity> <!-- Android Image Cropper Activity -->
