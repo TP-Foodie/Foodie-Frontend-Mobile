@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import com.android.volley.Response
 import com.taller.tp.foodie.model.common.ImageStringConversor
-import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import com.taller.tp.foodie.model.requestHandlers.RequestHandler
 import org.json.JSONObject
 import java.lang.ref.WeakReference
