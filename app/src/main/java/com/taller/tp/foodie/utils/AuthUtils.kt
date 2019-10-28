@@ -41,6 +41,15 @@ fun emailIsValid(email: String?): Boolean {
     return true
 }
 
+fun tokenIsValid(email: String?): Boolean {
+    if (email.isNullOrEmpty()) {
+        return false
+    }
+
+    return true
+}
+
+
 fun nameIsValid(name: String?): Boolean {
     if (name.isNullOrEmpty()) {
         return false
