@@ -44,7 +44,7 @@ class ChatService(ctx: Context, private val requestHandler: RequestHandler) {
             requestHandler.onError(error)
         }
 
-        client.doGetArray(CHATS_RESOURCE + chatId + MESSAGES_RESOURCE, listener, errorListener)
+        client.doGetObject(CHATS_RESOURCE + chatId + MESSAGES_RESOURCE, listener, errorListener)
     }
 
     fun sendMessage(chatId: String, messageData: ChatMessage) {

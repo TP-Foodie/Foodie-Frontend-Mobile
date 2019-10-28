@@ -14,7 +14,7 @@ class SendMessageRequestHandler(private val activity: ChatActivity) : RequestHan
     override fun onError(error: VolleyError) {
         Log.e("SendMessagesReq", "Volley error: " + error.localizedMessage)
         ErrorHandler.handleError(activity.findViewById<View>(R.id.chat_layout))
-        activity.chatMessageSentUpdateUI()
+        activity.chatMessageNotSentUpdateUI()
     }
 
     override fun onSuccess(response: JSONObject?) {

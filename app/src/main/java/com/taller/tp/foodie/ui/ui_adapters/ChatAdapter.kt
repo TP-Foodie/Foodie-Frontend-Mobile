@@ -49,8 +49,15 @@ class ChatAdapter(private val listaMensajes: List<ChatMessage>, private val my_u
         // format for message time
         val cal = Calendar.getInstance()
         cal.timeInMillis = mensaje.timestamp
-        val messageTime =
-            cal.get(Calendar.HOUR_OF_DAY).toString() + ":" + cal.get(Calendar.MINUTE).toString()
+        var hour = cal.get(Calendar.HOUR_OF_DAY).toString()
+        var minute = cal.get(Calendar.MINUTE).toString()
+        if (hour.length == 1) {
+            hour = "0$hour"
+        }
+        if (minute.length == 1) {
+            minute = "0$minute"
+        }
+        val messageTime = "$hour:$minute"
 
         holder.messageTime.text = messageTime
         holder.message.text = mensaje.message

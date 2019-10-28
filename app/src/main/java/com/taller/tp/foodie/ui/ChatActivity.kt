@@ -4,19 +4,20 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.Gson
+import com.taller.tp.foodie.MyApplication
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.ChatFetched
 import com.taller.tp.foodie.model.ChatMessage
 import com.taller.tp.foodie.model.ErrorHandler
 import com.taller.tp.foodie.model.UserProfileFetched
-import com.taller.tp.foodie.model.requestHandlers.GetChatRequestHandler
-import com.taller.tp.foodie.model.requestHandlers.GetOtherUserForChatRequestHandler
-import com.taller.tp.foodie.model.requestHandlers.GetUserForChatRequestHandler
-import com.taller.tp.foodie.model.requestHandlers.SendMessageRequestHandler
+import com.taller.tp.foodie.model.requestHandlers.*
 import com.taller.tp.foodie.services.ChatService
 import com.taller.tp.foodie.services.ProfileService
 import com.taller.tp.foodie.ui.ui_adapters.ChatAdapter
+import io.socket.client.Socket
 import kotlinx.android.synthetic.main.activity_chat.*
+import org.json.JSONObject
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -29,6 +30,8 @@ class ChatActivity : AppCompatActivity() {
     private var otherData: UserProfileFetched? = null
 
     private var chatAdapter: ChatAdapter? = null
+
+    private lateinit var socket: Socket
 
     companion object {
         const val CHAT_ID = "chatId"
@@ -45,6 +48,14 @@ class ChatActivity : AppCompatActivity() {
             return
         }
 
+        val app = application as MyApplication
+        socket = app.getSocket()
+        socket.connect()
+
+        val requestBody = JSONObject()
+        requestBody.put("id_chat", chatId!!)
+        socket.emit("joined", requestBody)
+
         setupClickListeners()
 
         setupUI()
@@ -58,11 +69,25 @@ class ChatActivity : AppCompatActivity() {
 
             val cal = Calendar.getInstance()
             val messageData = ChatMessage(myData?.id!!, message, cal.timeInMillis, chatId!!)
+
+            messagesList.add(0, messageData)
+
             ChatService(applicationContext, SendMessageRequestHandler(this))
                 .sendMessage(chatId!!, messageData)
 
             message_text.setText("")
             btn_send_message.isEnabled = false
+        }
+
+        socket.on("new_message") { args ->
+            val data = args[0] as JSONObject
+            val newMessage = Gson().fromJson(data.toString(), ChatMessage::class.java)
+            if (newMessage.uid_sender == otherData?.id) {
+                messagesList.add(0, newMessage)
+                runOnUiThread {
+                    updateChatMessagesUI()
+                }
+            }
         }
     }
 
@@ -71,14 +96,6 @@ class ChatActivity : AppCompatActivity() {
             return false
         }
         return true
-    }
-
-    private fun setupData() {
-        getMyData()
-
-        getOtherData()
-
-        getChatMessages()
     }
 
     fun updateChatMessages(chatMessages: MutableList<ChatMessage>) {
@@ -90,17 +107,21 @@ class ChatActivity : AppCompatActivity() {
     fun updateChat(chatMessages: ChatFetched) {
         chat = chatMessages
 
-        setupData()
+        getMyData()
     }
 
     fun updateMyData(userProfile: UserProfileFetched) {
         myData = userProfile
+
+        getOtherData()
     }
 
     fun updateOtherData(userProfile: UserProfileFetched) {
         otherData = userProfile
 
         setupChatToolbar()
+
+        getChatMessages()
     }
 
     private fun getMyData() {
@@ -125,7 +146,7 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun getChatMessages() {
-        ChatService(applicationContext, GetChatRequestHandler(this))
+        ChatService(applicationContext, ListChatMessagesRequestHandler(this))
             .getChatMessages(chatId!!)
     }
 
@@ -150,20 +171,43 @@ class ChatActivity : AppCompatActivity() {
         }
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStop() {
+        super.onStop()
+
+        val requestBody = JSONObject()
+        requestBody.put("id_chat", chatId!!)
+        socket.emit("left", requestBody)
+    }
+
+    override fun onRestart() {
+        super.onRestart()
 
         if (!checkPreconditionsAreMet()) {
             ErrorHandler.handleError(chat_layout)
             return
         }
 
+        val requestBody = JSONObject()
+        requestBody.put("id_chat", chatId!!)
+        socket.emit("joined", requestBody)
+
         setupUI()
 
         getChat()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        socket.disconnect()
+    }
     fun chatMessageSentUpdateUI() {
         btn_send_message.isEnabled = true
+        updateChatMessagesUI()
+    }
+
+    fun chatMessageNotSentUpdateUI() {
+        btn_send_message.isEnabled = true
+        messagesList.removeAt(0)
     }
 }

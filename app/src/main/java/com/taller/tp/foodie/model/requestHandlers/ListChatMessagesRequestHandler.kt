@@ -7,7 +7,6 @@ import com.google.gson.Gson
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.ChatMessage
 import com.taller.tp.foodie.model.ErrorHandler
-import com.taller.tp.foodie.services.SERVICE_ARRAY_RESPONSE
 import com.taller.tp.foodie.ui.ChatActivity
 import org.json.JSONObject
 
@@ -25,7 +24,7 @@ class ListChatMessagesRequestHandler(private val activity: ChatActivity) : Reque
             return
         }
 
-        val listResponse = response.getJSONArray(SERVICE_ARRAY_RESPONSE)
+        val listResponse = response.getJSONArray("messages")
         val messages = mutableListOf<ChatMessage>()
         for (i in 0 until listResponse.length()) {
             messages.add(

@@ -32,6 +32,7 @@ import com.taller.tp.foodie.model.requestHandlers.CreatePlaceRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.ListPlacesRequestHandler
 import com.taller.tp.foodie.services.OrderService
 import com.taller.tp.foodie.services.PlaceService
+import kotlinx.android.synthetic.main.activity_client_main.*
 import org.json.JSONObject
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
@@ -56,6 +57,13 @@ class ClientMainActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_client_main)
+
+        chat_button.setOnClickListener {
+            val intent = Intent(applicationContext, ChatActivity::class.java)
+            intent.putExtra(ChatActivity.CHAT_ID, "5db70abc476c15daf15899f0")
+            startActivity(intent)
+        }
+
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)

@@ -22,7 +22,7 @@ class GetOtherUserForChatRequestHandler(private val activity: WeakReference<Chat
     }
 
     override fun onError(error: VolleyError) {
-        Log.e("GetOthUseChatReqHandler", "Volley error: " + error.localizedMessage)
+        Log.e("GetOthUseChatReqHandler", "Volley error: " + error.message)
         ErrorHandler.handleError(activity.get()?.findViewById(R.id.chat_layout)!!)
     }
 }
