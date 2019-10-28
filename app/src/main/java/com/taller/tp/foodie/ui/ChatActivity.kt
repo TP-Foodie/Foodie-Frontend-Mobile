@@ -5,24 +5,28 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.taller.tp.foodie.R
-import com.taller.tp.foodie.model.Chat
+import com.taller.tp.foodie.model.ChatFetched
 import com.taller.tp.foodie.model.ChatMessage
 import com.taller.tp.foodie.model.ErrorHandler
-import com.taller.tp.foodie.model.UserProfile
+import com.taller.tp.foodie.model.UserProfileFetched
 import com.taller.tp.foodie.model.requestHandlers.GetChatRequestHandler
+import com.taller.tp.foodie.model.requestHandlers.GetOtherUserForChatRequestHandler
+import com.taller.tp.foodie.model.requestHandlers.GetUserForChatRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.SendMessageRequestHandler
 import com.taller.tp.foodie.services.ChatService
+import com.taller.tp.foodie.services.ProfileService
 import com.taller.tp.foodie.ui.ui_adapters.ChatAdapter
 import kotlinx.android.synthetic.main.activity_chat.*
+import java.lang.ref.WeakReference
 import java.util.*
 
 class ChatActivity : AppCompatActivity() {
 
     private var chatId: String? = null
-    private var chat: Chat? = null
+    private var chat: ChatFetched? = null
     private var messagesList = mutableListOf<ChatMessage>()
-    private var myData: UserProfile? = null
-    private var otherData: UserProfile? = null
+    private var myData: UserProfileFetched? = null
+    private var otherData: UserProfileFetched? = null
 
     private var chatAdapter: ChatAdapter? = null
 
@@ -52,9 +56,8 @@ class ChatActivity : AppCompatActivity() {
         btn_send_message.setOnClickListener {
             val message = message_text.text.toString().trim()
 
-            // TODO: my_uid
             val cal = Calendar.getInstance()
-            val messageData = ChatMessage("my_uid", message, cal.timeInMillis)
+            val messageData = ChatMessage(myData?.id!!, message, cal.timeInMillis, chatId!!)
             ChatService(applicationContext, SendMessageRequestHandler(this))
                 .sendMessage(chatId!!, messageData)
 
@@ -84,28 +87,36 @@ class ChatActivity : AppCompatActivity() {
         updateChatMessagesUI()
     }
 
-    fun updateChat(chatMessages: Chat) {
+    fun updateChat(chatMessages: ChatFetched) {
         chat = chatMessages
 
         setupData()
     }
 
-    fun updateMyData(userProfile: UserProfile) {
+    fun updateMyData(userProfile: UserProfileFetched) {
         myData = userProfile
     }
 
-    fun updateOtherData(userProfile: UserProfile) {
+    fun updateOtherData(userProfile: UserProfileFetched) {
         otherData = userProfile
 
         setupChatToolbar()
     }
 
     private fun getMyData() {
-        // get my data con user service (o profile service)
+        ProfileService(applicationContext, GetUserForChatRequestHandler(WeakReference(this)))
+            .getUserForChat()
     }
 
     private fun getOtherData() {
-        // get other data con user service (o profile service)
+        val otherUserId = if (chat?.uid_1 == myData?.id) {
+            chat?.uid_2!!
+        } else {
+            chat?.uid_1!!
+        }
+
+        ProfileService(applicationContext, GetOtherUserForChatRequestHandler(WeakReference(this)))
+            .getOtherUserForChat(otherUserId)
     }
 
     private fun getChat() {
@@ -131,8 +142,7 @@ class ChatActivity : AppCompatActivity() {
 
     private fun updateChatMessagesUI() {
         // update messages in messages list
-        // TODO: my uid
-        chatAdapter = ChatAdapter(messagesList, "my_uid")
+        chatAdapter = ChatAdapter(messagesList, myData?.id!!)
         messages_list.adapter = chatAdapter
 
         messages_list.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->

@@ -5,7 +5,7 @@ import android.view.View
 import com.android.volley.VolleyError
 import com.google.gson.Gson
 import com.taller.tp.foodie.R
-import com.taller.tp.foodie.model.Chat
+import com.taller.tp.foodie.model.ChatFetched
 import com.taller.tp.foodie.model.ErrorHandler
 import com.taller.tp.foodie.ui.ChatActivity
 import org.json.JSONObject
@@ -24,6 +24,6 @@ class GetChatRequestHandler(private val activity: ChatActivity) : RequestHandler
             return
         }
 
-        activity.updateChat(Gson().fromJson(response.toString(), Chat::class.java))
+        activity.updateChat(Gson().fromJson(response.toString(), ChatFetched::class.java))
     }
 }
