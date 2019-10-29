@@ -52,5 +52,6 @@
     <string name="choose_delivery">Elegir Delivery</string>
     <string name="delivery_photo">Foto del Delivery</string>
     <string name="general_success">Operación Exitosa!</string>
+    <string name="default_notification_channel_id">default notification channel</string>
 
 </resources>

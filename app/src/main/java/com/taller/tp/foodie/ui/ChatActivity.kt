@@ -2,6 +2,7 @@ package com.taller.tp.foodie.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.gson.Gson
@@ -49,12 +50,21 @@ class ChatActivity : AppCompatActivity() {
         }
 
         val app = application as MyApplication
-        socket = app.getSocket()
-        socket.connect()
+        socket = app.getSocket().connect()
 
-        val requestBody = JSONObject()
-        requestBody.put("id_chat", chatId!!)
-        socket.emit("joined", requestBody)
+        socket.on(Socket.EVENT_CONNECT_ERROR) { it ->
+            Log.e("ChatActivity", "ERROR socket connect")
+        }
+        socket.on(Socket.EVENT_CONNECT_TIMEOUT) { it ->
+            Log.e("ChatActivity", "TIMEOUT socket connect")
+        }
+        socket.on(Socket.EVENT_CONNECT) { it ->
+            Log.e("ChatActivity", "socket connected")
+
+            val requestBody = JSONObject()
+            requestBody.put("id_chat", chatId!!)
+            socket.emit("joined", requestBody)
+        }
 
         setupClickListeners()
 
@@ -85,6 +95,7 @@ class ChatActivity : AppCompatActivity() {
             if (newMessage.uid_sender == otherData?.id) {
                 messagesList.add(0, newMessage)
                 runOnUiThread {
+                    Log.e("ChatActivity", "data received: $data")
                     updateChatMessagesUI()
                 }
             }
