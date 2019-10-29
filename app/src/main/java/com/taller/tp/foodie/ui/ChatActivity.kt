@@ -1,12 +1,15 @@
 package com.taller.tp.foodie.ui
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.gson.Gson
-import com.taller.tp.foodie.MyApplication
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.ChatFetched
 import com.taller.tp.foodie.model.ChatMessage
@@ -16,9 +19,7 @@ import com.taller.tp.foodie.model.requestHandlers.*
 import com.taller.tp.foodie.services.ChatService
 import com.taller.tp.foodie.services.ProfileService
 import com.taller.tp.foodie.ui.ui_adapters.ChatAdapter
-import io.socket.client.Socket
 import kotlinx.android.synthetic.main.activity_chat.*
-import org.json.JSONObject
 import java.lang.ref.WeakReference
 import java.util.*
 
@@ -31,8 +32,6 @@ class ChatActivity : AppCompatActivity() {
     private var otherData: UserProfileFetched? = null
 
     private var chatAdapter: ChatAdapter? = null
-
-    private lateinit var socket: Socket
 
     companion object {
         const val CHAT_ID = "chatId"
@@ -49,22 +48,11 @@ class ChatActivity : AppCompatActivity() {
             return
         }
 
-        val app = application as MyApplication
-        socket = app.getSocket().connect()
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+            mMessageReceiver, IntentFilter("newMessage")
+        )
 
-        socket.on(Socket.EVENT_CONNECT_ERROR) { it ->
-            Log.e("ChatActivity", "ERROR socket connect")
-        }
-        socket.on(Socket.EVENT_CONNECT_TIMEOUT) { it ->
-            Log.e("ChatActivity", "TIMEOUT socket connect")
-        }
-        socket.on(Socket.EVENT_CONNECT) { it ->
-            Log.e("ChatActivity", "socket connected")
-
-            val requestBody = JSONObject()
-            requestBody.put("id_chat", chatId!!)
-            socket.emit("joined", requestBody)
-        }
+        persistChatState(true)
 
         setupClickListeners()
 
@@ -87,18 +75,6 @@ class ChatActivity : AppCompatActivity() {
 
             message_text.setText("")
             btn_send_message.isEnabled = false
-        }
-
-        socket.on("new_message") { args ->
-            val data = args[0] as JSONObject
-            val newMessage = Gson().fromJson(data.toString(), ChatMessage::class.java)
-            if (newMessage.uid_sender == otherData?.id) {
-                messagesList.add(0, newMessage)
-                runOnUiThread {
-                    Log.e("ChatActivity", "data received: $data")
-                    updateChatMessagesUI()
-                }
-            }
         }
     }
 
@@ -185,9 +161,11 @@ class ChatActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
 
-        val requestBody = JSONObject()
-        requestBody.put("id_chat", chatId!!)
-        socket.emit("left", requestBody)
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(
+            mMessageReceiver
+        )
+
+        persistChatState(false)
     }
 
     override fun onRestart() {
@@ -198,20 +176,18 @@ class ChatActivity : AppCompatActivity() {
             return
         }
 
-        val requestBody = JSONObject()
-        requestBody.put("id_chat", chatId!!)
-        socket.emit("joined", requestBody)
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+            mMessageReceiver, IntentFilter("newMessage")
+        )
+
+        persistChatState(true)
 
         setupUI()
 
         getChat()
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
 
-        socket.disconnect()
-    }
     fun chatMessageSentUpdateUI() {
         btn_send_message.isEnabled = true
         updateChatMessagesUI()
@@ -220,5 +196,31 @@ class ChatActivity : AppCompatActivity() {
     fun chatMessageNotSentUpdateUI() {
         btn_send_message.isEnabled = true
         messagesList.removeAt(0)
+    }
+
+    private fun persistChatState(isInForeground: Boolean) {
+        val pref = applicationContext.getSharedPreferences("ChatId", 0)
+        val editor = pref.edit()
+        if (isInForeground) {
+            editor.putString("CId", chatId)
+        } else {
+            editor.remove("CId")
+        }
+        editor.apply()
+    }
+
+    private val mMessageReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            Log.e("ChatActivity", "Local Broadcast RECEIVED")
+            val uidSender = intent.getStringExtra("uid_sender")
+            val message = intent.getStringExtra("message")
+            val timestamp = intent.getLongExtra("timestamp", Calendar.getInstance().timeInMillis)
+            val idChat = intent.getStringExtra("chat_id")
+            val chatMessage = ChatMessage(uidSender, message, timestamp, idChat)
+            messagesList.add(0, chatMessage)
+            runOnUiThread {
+                updateChatMessagesUI()
+            }
+        }
     }
 }
