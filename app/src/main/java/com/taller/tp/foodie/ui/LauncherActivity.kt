@@ -27,7 +27,7 @@ class LauncherActivity : AppCompatActivity() {
             val userToken = UserBackendDataHandler(this).getBackendToken()
 
             AuthService(this, CheckRegistrationRequestHandler(WeakReference(this)))
-                .checkIfUserIsRegistered(userToken)
+                .checkIfUserIsRegistered()
         }
     }
 

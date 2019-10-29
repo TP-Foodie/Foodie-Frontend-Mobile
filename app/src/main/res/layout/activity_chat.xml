@@ -5,7 +5,8 @@
     android:id="@+id/chat_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/white">
+    android:background="@android:color/white"
+    tools:ignore="Overdraw">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/toolbar_chatroom"
@@ -61,7 +62,9 @@
             android:paddingEnd="22dp"
             android:scrollbars="vertical"
             android:scrollHorizontally="false"
-            android:textColor="@android:color/black" />
+            android:importantForAutofill="no"
+            android:textColor="@android:color/black"
+            tools:ignore="LabelFor" />
 
         <ImageButton
             android:id="@+id/btn_send_message"
@@ -72,6 +75,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/message_text"
             app:srcCompat="@drawable/baseline_send_24"
+            android:contentDescription="@null"
             tools:ignore="VectorDrawableCompat" />
 
     </LinearLayout>

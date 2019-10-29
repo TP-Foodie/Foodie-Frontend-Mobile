@@ -58,7 +58,7 @@ class AuthService(ctx: Context, private val requestHandler: RequestHandler) {
         client.doPost(AUTH_RESOURCE, listener, requestObject, errorListener)
     }
 
-    fun checkIfFederatedIsRegistered(userToken: String?) {
+    fun checkIfFederatedIsRegistered() {
         requestHandler.begin()
 
         val listener = Response.Listener<JSONObject> { response: JSONObject? ->
@@ -71,7 +71,7 @@ class AuthService(ctx: Context, private val requestHandler: RequestHandler) {
         client.doGetObject(ME_RESOURCE, listener, errorListener)
     }
 
-    fun checkIfUserIsRegistered(userToken: String) {
-        checkIfFederatedIsRegistered(userToken)
+    fun checkIfUserIsRegistered() {
+        checkIfFederatedIsRegistered()
     }
 }

@@ -91,11 +91,6 @@ dependencies {
 
     // GSON
     implementation 'com.google.code.gson:gson:2.8.6'
-
-    // Socket IO
-    implementation ('io.socket:socket.io-client:1.0.0') {
-        exclude group: 'org.json', module: 'json'
-    }
 }
 
 // Add to the bottom of the file

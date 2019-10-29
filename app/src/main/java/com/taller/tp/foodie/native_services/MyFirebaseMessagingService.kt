@@ -9,6 +9,7 @@ import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
 import androidx.core.app.NotificationCompat
+import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -40,8 +41,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val data = remoteMessage.data
         if (data.isNotEmpty()) {
             // Notification Channel for data notifications
-            var name = ""
-            var description = ""
+            val name: String
+            val description: String
             when (data["channelId"]) {
                 "Chat Channel" -> {
                     name = "Chat"
@@ -76,7 +77,12 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 NotificationCompat.Builder(this, data["channelId"] ?: error(""))
                     .setAutoCancel(true)   //Automatically delete the notification
                     .setSmallIcon(com.taller.tp.foodie.R.drawable.ic_stat_f) //Notification icon
-                    .setColor(resources.getColor(com.taller.tp.foodie.R.color.colorAccent))
+                    .setColor(
+                        ContextCompat.getColor(
+                            this,
+                            com.taller.tp.foodie.R.color.colorAccent
+                        )
+                    )
                     .setContentIntent(pendingIntent)
                     .setContentTitle(data["title"])
                     .setContentText(data["body"])
