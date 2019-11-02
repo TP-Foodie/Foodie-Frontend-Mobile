@@ -6,10 +6,7 @@ import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
 import android.view.View
-import android.widget.Button
-import android.widget.CheckBox
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -26,6 +23,7 @@ import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.Coordinate
 import com.taller.tp.foodie.model.Order
 import com.taller.tp.foodie.model.Place
+import com.taller.tp.foodie.model.User
 import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import com.taller.tp.foodie.model.requestHandlers.ClientOrderRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.CreatePlaceRequestHandler
@@ -42,6 +40,7 @@ const val INIT_ZOOM_LEVEL = 13f
 const val PRODUCT_EMPTY_ERROR = "Por favor, ingrese el producto que desea ordenar"
 const val PLACE_EMPTY_ERROR = "Por favor, elija un lugar donde debemos retirarlo"
 const val CLIENT_NEW_ORDER_KEY = "CLIENT_NEW_ORDER"
+const val CLIENT_TYPE_KEY = "CLIENT_TYPE_KEY"
 
 class ClientMainActivity : AppCompatActivity(),
     GoogleMap.OnMarkerClickListener,
@@ -52,10 +51,13 @@ class ClientMainActivity : AppCompatActivity(),
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var lastSelectedMarker: Marker? = null
     private var markerPlaceMap: HashMap<Marker, Place> = HashMap()
+    lateinit var userType: User.USER_TYPE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_client_main)
+        loadUserTypeComponents()
+
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
@@ -76,8 +78,23 @@ class ClientMainActivity : AppCompatActivity(),
         showSuccessfullOrderMessage()
     }
 
+    private fun loadUserTypeComponents() {
+        //TODO llamar a servicio me para saber que tipo soy
+        userType = User.USER_TYPE.CUSTOMER
+        when(userType){
+            User.USER_TYPE.CUSTOMER -> {}
+            User.USER_TYPE.DELIVERY -> {
+                val makeOrderLayout = findViewById<LinearLayout>(R.id.make_order_layout)
+                makeOrderLayout.visibility = View.INVISIBLE
+            }
+        }
+    }
+
     private fun orderListButtonListener() {
-        startActivity(Intent(this, OrdersActivity::class.java))
+        val intent = Intent(this, OrdersActivity::class.java).apply {
+            putExtra(CLIENT_TYPE_KEY, userType.name)
+        }
+        startActivity(intent)
     }
 
     private fun signOut() {

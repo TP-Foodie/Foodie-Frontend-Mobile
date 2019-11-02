@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.tabs.TabLayout
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.Order
+import com.taller.tp.foodie.model.User
 import com.taller.tp.foodie.model.requestHandlers.ListOrdersRequestHandler
 import com.taller.tp.foodie.services.OrderService
 
@@ -28,12 +29,20 @@ class OrdersActivity : AppCompatActivity(),
                                             Order.STATUS.TAKEN_STATUS.ordinal)
     private val completedStatus = intArrayOf(Order.STATUS.DELIVERED_STATUS.ordinal)
 
+    lateinit var userType: User.USER_TYPE
+
     private var allOrders: ArrayList<Order> = ArrayList()
 
+    private fun loadUserType() {
+        val intentUserType = intent.getStringExtra(CLIENT_TYPE_KEY)
+        this.userType = User.USER_TYPE.valueOf(intentUserType)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_orders)
+        loadUserType()
+
         val tabs = findViewById<TabLayout>(R.id.order_list_tabs)
         tabs.addOnTabSelectedListener(this)
         val listOrdersRequestHandler = ListOrdersRequestHandler(this)
@@ -50,6 +59,7 @@ class OrdersActivity : AppCompatActivity(),
         val listAdapter = OrderListAdapter(this, orders){ order: Order? ->
             val detailIntent = Intent(this, OrderDetailActivity::class.java).apply {
                 putExtra(DETAIL_ORDER_KEY, order!!.id)
+                putExtra(CLIENT_TYPE_KEY, userType.name)
             }
             startActivity(detailIntent)
         }

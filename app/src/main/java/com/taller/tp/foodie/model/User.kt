@@ -1,6 +1,7 @@
 package com.taller.tp.foodie.model
 
 open class User(val id: String?, val name: String, val image: String?){
+    enum class USER_TYPE { CUSTOMER, DELIVERY }
     var email: String? = null
         get() = field
     fun setEmail(email: String?) : User {
@@ -19,4 +20,5 @@ open class User(val id: String?, val name: String, val image: String?){
         this.phone = phone
         return this
     }
+    var type: USER_TYPE = USER_TYPE.CUSTOMER
 }

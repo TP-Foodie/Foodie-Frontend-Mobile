@@ -6,6 +6,7 @@ class Order(val id: String){
     private var number: Int? = null
     private var product: OrderProduct? = null
     private var owner: User? = null
+    private var delivery: DeliveryUser? = null
 
     enum class STATUS(val key: String) {
         TAKEN_STATUS("TS"),
@@ -46,6 +47,15 @@ class Order(val id: String){
 
     fun getOwner(): User?{
         return owner
+    }
+
+    fun setDelivery(delivery: DeliveryUser?): Order{
+        this.delivery = delivery
+        return this
+    }
+
+    fun getDelivery(): DeliveryUser?{
+        return delivery
     }
 
     fun setType(type: String): Order{

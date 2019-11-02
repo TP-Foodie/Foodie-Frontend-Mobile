@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.Order
+import com.taller.tp.foodie.model.User
 import com.taller.tp.foodie.model.requestHandlers.OrderDetailRequestHandler
 import com.taller.tp.foodie.services.OrderService
 
@@ -14,10 +15,18 @@ import com.taller.tp.foodie.services.OrderService
 class OrderDetailActivity : AppCompatActivity() {
 
     private var order: Order? = null
+    lateinit var userType: User.USER_TYPE
+
+    private fun loadUserType() {
+        val intentUserType = intent.getStringExtra(CLIENT_TYPE_KEY)
+        this.userType = User.USER_TYPE.valueOf(intentUserType)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_order_detail)
+
+        loadUserType()
 
         val orderId = intent.getStringExtra(DETAIL_ORDER_KEY)
         if (orderId != null) {
@@ -29,7 +38,7 @@ class OrderDetailActivity : AppCompatActivity() {
     }
 
     private fun confirmDeliveryButtonListener() {
-        OrderService(this, OrderDetailRequestHandler(this))
+        OrderService(this, OrderDetailRequestHandler(this).forUpdate())
             .updateStatus(order!!, Order.STATUS.DELIVERED_STATUS)
     }
 
@@ -53,7 +62,7 @@ class OrderDetailActivity : AppCompatActivity() {
     }
 
     private fun setupActions() {
-        if (order!!.getStatus() != Order.STATUS.TAKEN_STATUS) {
+        if (userType != User.USER_TYPE.DELIVERY || order!!.getStatus() != Order.STATUS.TAKEN_STATUS) {
             val confirmDeliveryButton = findViewById<Button>(R.id.confirm_delivery_button)
             confirmDeliveryButton.visibility = View.INVISIBLE
         }

@@ -54,6 +54,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/make_order_layout"
                 android:layout_width="326dp"
                 android:layout_height="112dp"
                 android:background="@android:drawable/dialog_holo_light_frame"
@@ -70,15 +71,15 @@
                         android:layout_height="wrap_content"
                         android:hint="@string/delivery_what"
                         android:textColor="@android:color/background_dark"
-                        android:textColorHint="@android:color/background_dark"/>
+                        android:textColorHint="@android:color/background_dark" />
 
                     <CheckBox
                         android:id="@+id/delivery_favour_check"
                         android:layout_width="match_parent"
                         android:layout_height="43dp"
+                        android:buttonTint="@android:color/background_dark"
                         android:text="@string/order_as_favour"
-                        android:textColor="@android:color/background_dark"
-                        android:buttonTint="@android:color/background_dark"/>
+                        android:textColor="@android:color/background_dark" />
 
                 </LinearLayout>
 

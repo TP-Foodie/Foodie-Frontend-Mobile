@@ -28,7 +28,7 @@ class OrderService(ctx: Context, private val requestHandler: RequestHandler) {
     }
 
     fun updateStatus(order: Order, status: Order.STATUS) {
-        update(order, buildUpdateStatusRequest(status))
+        update(order, buildUpdateStatusRequest(order,status))
     }
 
     fun update(order: Order, body: JSONObject) {
@@ -41,10 +41,10 @@ class OrderService(ctx: Context, private val requestHandler: RequestHandler) {
         client.doPatch(resource, listener, body, errorListener)
     }
 
-    private fun buildUpdateStatusRequest(status: Order.STATUS): JSONObject {
+    private fun buildUpdateStatusRequest(order: Order, status: Order.STATUS): JSONObject {
         val jsonRequest = JSONObject()
         jsonRequest.put("status", status.key)
-        jsonRequest.put("delivery", "123412341234123412341234") // TODO JE
+        jsonRequest.put("delivery", order.getDelivery()!!.id)
         return jsonRequest
     }
 
@@ -85,7 +85,15 @@ class OrderService(ctx: Context, private val requestHandler: RequestHandler) {
             val ownerJson = json.getJSONObject("owner")
             val owner = UserService.fromUserJson(ownerJson)
 
-            return order.setProduct(orderProduct).setOwner(owner)
+            // Delivery
+            var deliveryUser: DeliveryUser? = null
+            if (!json.isNull("delivery")){
+                val deliveryJson = json.getJSONObject("delivery")
+                val delivery = UserService.fromUserJson(deliveryJson)
+                deliveryUser = DeliveryUser(delivery.id!!, delivery.name, delivery.image)
+            }
+
+            return order.setProduct(orderProduct).setOwner(owner).setDelivery(deliveryUser)
         }
 
         private fun fromOrderProductJson(json: JSONObject) : OrderProduct {

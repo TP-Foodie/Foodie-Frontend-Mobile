@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import com.android.volley.Response
 import com.taller.tp.foodie.model.User
 import com.taller.tp.foodie.model.common.ImageStringConversor
-import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import com.taller.tp.foodie.model.requestHandlers.RequestHandler
 import org.json.JSONObject
 import java.lang.ref.WeakReference
@@ -33,13 +32,14 @@ class UserService(ctx: Context, private val requestHandler: RequestHandler) {
         const val SUBSCRIPTION_FIELD = "subscription"
 
         fun fromUserJson(json: JSONObject): User{
+            val id = json.getString("id")
             val email = json.getString("email")
             val lastName = json.getString("last_name")
             val name = json.getString("name")
             val phone = json.getString("phone")
             val image = json.getString("profile_image")
 
-            return User(null, name, image)
+            return User(id, name, image)
                 .setEmail(email)
                 .setLastName(lastName)
                 .setPhone(phone)
