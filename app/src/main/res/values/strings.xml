@@ -40,7 +40,6 @@
     <string name="btn_signout">Sign Out</string>
 
 
-
     <string name="build_order_btn">Pedir</string>
     <string name="profile_btn">Perfil</string>
     <string name="delivery_what">Que querés pedir?</string>
@@ -53,5 +52,18 @@
     <string name="choose_delivery">Elegir Delivery</string>
     <string name="delivery_photo">Foto del Delivery</string>
     <string name="general_success">Operación Exitosa!</string>
+
+    <!-- Orders -->
+    <string name="pending_orders">Pendientes</string>
+    <string name="completed_orders">Completadas</string>
+    <string name="loading_orders">Cargando Pedidos..</string>
+    <string name="detail_order">Detalles</string>
+    <string name="deliver_order">Entregar</string>
+    <string name="track_order">Seguimiento</string>
+    <string name="empty_order_list">No hay Pedidos</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 
 </resources>

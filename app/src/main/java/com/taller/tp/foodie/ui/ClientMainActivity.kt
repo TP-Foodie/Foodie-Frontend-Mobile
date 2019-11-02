@@ -70,7 +70,14 @@ class ClientMainActivity : AppCompatActivity(),
         val makeOrderButton = findViewById<Button>(R.id.make_order_button)
         makeOrderButton.setOnClickListener { makeOrderButtonListener() }
 
+        val orderListButton = findViewById<Button>(R.id.orders_button)
+        orderListButton.setOnClickListener { orderListButtonListener() }
+
         showSuccessfullOrderMessage()
+    }
+
+    private fun orderListButtonListener() {
+        startActivity(Intent(this, OrdersActivity::class.java))
     }
 
     private fun signOut() {

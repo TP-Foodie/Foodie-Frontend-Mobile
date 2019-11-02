@@ -3,6 +3,7 @@ package com.taller.tp.foodie.services
 import android.content.Context
 import android.graphics.Bitmap
 import com.android.volley.Response
+import com.taller.tp.foodie.model.User
 import com.taller.tp.foodie.model.common.ImageStringConversor
 import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import com.taller.tp.foodie.model.requestHandlers.RequestHandler
@@ -30,6 +31,19 @@ class UserService(ctx: Context, private val requestHandler: RequestHandler) {
         // type and subcription finish register
         const val TYPE_FIELD = "type"
         const val SUBSCRIPTION_FIELD = "subscription"
+
+        fun fromUserJson(json: JSONObject): User{
+            val email = json.getString("email")
+            val lastName = json.getString("last_name")
+            val name = json.getString("name")
+            val phone = json.getString("phone")
+            val image = json.getString("profile_image")
+
+            return User(null, name, image)
+                .setEmail(email)
+                .setLastName(lastName)
+                .setPhone(phone)
+        }
     }
 
     fun register(

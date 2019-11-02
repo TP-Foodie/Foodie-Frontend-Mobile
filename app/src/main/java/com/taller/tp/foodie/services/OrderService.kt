@@ -2,7 +2,10 @@ package com.taller.tp.foodie.services
 
 import android.content.Context
 import com.android.volley.Response
-import com.taller.tp.foodie.model.*
+import com.taller.tp.foodie.model.DeliveryUser
+import com.taller.tp.foodie.model.Order
+import com.taller.tp.foodie.model.OrderProduct
+import com.taller.tp.foodie.model.Place
 import com.taller.tp.foodie.model.requestHandlers.RequestHandler
 import org.json.JSONObject
 
@@ -21,29 +24,68 @@ class OrderService(ctx: Context, private val requestHandler: RequestHandler) {
     }
 
     fun assignDelivery(order: Order, deliveryUser: DeliveryUser) {
+        update(order, buildAssignDeliveryRequest(deliveryUser))
+    }
+
+    fun updateStatus(order: Order, status: Order.STATUS) {
+        update(order, buildUpdateStatusRequest(status))
+    }
+
+    fun update(order: Order, body: JSONObject) {
         requestHandler.begin()
 
         val listener = Response.Listener<JSONObject> { requestHandler.onSuccess(it) }
         val errorListener = Response.ErrorListener { requestHandler.onError(it) }
 
         val resource = String.format("%s%s", ORDER_RESOURCE, order.id)
-        client.doPatch(resource, listener, buildAssignDeliveryRequest(deliveryUser), errorListener)
+        client.doPatch(resource, listener, body, errorListener)
+    }
+
+    private fun buildUpdateStatusRequest(status: Order.STATUS): JSONObject {
+        val jsonRequest = JSONObject()
+        jsonRequest.put("status", status.key)
+        jsonRequest.put("delivery", "123412341234123412341234") // TODO JE
+        return jsonRequest
+    }
+
+    fun list(){
+        requestHandler.begin()
+
+        val listener = Response.Listener<JSONObject> { requestHandler.onSuccess(it) }
+        val errorListener = Response.ErrorListener { requestHandler.onError(it) }
+        client.doGetArray(ORDER_RESOURCE, listener, errorListener)
+    }
+
+    fun find(orderId: String){
+        requestHandler.begin()
+
+        val listener = Response.Listener<JSONObject> { requestHandler.onSuccess(it) }
+        val errorListener = Response.ErrorListener { requestHandler.onError(it) }
+        client.doGetObject(ORDER_RESOURCE+orderId, listener, errorListener)
     }
 
     companion object {
-        fun fromOrderJson(json:JSONObject) : Order {
+        fun fromOrderJson(json:JSONObject, withDetail: Boolean = true) : Order {
             // General
             val id = json.getString("id")
             val orderType = json.getString("type")
             val status = json.getString("status")
+            val number = json.getInt("number")
 
+            val order = Order(id).setType(orderType)
+                .setStatus(status).setNumber(number)
+
+            if (!withDetail)
+                return order
             // Product
             val productJson = json.getJSONObject("product")
             val orderProduct = fromOrderProductJson(productJson)
 
-            return Order(id).setType(orderType)
-                                    .setStatus(status)
-                                    .setProduct(orderProduct)
+            // Owner
+            val ownerJson = json.getJSONObject("owner")
+            val owner = UserService.fromUserJson(ownerJson)
+
+            return order.setProduct(orderProduct).setOwner(owner)
         }
 
         private fun fromOrderProductJson(json: JSONObject) : OrderProduct {
