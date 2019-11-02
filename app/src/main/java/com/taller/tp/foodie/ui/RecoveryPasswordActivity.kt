@@ -6,11 +6,14 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.common.auth.AuthErrors
+import com.taller.tp.foodie.model.requestHandlers.UpdatePasswordRequestHandler
+import com.taller.tp.foodie.services.AuthService
 import com.taller.tp.foodie.utils.emailIsValid
 import com.taller.tp.foodie.utils.passwordIsValid
 import com.taller.tp.foodie.utils.passwordsAreEqualAndNotEmpty
 import com.taller.tp.foodie.utils.tokenIsValid
 import kotlinx.android.synthetic.main.activity_recovery_password.*
+import java.lang.ref.WeakReference
 
 class RecoveryPasswordActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -18,15 +21,28 @@ class RecoveryPasswordActivity : AppCompatActivity() {
         setContentView(R.layout.activity_recovery_password)
     }
 
-    fun loginPage(view: View) {
+    fun loginPage() {
         val intent = Intent(applicationContext, LoginActivity::class.java)
         startActivity(intent)
     }
 
     fun recoveryPassword(view: View) {
-        validateEmailAndUpdateUi()
-        validateTokenAndUpdateUi()
-        validatePasswordAndUpdateUi()
+        val validEmail = validateEmailAndUpdateUi()
+        val validToken = validateTokenAndUpdateUi()
+        val validPassword = validatePasswordAndUpdateUi()
+
+        if (validEmail && validPassword && validToken){
+            this.updatePassword()
+        }
+    }
+
+    private fun updatePassword() {
+        val requestHandler = UpdatePasswordRequestHandler(WeakReference(this))
+        AuthService(this, requestHandler).updatePassowrd(
+            email = email_field.text.toString(),
+            password = password_field.text.toString(),
+            token = token_field.text.toString()
+        )
     }
 
 

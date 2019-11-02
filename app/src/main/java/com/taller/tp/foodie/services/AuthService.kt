@@ -24,7 +24,7 @@ class AuthService(ctx: Context, private val requestHandler: RequestHandler) {
         // email - password auth
         const val EMAIL_FIELD = "email"
         const val PASSWORD_FIELD = "password"
-        const val TOKEN_FIELD = "token"
+        const val TOKEN_FIELD = "recovery_token"
     }
 
     fun federatedAuthenticationWithBackend(token: String) {
@@ -111,6 +111,6 @@ class AuthService(ctx: Context, private val requestHandler: RequestHandler) {
         requestObject.put(PASSWORD_FIELD, password)
         requestObject.put(TOKEN_FIELD, token)
 
-        client.doPost(RECOVERY_TOKEN, listener, requestObject, errorListener)
+        client.doPost(UPDATE_PASSWORD, listener, requestObject, errorListener)
     }
 }

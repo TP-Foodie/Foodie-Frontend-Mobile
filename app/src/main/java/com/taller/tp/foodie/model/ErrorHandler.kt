@@ -25,5 +25,11 @@ class ErrorHandler {
             snackbar.show()
         }
 
+        fun invalidToken(contextView: View) {
+            val snackbar = Snackbar.make(contextView, "Token inválido", Snackbar.LENGTH_SHORT)
+            snackbar.view.setBackgroundColor(Color.RED)
+            snackbar.show()
+        }
+
     }
 }
