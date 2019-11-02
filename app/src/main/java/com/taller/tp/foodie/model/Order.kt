@@ -1,7 +1,7 @@
 package com.taller.tp.foodie.model
 
 class Order(val id: String){
-    private var status: String? = null
+    private var status: STATUS? = null
     private var type: String? = null
     private var number: Int? = null
     private var product: OrderProduct? = null
@@ -10,19 +10,32 @@ class Order(val id: String){
     enum class STATUS(val key: String) {
         TAKEN_STATUS("TS"),
         WAITING_STATUS("WS"),
-        DELIVERED_STATUS("DS")
+        DELIVERED_STATUS("DS");
+
+        companion object{
+            fun fromKey(key: String?): STATUS {
+                when(key){
+                    "TS" -> return TAKEN_STATUS
+                    "WS" -> return WAITING_STATUS
+                    "DS" -> return DELIVERED_STATUS
+                }
+                throw RuntimeException("Unreachable")
+            }
+        }
     }
     enum class TYPE(val key: String){
         NORMAL_TYPE("NT"),
         FAVOR_TYPE("FT")
     }
 
-    fun setStatus(status: String): Order{
-        this.status = status
+    fun setStatus(status: String?): Order{
+        if (!status.isNullOrEmpty()){
+            this.status = STATUS.fromKey(status)
+        }
         return this
     }
 
-    fun getStatus(): String{
+    fun getStatus(): STATUS{
         return status!!
     }
 

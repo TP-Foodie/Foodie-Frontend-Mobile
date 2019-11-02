@@ -53,7 +53,7 @@ class OrderDetailActivity : AppCompatActivity() {
     }
 
     private fun setupActions() {
-        if (order!!.getStatus() != "TS") {
+        if (order!!.getStatus() != Order.STATUS.TAKEN_STATUS) {
             val confirmDeliveryButton = findViewById<Button>(R.id.confirm_delivery_button)
             confirmDeliveryButton.visibility = View.INVISIBLE
         }

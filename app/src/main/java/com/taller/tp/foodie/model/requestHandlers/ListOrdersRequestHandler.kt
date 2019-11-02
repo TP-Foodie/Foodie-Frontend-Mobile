@@ -31,6 +31,7 @@ class ListOrdersRequestHandler(private val activity: OrdersActivity) : RequestHa
             val orderJson = ordersResponse.getJSONObject(i)
             orders.add(OrderService.fromOrderJson(orderJson, withDetail = false))
         }
-        activity.populateOrders(orders)
+        activity.setOrders(orders)
+        activity.populateOrders()
     }
 }
