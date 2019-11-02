@@ -35,11 +35,13 @@ class UserService(ctx: Context, private val requestHandler: RequestHandler) {
             val id = json.getString("id")
             val email = json.getString("email")
             val lastName = json.getString("last_name")
+            val type = json.getString("type")
             val name = json.getString("name")
             val phone = json.getString("phone")
             val image = json.getString("profile_image")
 
             return User(id, name, image)
+                .setType(type)
                 .setEmail(email)
                 .setLastName(lastName)
                 .setPhone(phone)
@@ -93,5 +95,18 @@ class UserService(ctx: Context, private val requestHandler: RequestHandler) {
         requestObject.put(SUBSCRIPTION_FIELD, subscription)
 
         client.doPatch(ME_RESOURCE, listener, requestObject, errorListener)
+    }
+
+    fun getActualUser() {
+        requestHandler.begin()
+
+        val listener = Response.Listener<JSONObject> { response ->
+            requestHandler.onSuccess(response)
+        }
+        val errorListener = Response.ErrorListener { error ->
+            requestHandler.onError(error)
+        }
+
+        client.doGetObject(ME_RESOURCE, listener, errorListener)
     }
 }

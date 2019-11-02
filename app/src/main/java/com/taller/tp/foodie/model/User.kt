@@ -20,5 +20,11 @@ open class User(val id: String?, val name: String, val image: String?){
         this.phone = phone
         return this
     }
+
     var type: USER_TYPE = USER_TYPE.CUSTOMER
+        get() = field
+    fun setType(type: String) : User {
+        this.type= USER_TYPE.valueOf(type)
+        return this
+    }
 }

@@ -25,11 +25,13 @@ import com.taller.tp.foodie.model.Order
 import com.taller.tp.foodie.model.Place
 import com.taller.tp.foodie.model.User
 import com.taller.tp.foodie.model.common.UserBackendDataHandler
+import com.taller.tp.foodie.model.requestHandlers.ClientMainUserRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.ClientOrderRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.CreatePlaceRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.ListPlacesRequestHandler
 import com.taller.tp.foodie.services.OrderService
 import com.taller.tp.foodie.services.PlaceService
+import com.taller.tp.foodie.services.UserService
 import org.json.JSONObject
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
@@ -56,7 +58,11 @@ class ClientMainActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_client_main)
-        loadUserTypeComponents()
+
+        val makeOrderLayout = findViewById<LinearLayout>(R.id.make_order_layout)
+        makeOrderLayout.visibility = View.INVISIBLE
+
+        UserService(this, ClientMainUserRequestHandler(this)).getActualUser()
 
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -78,15 +84,13 @@ class ClientMainActivity : AppCompatActivity(),
         showSuccessfullOrderMessage()
     }
 
-    private fun loadUserTypeComponents() {
-        //TODO llamar a servicio me para saber que tipo soy
-        userType = User.USER_TYPE.CUSTOMER
+    fun loadUserTypeComponents(user: User) {
+        userType = user.type
+        val makeOrderLayout = findViewById<LinearLayout>(R.id.make_order_layout)
         when(userType){
-            User.USER_TYPE.CUSTOMER -> {}
-            User.USER_TYPE.DELIVERY -> {
-                val makeOrderLayout = findViewById<LinearLayout>(R.id.make_order_layout)
-                makeOrderLayout.visibility = View.INVISIBLE
-            }
+            User.USER_TYPE.DELIVERY -> makeOrderLayout.visibility = View.INVISIBLE
+            User.USER_TYPE.CUSTOMER -> makeOrderLayout.visibility = View.VISIBLE
+
         }
     }
 
