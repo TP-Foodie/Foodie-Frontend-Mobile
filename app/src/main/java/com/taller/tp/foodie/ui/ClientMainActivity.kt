@@ -125,7 +125,10 @@ class ClientMainActivity : AppCompatActivity(),
                 val createPlaceRequestHandler = CreatePlaceRequestHandler(this)
                 val placePosition = Coordinate(marker.position.latitude, marker.position.longitude)
                 val name = findViewById<EditText>(R.id.delivery_place_input).text.toString()
-                PlaceService(this, createPlaceRequestHandler).create(placePosition, name)
+                PlaceService(this.applicationContext, createPlaceRequestHandler).create(
+                    placePosition,
+                    name
+                )
             } else {
                 doOrder(place)
             }
@@ -174,7 +177,7 @@ class ClientMainActivity : AppCompatActivity(),
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         val listPlacesRequestHandler = ListPlacesRequestHandler(this)
-        PlaceService(this, listPlacesRequestHandler).list()
+        PlaceService(this.applicationContext, listPlacesRequestHandler).list()
     }
 
     // Called when the places are ready from the ListPlacesRequestHandler

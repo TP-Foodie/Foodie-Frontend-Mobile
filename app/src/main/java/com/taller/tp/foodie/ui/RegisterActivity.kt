@@ -3,6 +3,7 @@ package com.taller.tp.foodie.ui
 import android.content.Intent
 import android.graphics.Bitmap
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.taller.tp.foodie.R
@@ -67,7 +68,7 @@ class RegisterActivity : AppCompatActivity() {
     private fun registerUserInBackend() {
         // register user in backend
         val requestHandler = RegisterRequestHandler(WeakReference(this))
-        UserService(this, requestHandler).register(
+        UserService(this.applicationContext, requestHandler).register(
             email_field.text.toString(),
             password_field.text.toString(),
             name_field.text.toString(),
@@ -83,7 +84,10 @@ class RegisterActivity : AppCompatActivity() {
      */
     fun authenticateWithBackend() {
         // authenticate user with backend
-        AuthService(this, EmailAuthFromRegisterRequestHandler(WeakReference(this)))
+        AuthService(
+            this.applicationContext,
+            EmailAuthFromRegisterRequestHandler(WeakReference(this))
+        )
             .emailAndPasswordAuthenticationWithBackend(
                 email_field.text.toString(),
                 password_field.text.toString()
@@ -178,8 +182,7 @@ class RegisterActivity : AppCompatActivity() {
                 // Setting image to ImageView
                 profile_image.setImageURI(result.uri.toString())
 
-                // Save image bitmap
-                profileImage = result.bitmap
+                profileImage = MediaStore.Images.Media.getBitmap(this.contentResolver, result.uri)
             } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
                 // update UI
                 Log.e(this.localClassName, "Error al hacer crop: ${result.error.message}")

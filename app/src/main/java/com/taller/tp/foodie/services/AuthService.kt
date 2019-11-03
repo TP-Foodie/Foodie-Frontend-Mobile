@@ -7,13 +7,12 @@ import org.json.JSONObject
 
 class AuthService(ctx: Context, private val requestHandler: RequestHandler) {
 
-    private val client = BackService(ctx)
+    private val client = BackService.getInstance(ctx)
 
     companion object {
         // endpoints
         const val GOOGLE_AUTH_RESOURCE = "/auth/google"
         const val AUTH_RESOURCE = "/auth/"
-        const val USERS_RESOURCE = "/users/"
         const val ME_RESOURCE = "/users/me"
 
         // federated auth

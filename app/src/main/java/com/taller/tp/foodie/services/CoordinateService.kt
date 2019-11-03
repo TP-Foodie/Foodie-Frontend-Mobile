@@ -1,10 +1,9 @@
 package com.taller.tp.foodie.services
 
-import android.content.Context
 import com.taller.tp.foodie.model.Coordinate
 import org.json.JSONObject
 
-class CoordinateService(ctx: Context): BackService(ctx) {
+class CoordinateService {
 
     companion object {
         fun fromCoordinateJson(json:JSONObject) : Coordinate{

@@ -7,7 +7,7 @@ import org.json.JSONObject
 
 class ProfileService(ctx: Context, private val requestHandler: RequestHandler) {
 
-    private val client = BackService(ctx)
+    private val client = BackService.getInstance(ctx)
 
     companion object {
         // endpoint
@@ -16,6 +16,10 @@ class ProfileService(ctx: Context, private val requestHandler: RequestHandler) {
     }
 
     fun getUserForChat() {
+        getUserProfile()
+    }
+
+    fun getUserProfile() {
         // setup request handler
         requestHandler.begin()
 
@@ -28,7 +32,7 @@ class ProfileService(ctx: Context, private val requestHandler: RequestHandler) {
 
         client.doGetObject(ME_RESOURCE, listener, errorListener)
     }
-
+  
     fun getOtherUserForChat(idUser: String) {
         // setup request handler
         requestHandler.begin()

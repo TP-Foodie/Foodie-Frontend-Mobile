@@ -12,7 +12,8 @@ class ImageStringConversor {
         image.compress(Bitmap.CompressFormat.PNG, 100, baos)
         val byteArray = baos.toByteArray()
 
-        return Base64.encodeToString(byteArray, Base64.DEFAULT)
+        val imageString = Base64.encodeToString(byteArray, Base64.DEFAULT)
+        return "data:image/png;base64,$imageString"
     }
 
     fun base64StringToBitmap(encodedImage: String): Bitmap {
