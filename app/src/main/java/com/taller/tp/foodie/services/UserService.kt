@@ -4,15 +4,12 @@ import android.content.Context
 import android.graphics.Bitmap
 import com.android.volley.Response
 import com.taller.tp.foodie.model.common.ImageStringConversor
-import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import com.taller.tp.foodie.model.requestHandlers.RequestHandler
 import org.json.JSONObject
-import java.lang.ref.WeakReference
 
 class UserService(ctx: Context, private val requestHandler: RequestHandler) {
 
-    private val client : BackService = BackService(ctx)
-    private val context = WeakReference(ctx)
+    private val client = BackService.getInstance(ctx)
 
     companion object {
         // endpoint

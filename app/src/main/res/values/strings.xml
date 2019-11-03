@@ -48,10 +48,15 @@
     <string name="map_place_choice">Pedido</string>
     <string name="location">Necesitamos acceder a tu ubicación</string>
     <string name="order_as_favour">Pedir como favor</string>
-    <string name="user_image_desc">imagen</string>
     <string name="orders">Pedidos</string>
     <string name="choose_delivery">Elegir Delivery</string>
     <string name="delivery_photo">Foto del Delivery</string>
     <string name="general_success">Operación Exitosa!</string>
+
+    <!-- Profile -->
+    <string name="email_title">Email</string>
+    <string name="phone_title">Telefono</string>
+    <string name="deliveries_title">Deliveries Realizados</string>
+    <string name="sent_msg_title">Mensajes Enviados</string>
 
 </resources>
