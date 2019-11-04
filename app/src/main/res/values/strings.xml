@@ -55,6 +55,12 @@
     <string name="chat_message_margin">a</string>
     <string name="chat_button">CHAT</string>
 
+    <string name="btn_send_token">Enviar token</string>
+    <string name="btn_forgot_password">Olvidaste la contraseña?</string>
+    <string name="hint_token">Token</string>
+    <string name="btn_update_password">Actualizar contraseña</string>
+    <string name="put_token">Introducir token</string>
+
     <!-- Profile -->
     <string name="email_title">Email</string>
     <string name="phone_title">Telefono</string>

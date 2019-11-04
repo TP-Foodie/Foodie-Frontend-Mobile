@@ -18,5 +18,18 @@ class ErrorHandler {
             snackbar.view.setBackgroundColor(Color.RED)
             snackbar.show()
         }
+
+        fun handleUserNotFound(contextView: View) {
+            val snackbar = Snackbar.make(contextView, "Usuario no encontrado", Snackbar.LENGTH_SHORT)
+            snackbar.view.setBackgroundColor(Color.RED)
+            snackbar.show()
+        }
+
+        fun invalidToken(contextView: View) {
+            val snackbar = Snackbar.make(contextView, "Token inválido", Snackbar.LENGTH_SHORT)
+            snackbar.view.setBackgroundColor(Color.RED)
+            snackbar.show()
+        }
+
     }
 }

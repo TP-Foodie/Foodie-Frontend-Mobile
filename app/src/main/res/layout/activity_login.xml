@@ -71,12 +71,22 @@
             android:fontFamily="@font/raleway"
             android:text="@string/btn_log_in" />
 
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_recovery"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="5dp"
+            android:fontFamily="@font/raleway"
+            android:text="@string/btn_forgot_password"
+            android:onClick="tokenPage"/>
+
+
         <TextView
             android:id="@+id/tv_goto_register"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
             android:gravity="center_horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
