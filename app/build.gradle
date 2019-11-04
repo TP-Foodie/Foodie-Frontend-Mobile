@@ -15,7 +15,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         def map_api_key = System.getenv("MAP_API_KEY") == null ? "" : System.getenv("MAP_API_KEY")
-        manifestPlaceholders = [ MAP_API_KEY:map_api_key ]
+        manifestPlaceholders = [MAP_API_KEY: map_api_key]
     }
     signingConfigs {
         release
@@ -86,6 +86,12 @@ dependencies {
     // Image Cropper
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
 
+    // Firebase Messaging
+    implementation 'com.google.firebase:firebase-messaging:20.0.0'
+
     // Json serializer/deserializer from Objecto to JSON and viceversa
     implementation 'com.google.code.gson:gson:2.8.6'
 }
+
+// Add to the bottom of the file
+apply plugin: 'com.google.gms.google-services'
