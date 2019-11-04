@@ -18,7 +18,6 @@
 
         <include
             android:id="@+id/include3"
-            layout="@layout/icon"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="0dp" />
 
