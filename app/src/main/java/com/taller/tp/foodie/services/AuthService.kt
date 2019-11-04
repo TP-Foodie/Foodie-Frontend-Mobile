@@ -7,7 +7,7 @@ import org.json.JSONObject
 
 class AuthService(ctx: Context, private val requestHandler: RequestHandler) {
 
-    private val client = BackService(ctx)
+    private val client = BackService.getInstance(ctx)
 
     companion object {
         // endpoints
@@ -15,7 +15,6 @@ class AuthService(ctx: Context, private val requestHandler: RequestHandler) {
         const val AUTH_RESOURCE = "/auth/"
         const val RECOVERY_TOKEN = "/auth/recovery_token"
         const val UPDATE_PASSWORD = "/auth/password"
-        const val USERS_RESOURCE = "/users/"
         const val ME_RESOURCE = "/users/me"
 
         // federated auth
@@ -61,7 +60,7 @@ class AuthService(ctx: Context, private val requestHandler: RequestHandler) {
         client.doPost(AUTH_RESOURCE, listener, requestObject, errorListener)
     }
 
-    fun checkIfFederatedIsRegistered(userToken: String?) {
+    fun checkIfFederatedIsRegistered() {
         requestHandler.begin()
 
         val listener = Response.Listener<JSONObject> { response: JSONObject? ->
@@ -74,8 +73,8 @@ class AuthService(ctx: Context, private val requestHandler: RequestHandler) {
         client.doGetObject(ME_RESOURCE, listener, errorListener)
     }
 
-    fun checkIfUserIsRegistered(userToken: String) {
-        checkIfFederatedIsRegistered(userToken)
+    fun checkIfUserIsRegistered() {
+        checkIfFederatedIsRegistered()
     }
 
     fun sendToken(email: String) {

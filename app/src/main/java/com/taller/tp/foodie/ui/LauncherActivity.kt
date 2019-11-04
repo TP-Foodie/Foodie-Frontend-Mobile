@@ -24,10 +24,8 @@ class LauncherActivity : AppCompatActivity() {
             finish()
         } else {
             // check if the user has type field in user object
-            val userToken = UserBackendDataHandler(this).getBackendToken()
-
             AuthService(this, CheckRegistrationRequestHandler(WeakReference(this)))
-                .checkIfUserIsRegistered(userToken)
+                .checkIfUserIsRegistered()
         }
     }
 

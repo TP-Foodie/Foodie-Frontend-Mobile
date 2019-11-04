@@ -10,7 +10,8 @@ import org.json.JSONObject
 const val AVAILABLE_DELIVERY_RESOURCE = "/available_deliveries"
 
 class DeliveryUserService(ctx: Context, private val requestHandler: RequestHandler) {
-    private val client : BackService = BackService(ctx)
+
+    private val client = BackService.getInstance(ctx)
 
     fun availableDeliveries(coordinates: Coordinate) {
         requestHandler.begin()

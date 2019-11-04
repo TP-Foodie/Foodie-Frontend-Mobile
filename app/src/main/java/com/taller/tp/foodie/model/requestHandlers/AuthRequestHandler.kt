@@ -38,8 +38,7 @@ class FederatedAuthRequestHandler(private val activity: WeakReference<LoginActiv
                 response?.getString(ResponseData.TOKEN_FIELD)
             )
 
-        activity.get()
-            ?.checkIfFederatedIsRegistered(response?.getString(ResponseData.TOKEN_FIELD))
+        activity.get()?.checkIfFederatedIsRegistered()
     }
 }
 
