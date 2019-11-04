@@ -81,7 +81,8 @@
             app:layout_constraintBottom_toBottomOf="@id/btn_right"
             app:layout_constraintEnd_toEndOf="@id/btn_right"
             app:layout_constraintStart_toStartOf="@id/btn_right"
-            app:layout_constraintTop_toTopOf="@id/btn_right" />
+            app:layout_constraintTop_toTopOf="@id/btn_right"
+            tools:ignore="NotSibling" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

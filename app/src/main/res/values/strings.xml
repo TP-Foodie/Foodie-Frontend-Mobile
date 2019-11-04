@@ -55,9 +55,6 @@
     <string name="chat_message_margin">a</string>
     <string name="chat_button">CHAT</string>
 
-    <string name="title_activity_password_recovery">password_recovery</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="btn_send_token">Enviar token</string>
     <string name="btn_forgot_password">Olvidaste la contraseña?</string>
     <string name="hint_token">Token</string>
