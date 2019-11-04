@@ -40,7 +40,6 @@
     <string name="btn_signout">Sign Out</string>
 
 
-
     <string name="build_order_btn">Pedir</string>
     <string name="profile_btn">Perfil</string>
     <string name="delivery_what">Que querés pedir?</string>
@@ -52,6 +51,9 @@
     <string name="choose_delivery">Elegir Delivery</string>
     <string name="delivery_photo">Foto del Delivery</string>
     <string name="general_success">Operación Exitosa!</string>
+    <string name="default_notification_channel_id">default notification channel</string>
+    <string name="chat_message_margin">a</string>
+    <string name="chat_button">CHAT</string>
 
     <!-- Profile -->
     <string name="email_title">Email</string>
