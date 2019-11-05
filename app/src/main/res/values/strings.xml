@@ -57,13 +57,9 @@
     <string name="pending_orders">Pendientes</string>
     <string name="completed_orders">Completadas</string>
     <string name="loading_orders">Cargando Pedidos..</string>
-    <string name="detail_order">Detalles</string>
     <string name="deliver_order">Entregar</string>
-    <string name="track_order">Seguimiento</string>
     <string name="empty_order_list">No hay Pedidos</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
 
 </resources>

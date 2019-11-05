@@ -90,7 +90,6 @@ class ClientMainActivity : AppCompatActivity(),
         when(userType){
             User.USER_TYPE.DELIVERY -> makeOrderLayout.visibility = View.INVISIBLE
             User.USER_TYPE.CUSTOMER -> makeOrderLayout.visibility = View.VISIBLE
-
         }
     }
 

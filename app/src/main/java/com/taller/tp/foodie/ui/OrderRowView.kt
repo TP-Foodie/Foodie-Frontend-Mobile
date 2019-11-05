@@ -6,7 +6,7 @@ import android.widget.FrameLayout
 import android.widget.TextView
 import com.taller.tp.foodie.R
 
-class OrderRowView(context: Context) : FrameLayout(context) {
+class OrderRowView (context: Context) : FrameLayout(context) {
 
     init {
         val layoutInflater =
