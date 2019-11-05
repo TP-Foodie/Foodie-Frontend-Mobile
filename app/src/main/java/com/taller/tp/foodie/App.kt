@@ -3,7 +3,6 @@ package com.taller.tp.foodie
 import android.app.Application
 import com.facebook.drawee.backends.pipeline.Fresco
 
-
 class MyApplication : Application() {
 
     override fun onCreate() {

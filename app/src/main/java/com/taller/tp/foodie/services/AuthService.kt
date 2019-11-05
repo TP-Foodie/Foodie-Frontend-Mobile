@@ -7,13 +7,14 @@ import org.json.JSONObject
 
 class AuthService(ctx: Context, private val requestHandler: RequestHandler) {
 
-    private val client = BackService(ctx)
+    private val client = BackService.getInstance(ctx)
 
     companion object {
         // endpoints
         const val GOOGLE_AUTH_RESOURCE = "/auth/google"
         const val AUTH_RESOURCE = "/auth/"
-        const val USERS_RESOURCE = "/users/"
+        const val RECOVERY_TOKEN = "/auth/recovery_token"
+        const val UPDATE_PASSWORD = "/auth/password"
         const val ME_RESOURCE = "/users/me"
 
         // federated auth
@@ -22,6 +23,7 @@ class AuthService(ctx: Context, private val requestHandler: RequestHandler) {
         // email - password auth
         const val EMAIL_FIELD = "email"
         const val PASSWORD_FIELD = "password"
+        const val TOKEN_FIELD = "recovery_token"
     }
 
     fun federatedAuthenticationWithBackend(token: String) {
@@ -58,7 +60,7 @@ class AuthService(ctx: Context, private val requestHandler: RequestHandler) {
         client.doPost(AUTH_RESOURCE, listener, requestObject, errorListener)
     }
 
-    fun checkIfFederatedIsRegistered(userToken: String?) {
+    fun checkIfFederatedIsRegistered() {
         requestHandler.begin()
 
         val listener = Response.Listener<JSONObject> { response: JSONObject? ->
@@ -71,7 +73,43 @@ class AuthService(ctx: Context, private val requestHandler: RequestHandler) {
         client.doGetObject(ME_RESOURCE, listener, errorListener)
     }
 
-    fun checkIfUserIsRegistered(userToken: String) {
-        checkIfFederatedIsRegistered(userToken)
+    fun checkIfUserIsRegistered() {
+        checkIfFederatedIsRegistered()
+    }
+
+    fun sendToken(email: String) {
+        requestHandler.begin()
+
+        val listener = Response.Listener<JSONObject> { response: JSONObject? ->
+            requestHandler.onSuccess(response)
+        }
+        val errorListener = Response.ErrorListener { error ->
+            requestHandler.onError(error)
+        }
+
+        // build json request
+        val requestObject = JSONObject()
+        requestObject.put(EMAIL_FIELD, email)
+
+        client.doPost(RECOVERY_TOKEN, listener, requestObject, errorListener)
+    }
+
+    fun updatePassowrd(email: String, password: String, token: String) {
+        requestHandler.begin()
+
+        val listener = Response.Listener<JSONObject> { response: JSONObject? ->
+            requestHandler.onSuccess(response)
+        }
+        val errorListener = Response.ErrorListener { error ->
+            requestHandler.onError(error)
+        }
+
+        // build json request
+        val requestObject = JSONObject()
+        requestObject.put(EMAIL_FIELD, email)
+        requestObject.put(PASSWORD_FIELD, password)
+        requestObject.put(TOKEN_FIELD, token)
+
+        client.doPost(UPDATE_PASSWORD, listener, requestObject, errorListener)
     }
 }

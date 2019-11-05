@@ -12,7 +12,8 @@ import org.json.JSONObject
 const val ORDER_RESOURCE = "/orders/"
 
 class OrderService(ctx: Context, private val requestHandler: RequestHandler) {
-    private val client : BackService = BackService(ctx)
+
+    private val client = BackService.getInstance(ctx)
 
     fun makeOrder(orderRequest: OrderRequest) {
         requestHandler.begin()
@@ -96,7 +97,7 @@ class OrderService(ctx: Context, private val requestHandler: RequestHandler) {
             return order.setProduct(orderProduct).setOwner(owner).setDelivery(deliveryUser)
         }
 
-        private fun fromOrderProductJson(json: JSONObject) : OrderProduct {
+        private fun fromOrderProductJson(json: JSONObject): OrderProduct {
             val productName = json.getString("name")
             val placeJson = json.getJSONObject("place")
             val coordinates =

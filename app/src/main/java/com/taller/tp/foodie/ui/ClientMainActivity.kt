@@ -31,6 +31,7 @@ import com.taller.tp.foodie.model.requestHandlers.CreatePlaceRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.ListPlacesRequestHandler
 import com.taller.tp.foodie.services.OrderService
 import com.taller.tp.foodie.services.PlaceService
+import kotlinx.android.synthetic.main.activity_client_main.*
 import com.taller.tp.foodie.services.UserService
 import org.json.JSONObject
 import pub.devrel.easypermissions.AfterPermissionGranted
@@ -58,6 +59,13 @@ class ClientMainActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_client_main)
+
+        chat_button.setOnClickListener {
+            val intent = Intent(applicationContext, ChatActivity::class.java)
+            intent.putExtra(ChatActivity.CHAT_ID, "5db70abc476c15daf15899f0")
+            startActivity(intent)
+        }
+
 
         val makeOrderLayout = findViewById<LinearLayout>(R.id.make_order_layout)
         makeOrderLayout.visibility = View.INVISIBLE
@@ -144,7 +152,10 @@ class ClientMainActivity : AppCompatActivity(),
                 val createPlaceRequestHandler = CreatePlaceRequestHandler(this)
                 val placePosition = Coordinate(marker.position.latitude, marker.position.longitude)
                 val name = findViewById<EditText>(R.id.delivery_place_input).text.toString()
-                PlaceService(this, createPlaceRequestHandler).create(placePosition, name)
+                PlaceService(this.applicationContext, createPlaceRequestHandler).create(
+                    placePosition,
+                    name
+                )
             } else {
                 doOrder(place)
             }
@@ -193,7 +204,7 @@ class ClientMainActivity : AppCompatActivity(),
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         val listPlacesRequestHandler = ListPlacesRequestHandler(this)
-        PlaceService(this, listPlacesRequestHandler).list()
+        PlaceService(this.applicationContext, listPlacesRequestHandler).list()
     }
 
     // Called when the places are ready from the ListPlacesRequestHandler

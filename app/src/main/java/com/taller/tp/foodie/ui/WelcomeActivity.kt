@@ -94,7 +94,10 @@ class WelcomeActivity : AppCompatActivity() {
 
                 // finish register user in backend
                 val requestHandler = FinishRegisterRequestHandler(WeakReference(this))
-                UserService(this, requestHandler).finishRegister(userType, subscription)
+                UserService(this.applicationContext, requestHandler).finishRegister(
+                    userType,
+                    subscription
+                )
             } else {
                 slide_view_pager.currentItem = currentSliderPosition + 1
             }

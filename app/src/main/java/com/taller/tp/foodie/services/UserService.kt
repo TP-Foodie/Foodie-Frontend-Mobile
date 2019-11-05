@@ -7,12 +7,10 @@ import com.taller.tp.foodie.model.User
 import com.taller.tp.foodie.model.common.ImageStringConversor
 import com.taller.tp.foodie.model.requestHandlers.RequestHandler
 import org.json.JSONObject
-import java.lang.ref.WeakReference
 
 class UserService(ctx: Context, private val requestHandler: RequestHandler) {
 
-    private val client : BackService = BackService(ctx)
-    private val context = WeakReference(ctx)
+    private val client = BackService.getInstance(ctx)
 
     companion object {
         // endpoint
@@ -30,6 +28,8 @@ class UserService(ctx: Context, private val requestHandler: RequestHandler) {
         // type and subcription finish register
         const val TYPE_FIELD = "type"
         const val SUBSCRIPTION_FIELD = "subscription"
+
+        const val FCM_TOKEN_FIELD = "fcmToken"
 
         fun fromUserJson(json: JSONObject): User{
             val id = json.getString("id")
@@ -93,6 +93,23 @@ class UserService(ctx: Context, private val requestHandler: RequestHandler) {
         val requestObject = JSONObject()
         requestObject.put(TYPE_FIELD, userType)
         requestObject.put(SUBSCRIPTION_FIELD, subscription)
+
+        client.doPatch(ME_RESOURCE, listener, requestObject, errorListener)
+    }
+
+    fun updateUserFcmToken(fcmToken: String) {
+        requestHandler.begin()
+
+        val listener = Response.Listener<JSONObject> { response ->
+            requestHandler.onSuccess(response)
+        }
+        val errorListener = Response.ErrorListener { error ->
+            requestHandler.onError(error)
+        }
+
+        // build json request
+        val requestObject = JSONObject()
+        requestObject.put(FCM_TOKEN_FIELD, fcmToken)
 
         client.doPatch(ME_RESOURCE, listener, requestObject, errorListener)
     }

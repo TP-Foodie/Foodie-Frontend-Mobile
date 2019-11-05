@@ -20,8 +20,8 @@ import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.Coordinate
 import com.taller.tp.foodie.model.DeliveryUser
 import com.taller.tp.foodie.model.Order
-import com.taller.tp.foodie.model.requestHandlers.AvailableDeliveryRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.AssignOrderDeliveryRequestHandler
+import com.taller.tp.foodie.model.requestHandlers.AvailableDeliveryRequestHandler
 import com.taller.tp.foodie.services.DeliveryUserService
 import com.taller.tp.foodie.services.OrderService
 import org.json.JSONObject
@@ -76,7 +76,8 @@ class ChooseDeliveryActivity : AppCompatActivity(),
             val marker = lastSelectedMarker!!
             val deliveryUser = markerPlaceMap[marker]
             val assignDelivery = AssignOrderDeliveryRequestHandler(this)
-            OrderService(this, assignDelivery).assignDelivery(pendingOrder!!, deliveryUser!!)
+            OrderService(this.applicationContext, assignDelivery)
+                .assignDelivery(pendingOrder!!, deliveryUser!!)
         }
     }
 
@@ -96,7 +97,10 @@ class ChooseDeliveryActivity : AppCompatActivity(),
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         val listPlacesRequestHandler = AvailableDeliveryRequestHandler(this)
-        DeliveryUserService(this, listPlacesRequestHandler).availableDeliveries(placeCoordinate!!)
+        DeliveryUserService(
+            this.applicationContext,
+            listPlacesRequestHandler
+        ).availableDeliveries(placeCoordinate!!)
     }
 
     // Called when the deliveries are ready from the AvailableDeliveryRequestHandler
