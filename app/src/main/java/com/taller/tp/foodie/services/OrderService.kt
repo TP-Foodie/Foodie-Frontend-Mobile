@@ -121,11 +121,20 @@ class OrderService(ctx: Context, private val requestHandler: RequestHandler) {
             jsonOrderProduct.put("name", orderRequest.orderProduct.product)
             jsonOrderProduct.put("place", orderRequest.orderProduct.placeId)
             jsonOrder.put("product",jsonOrderProduct)
+            // Payment method
+//            val paymentMethod: String?
+//            if (orderRequest.paymentMethod == null)
+//                paymentMethod = null
+//            else
+//                paymentMethod = orderRequest.paymentMethod.name
+//            jsonOrder.put("payment_method", paymentMethod)
             return jsonOrder
         }
     }
 
-    class OrderRequest(val orderType: String, val orderProduct: OrderProductRequest)
+    class OrderRequest(val orderType: String,
+                       val orderProduct: OrderProductRequest)
+//                       val paymentMethod: Order.PAYMENT_METHOD?)
 
     class OrderProductRequest(val product: String, val placeId: String)
 }

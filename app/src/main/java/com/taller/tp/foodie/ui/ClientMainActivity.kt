@@ -31,11 +31,16 @@ import com.taller.tp.foodie.model.requestHandlers.CreatePlaceRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.ListPlacesRequestHandler
 import com.taller.tp.foodie.services.OrderService
 import com.taller.tp.foodie.services.PlaceService
+import com.taller.tp.foodie.services.ProfileService
 import kotlinx.android.synthetic.main.activity_client_main.*
-import com.taller.tp.foodie.services.UserService
 import org.json.JSONObject
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
+import java.lang.ref.WeakReference
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
+import kotlin.collections.forEach
+import kotlin.collections.set
 
 
 const val REQUEST_CODE_LOCATION = 123
@@ -48,34 +53,57 @@ const val CLIENT_TYPE_KEY = "CLIENT_TYPE_KEY"
 class ClientMainActivity : AppCompatActivity(),
     GoogleMap.OnMarkerClickListener,
     GoogleMap.OnMarkerDragListener,
-    OnMapReadyCallback {
+    OnMapReadyCallback{
 
     private lateinit var mMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var lastSelectedMarker: Marker? = null
     private var markerPlaceMap: HashMap<Marker, Place> = HashMap()
+//    var paymentMethod: Order.PAYMENT_METHOD? = null
     lateinit var userType: User.USER_TYPE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_client_main)
 
+        ProfileService(this.applicationContext, ClientMainUserRequestHandler(WeakReference(this))).getUserProfile()
+
+        val mapFragment = supportFragmentManager
+            .findFragmentById(R.id.map) as SupportMapFragment
+        mapFragment.getMapAsync(this)
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
+        buildListeners()
+
+        showSuccessfullOrderMessage()
+    }
+
+    private fun buildListeners() {
         chat_button.setOnClickListener {
             val intent = Intent(applicationContext, ChatActivity::class.java)
             intent.putExtra(ChatActivity.CHAT_ID, "5db70abc476c15daf15899f0")
             startActivity(intent)
         }
 
-
-        val makeOrderLayout = findViewById<LinearLayout>(R.id.make_order_layout)
-        makeOrderLayout.visibility = View.INVISIBLE
-
-        UserService(this, ClientMainUserRequestHandler(this)).getActualUser()
-
-        val mapFragment = supportFragmentManager
-            .findFragmentById(R.id.map) as SupportMapFragment
-        mapFragment.getMapAsync(this)
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+        val paymentRadio = findViewById<RadioGroup>(R.id.payment_method_radio)
+        paymentRadio.setOnCheckedChangeListener { group, checkedId ->
+//            if (checkedId != -1){
+//                when (checkedId){
+//                    R.id.cash_option -> paymentMethod = Order.PAYMENT_METHOD.CASH_PAYMENT_METHOD
+//                    R.id.card_option -> paymentMethod = Order.PAYMENT_METHOD.CARD_PAYMENT_METHOD
+//                }
+//            }
+        }
+        val favourCheck = findViewById<CheckBox>(R.id.delivery_favour_check)
+        favourCheck.setOnCheckedChangeListener{ v, checked ->
+            val paymentLayout = findViewById<LinearLayout>(R.id.payment_layout)
+            if (checked){
+                paymentLayout.visibility = View.INVISIBLE
+                paymentRadio.clearCheck()
+            } else {
+                paymentLayout.visibility = View.VISIBLE
+            }
+        }
 
         val signOutButton = findViewById<Button>(R.id.btn_signout)
         signOutButton.setOnClickListener { signOut() }
@@ -88,8 +116,6 @@ class ClientMainActivity : AppCompatActivity(),
 
         val orderListButton = findViewById<Button>(R.id.orders_button)
         orderListButton.setOnClickListener { orderListButtonListener() }
-
-        showSuccessfullOrderMessage()
     }
 
     fun loadUserTypeComponents(user: User) {
@@ -164,6 +190,8 @@ class ClientMainActivity : AppCompatActivity(),
 
     fun doOrder(place: Place) {
         val isFavour= findViewById<CheckBox>(R.id.delivery_favour_check).isChecked
+//        if (isFavour)
+//            paymentMethod = null
         val product = findViewById<TextView>(R.id.delivery_what_input)
 
         val requestHandler = ClientOrderRequestHandler(this)
@@ -172,7 +200,8 @@ class ClientMainActivity : AppCompatActivity(),
         val orderType: Order.TYPE
         orderType = if (isFavour) Order.TYPE.FAVOR_TYPE else Order.TYPE.NORMAL_TYPE
         val orderRequest = OrderService.OrderRequest(orderType.key, orderProduct)
-        OrderService(this, requestHandler).makeOrder(orderRequest)
+//        val orderRequest = OrderService.OrderRequest(orderType.key, orderProduct, paymentMethod)
+        OrderService(this.applicationContext, requestHandler).makeOrder(orderRequest)
     }
 
     private fun validateProduct(): Boolean {

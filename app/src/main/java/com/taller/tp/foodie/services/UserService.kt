@@ -113,17 +113,4 @@ class UserService(ctx: Context, private val requestHandler: RequestHandler) {
 
         client.doPatch(ME_RESOURCE, listener, requestObject, errorListener)
     }
-
-    fun getActualUser() {
-        requestHandler.begin()
-
-        val listener = Response.Listener<JSONObject> { response ->
-            requestHandler.onSuccess(response)
-        }
-        val errorListener = Response.ErrorListener { error ->
-            requestHandler.onError(error)
-        }
-
-        client.doGetObject(ME_RESOURCE, listener, errorListener)
-    }
 }

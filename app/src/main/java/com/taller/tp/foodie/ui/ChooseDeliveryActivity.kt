@@ -24,6 +24,7 @@ import com.taller.tp.foodie.model.requestHandlers.AssignOrderDeliveryRequestHand
 import com.taller.tp.foodie.model.requestHandlers.AvailableDeliveryRequestHandler
 import com.taller.tp.foodie.services.DeliveryUserService
 import com.taller.tp.foodie.services.OrderService
+import com.taller.tp.foodie.services.ProfileService
 import org.json.JSONObject
 import pub.devrel.easypermissions.EasyPermissions
 import java.net.URL
@@ -130,24 +131,29 @@ class ChooseDeliveryActivity : AppCompatActivity(),
     override fun onMarkerClick(marker : Marker): Boolean {
         lastSelectedMarker = marker
         val delivery = markerPlaceMap[marker]
+        val getDeliveryDetail = AvailableDeliveryRequestHandler(this).forDetail()
+        ProfileService(
+                this.applicationContext,
+                getDeliveryDetail
+        ).getOtherUserForChat(delivery!!.id!!)
+        return false
+    }
+
+    fun onMarkerSetDetail(delivery: DeliveryUser){
         val deliveryName = findViewById<TextView>(R.id.delivery_name)
+        val deliveryRep = findViewById<TextView>(R.id.delivery_rep)
         val deliveryPhoto = findViewById<ImageView>(R.id.delivery_photo)
         val layout = findViewById<LinearLayout>(R.id.order_layout)
-        if (delivery != null){
-            runOnUiThread {
-                deliveryName.text = delivery.name
-                val url = URL(delivery.image)
-                BitmapLoader(deliveryPhoto, url).execute(0)
-                deliveryName.visibility = View.VISIBLE
-                layout.visibility = View.VISIBLE
-            }
-
-        } else {
-            layout.visibility = View.INVISIBLE
-            deliveryName.isEnabled = true
+        deliveryName.text = String.format("Nombre: %s", delivery.name)
+        deliveryName.visibility = View.VISIBLE
+        deliveryRep.text = String.format("Reputación: %d", 0) //TODO CUANDO ESTE BIEN EL USER SERVICE
+        deliveryRep.visibility = View.VISIBLE
+        layout.visibility = View.VISIBLE
+        if (delivery.image.isNullOrEmpty()) return
+        runOnUiThread {
+            val url = URL(delivery.image)
+            BitmapLoader(deliveryPhoto, url).execute(0)
         }
-
-        return false
     }
 
     override fun onRequestPermissionsResult(

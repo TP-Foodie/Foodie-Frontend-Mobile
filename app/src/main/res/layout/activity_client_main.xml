@@ -23,7 +23,7 @@
         <LinearLayout
             android:id="@+id/order_layout"
             android:layout_width="wrap_content"
-            android:layout_height="650dp"
+            android:layout_height="685dp"
             android:orientation="vertical">
 
             <Button
@@ -62,8 +62,9 @@
             <LinearLayout
                 android:id="@+id/make_order_layout"
                 android:layout_width="326dp"
-                android:layout_height="112dp"
+                android:layout_height="172dp"
                 android:background="@android:drawable/dialog_holo_light_frame"
+                android:visibility="invisible"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -86,6 +87,42 @@
                         android:buttonTint="@android:color/background_dark"
                         android:text="@string/order_as_favour"
                         android:textColor="@android:color/background_dark" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/payment_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioGroup
+                        android:id="@+id/payment_method_radio"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal"
+                        android:buttonTint="@android:color/background_dark"
+                        android:textColor="@android:color/background_dark"
+                        android:text="@string/payment_method_label">
+
+                        <RadioButton
+                            android:id="@+id/cash_option"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:buttonTint="@android:color/background_dark"
+                            android:textColor="@android:color/background_dark"
+                            android:text="@string/cash_method_label" />
+
+                        <RadioButton
+                            android:id="@+id/card_option"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:buttonTint="@android:color/background_dark"
+                            android:textColor="@android:color/background_dark"
+                            android:text="@string/card_method_label" />
+                    </RadioGroup>
 
                 </LinearLayout>
 
@@ -114,6 +151,7 @@
                         android:layout_gravity="end"
                         android:layout_weight="1"
                         android:text="@string/build_order_btn" />
+
                 </LinearLayout>
 
             </LinearLayout>

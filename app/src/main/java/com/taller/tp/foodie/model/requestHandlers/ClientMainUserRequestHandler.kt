@@ -8,18 +8,19 @@ import com.taller.tp.foodie.model.ErrorHandler
 import com.taller.tp.foodie.services.UserService
 import com.taller.tp.foodie.ui.ClientMainActivity
 import org.json.JSONObject
+import java.lang.ref.WeakReference
 
 
-class ClientMainUserRequestHandler(private val activity: ClientMainActivity) : RequestHandler {
+class ClientMainUserRequestHandler(private val activity: WeakReference<ClientMainActivity>) : RequestHandler {
     override fun begin() {}
 
     override fun onError(error: VolleyError) {
         Log.e("CliMainUserReq", "Volley error: " + error.localizedMessage)
-        ErrorHandler.handleError(activity.findViewById<View>(R.id.map_choice_context))
+        ErrorHandler.handleError(activity.get()?.findViewById<View>(R.id.map_choice_context)!!)
     }
 
     override fun onSuccess(response: JSONObject?) {
         val user = UserService.fromUserJson(response!!)
-        activity.loadUserTypeComponents(user)
+        activity.get()?.loadUserTypeComponents(user)
     }
 }
