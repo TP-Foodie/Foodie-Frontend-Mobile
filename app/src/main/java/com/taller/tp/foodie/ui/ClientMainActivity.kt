@@ -190,8 +190,8 @@ class ClientMainActivity : AppCompatActivity(),
 
     fun doOrder(place: Place) {
         val isFavour= findViewById<CheckBox>(R.id.delivery_favour_check).isChecked
-//        if (isFavour)
-//            paymentMethod = null
+        if (isFavour)
+            paymentMethod = null
         val product = findViewById<TextView>(R.id.delivery_what_input)
 
         val requestHandler = ClientOrderRequestHandler(this)
@@ -199,8 +199,7 @@ class ClientMainActivity : AppCompatActivity(),
         val orderProduct = OrderService.OrderProductRequest(product.text.toString(), place.getId())
         val orderType: Order.TYPE
         orderType = if (isFavour) Order.TYPE.FAVOR_TYPE else Order.TYPE.NORMAL_TYPE
-        val orderRequest = OrderService.OrderRequest(orderType.key, orderProduct)
-//        val orderRequest = OrderService.OrderRequest(orderType.key, orderProduct, paymentMethod)
+        val orderRequest = OrderService.OrderRequest(orderType.key, orderProduct, paymentMethod)
         OrderService(this.applicationContext, requestHandler).makeOrder(orderRequest)
     }
 
