@@ -1,25 +1,34 @@
 package com.taller.tp.foodie.model.common
 
 import android.content.Context
-import java.lang.ref.WeakReference
+import com.taller.tp.foodie.MyApplication
 
-class UserBackendDataHandler(context: Context) {
+class UserBackendDataHandler {
 
-    companion object Keys {
+    companion object {
+        @Volatile
+        private var INSTANCE: UserBackendDataHandler? = null
+
+        fun getInstance() =
+            INSTANCE ?: synchronized(this) {
+                INSTANCE ?: UserBackendDataHandler().also {
+                    INSTANCE = it
+                }
+            }
+
         const val USER_DATA_RESOURCE_KEY = "userData"
 
         const val TOKEN = "token"
     }
-
-    private val context = WeakReference(context)
 
     /*
      * Persist Data
      */
 
     fun persistUserBackendData(token: String?) {
+        val mContext = MyApplication.getContext()
         val sharedPreferences =
-            context.get()?.getSharedPreferences(USER_DATA_RESOURCE_KEY, Context.MODE_PRIVATE)
+            mContext.getSharedPreferences(USER_DATA_RESOURCE_KEY, Context.MODE_PRIVATE)
         with(sharedPreferences!!.edit()) {
             putString(TOKEN, token)
             apply()
@@ -31,8 +40,9 @@ class UserBackendDataHandler(context: Context) {
      */
 
     fun getBackendToken(): String {
+        val mContext = MyApplication.getContext()
         val sharedPreferences =
-            context.get()?.getSharedPreferences(USER_DATA_RESOURCE_KEY, Context.MODE_PRIVATE)
+            mContext.getSharedPreferences(USER_DATA_RESOURCE_KEY, Context.MODE_PRIVATE)
 
         return sharedPreferences?.getString(TOKEN, "").toString()
     }
@@ -43,8 +53,9 @@ class UserBackendDataHandler(context: Context) {
      */
 
     fun deleteUserBackendData() {
+        val mContext = MyApplication.getContext()
         val sharedPreferences =
-            context.get()?.getSharedPreferences(USER_DATA_RESOURCE_KEY, Context.MODE_PRIVATE)
+            mContext.getSharedPreferences(USER_DATA_RESOURCE_KEY, Context.MODE_PRIVATE)
         with(sharedPreferences!!.edit()) {
             remove(TOKEN)
             apply()

@@ -1,6 +1,5 @@
 package com.taller.tp.foodie.services
 
-import android.content.Context
 import com.android.volley.Response
 import com.taller.tp.foodie.model.Coordinate
 import com.taller.tp.foodie.model.DeliveryUser
@@ -9,9 +8,9 @@ import org.json.JSONObject
 
 const val AVAILABLE_DELIVERY_RESOURCE = "/available_deliveries"
 
-class DeliveryUserService(ctx: Context, private val requestHandler: RequestHandler) {
+class DeliveryUserService(private val requestHandler: RequestHandler) {
 
-    private val client = BackService.getInstance(ctx)
+    private val client = BackService.getInstance()
 
     fun availableDeliveries(coordinates: Coordinate) {
         requestHandler.begin()

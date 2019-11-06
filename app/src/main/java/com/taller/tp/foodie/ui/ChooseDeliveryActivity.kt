@@ -76,7 +76,7 @@ class ChooseDeliveryActivity : AppCompatActivity(),
             val marker = lastSelectedMarker!!
             val deliveryUser = markerPlaceMap[marker]
             val assignDelivery = AssignOrderDeliveryRequestHandler(this)
-            OrderService(this.applicationContext, assignDelivery)
+            OrderService(assignDelivery)
                 .assignDelivery(pendingOrder!!, deliveryUser!!)
         }
     }
@@ -97,10 +97,7 @@ class ChooseDeliveryActivity : AppCompatActivity(),
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         val listPlacesRequestHandler = AvailableDeliveryRequestHandler(this)
-        DeliveryUserService(
-            this.applicationContext,
-            listPlacesRequestHandler
-        ).availableDeliveries(placeCoordinate!!)
+        DeliveryUserService(listPlacesRequestHandler).availableDeliveries(placeCoordinate!!)
     }
 
     // Called when the deliveries are ready from the AvailableDeliveryRequestHandler
