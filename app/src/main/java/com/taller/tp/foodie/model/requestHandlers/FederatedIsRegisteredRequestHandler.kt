@@ -3,9 +3,11 @@ package com.taller.tp.foodie.model.requestHandlers
 import android.content.Intent
 import android.util.Log
 import com.android.volley.VolleyError
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.iid.FirebaseInstanceId
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.ErrorHandler
-import com.taller.tp.foodie.ui.ClientMainActivity
+import com.taller.tp.foodie.services.UserService
 import com.taller.tp.foodie.ui.LoginActivity
 import com.taller.tp.foodie.ui.WelcomeActivity
 import org.json.JSONObject
@@ -40,9 +42,20 @@ class FederatedIsRegisteredRequestHandler(private val activity: WeakReference<Lo
         }
 
         if (isRegistered(response)) {
-            val intent = Intent(activity.get(), ClientMainActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-            activity.get()?.startActivity(intent)
+            // get fcm token for device
+            FirebaseInstanceId.getInstance().instanceId
+                .addOnCompleteListener(OnCompleteListener { task ->
+                    if (!task.isSuccessful || task.result == null) {
+                        Log.w("AuthRequestHandler", "getInstanceId failed", task.exception)
+                        return@OnCompleteListener
+                    }
+
+                    // Get new Instance ID token
+                    val token = task.result?.token
+
+                    // set fcm token in backend
+                    UserService(SetFcmTokenLoginRequestHandler(activity)).updateUserFcmToken(token!!)
+                })
         } else {
             val intent = Intent(activity.get(), WelcomeActivity::class.java)
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

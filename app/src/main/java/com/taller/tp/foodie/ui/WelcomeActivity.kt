@@ -93,8 +93,7 @@ class WelcomeActivity : AppCompatActivity() {
                 }
 
                 // finish register user in backend
-                val requestHandler = FinishRegisterRequestHandler(WeakReference(this))
-                UserService(this.applicationContext, requestHandler).finishRegister(
+                UserService(FinishRegisterRequestHandler(WeakReference(this))).finishRegister(
                     userType,
                     subscription
                 )

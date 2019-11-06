@@ -30,7 +30,7 @@ class OrderDetailActivity : AppCompatActivity() {
 
         val orderId = intent.getStringExtra(DETAIL_ORDER_KEY)
         if (orderId != null) {
-            OrderService(this, OrderDetailRequestHandler(this)).find(orderId)
+            OrderService(OrderDetailRequestHandler(this)).find(orderId)
         }
 
         val confirmDeliveryButton = findViewById<Button>(R.id.confirm_delivery_button)
@@ -38,7 +38,7 @@ class OrderDetailActivity : AppCompatActivity() {
     }
 
     private fun confirmDeliveryButtonListener() {
-        OrderService(this, OrderDetailRequestHandler(this).forUpdate())
+        OrderService(OrderDetailRequestHandler(this).forUpdate())
             .updateStatus(order!!, Order.STATUS.DELIVERED_STATUS)
     }
 

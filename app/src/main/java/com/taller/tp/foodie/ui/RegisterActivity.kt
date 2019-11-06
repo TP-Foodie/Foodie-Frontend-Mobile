@@ -67,8 +67,7 @@ class RegisterActivity : AppCompatActivity() {
 
     private fun registerUserInBackend() {
         // register user in backend
-        val requestHandler = RegisterRequestHandler(WeakReference(this))
-        UserService(this.applicationContext, requestHandler).register(
+        UserService(RegisterRequestHandler(WeakReference(this))).register(
             email_field.text.toString(),
             password_field.text.toString(),
             name_field.text.toString(),
@@ -85,7 +84,6 @@ class RegisterActivity : AppCompatActivity() {
     fun authenticateWithBackend() {
         // authenticate user with backend
         AuthService(
-            this.applicationContext,
             EmailAuthFromRegisterRequestHandler(WeakReference(this))
         )
             .emailAndPasswordAuthenticationWithBackend(

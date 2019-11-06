@@ -1,14 +1,13 @@
 package com.taller.tp.foodie.services
 
-import android.content.Context
 import com.android.volley.Response
 import com.taller.tp.foodie.model.ChatMessage
 import com.taller.tp.foodie.model.requestHandlers.RequestHandler
 import org.json.JSONObject
 
-class ChatService(ctx: Context, private val requestHandler: RequestHandler) {
+class ChatService(private val requestHandler: RequestHandler) {
 
-    private val client: BackService = BackService(ctx)
+    private val client = BackService.getInstance()
 
     companion object {
         // endpoint

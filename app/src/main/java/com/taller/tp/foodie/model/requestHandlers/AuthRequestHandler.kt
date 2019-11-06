@@ -6,12 +6,14 @@ import android.view.View
 import android.widget.Button
 import android.widget.ProgressBar
 import com.android.volley.VolleyError
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.iid.FirebaseInstanceId
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.ErrorHandler
 import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import com.taller.tp.foodie.model.common.auth.AuthErrors
 import com.taller.tp.foodie.model.common.auth.ResponseData
-import com.taller.tp.foodie.ui.ClientMainActivity
+import com.taller.tp.foodie.services.UserService
 import com.taller.tp.foodie.ui.LoginActivity
 import com.taller.tp.foodie.ui.RegisterActivity
 import com.taller.tp.foodie.ui.WelcomeActivity
@@ -33,10 +35,9 @@ class FederatedAuthRequestHandler(private val activity: WeakReference<LoginActiv
 
     override fun onSuccess(response: JSONObject?) {
         // persist user data
-        UserBackendDataHandler(activity.get()?.applicationContext!!)
-            .persistUserBackendData(
-                response?.getString(ResponseData.TOKEN_FIELD)
-            )
+        UserBackendDataHandler.getInstance().persistUserBackendData(
+            response?.getString(ResponseData.TOKEN_FIELD)
+        )
 
         activity.get()?.checkIfFederatedIsRegistered()
     }
@@ -70,17 +71,24 @@ class EmailAuthFromLoginRequestHandler(private val activity: WeakReference<Login
 
     override fun onSuccess(response: JSONObject?) {
         // persist user data
-        UserBackendDataHandler(activity.get()?.applicationContext!!)
-            .persistUserBackendData(
-                response?.getString(ResponseData.TOKEN_FIELD)
-            )
+        UserBackendDataHandler.getInstance().persistUserBackendData(
+            response?.getString(ResponseData.TOKEN_FIELD)
+        )
 
-        // go to main activity, clear activity task
-        val intent = Intent(activity.get(), ClientMainActivity::class.java)
-        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        activity.get()?.startActivity(intent)
+        // get fcm token for device
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful || task.result == null) {
+                    Log.w("AuthRequestHandler", "getInstanceId failed", task.exception)
+                    return@OnCompleteListener
+                }
 
-        activity.get()?.finish()
+                // Get new Instance ID token
+                val token = task.result?.token
+
+                // set fcm token in backend
+                UserService(SetFcmTokenLoginRequestHandler(activity)).updateUserFcmToken(token!!)
+            })
     }
 }
 
@@ -111,10 +119,9 @@ class EmailAuthFromRegisterRequestHandler(private val activity: WeakReference<Re
 
     override fun onSuccess(response: JSONObject?) {
         // persist user data
-        UserBackendDataHandler(activity.get()?.applicationContext!!)
-            .persistUserBackendData(
-                response?.getString(ResponseData.TOKEN_FIELD)
-            )
+        UserBackendDataHandler.getInstance().persistUserBackendData(
+            response?.getString(ResponseData.TOKEN_FIELD)
+        )
 
         // go to welcome activity, clear activity task
         val intent = Intent(activity.get(), WelcomeActivity::class.java)

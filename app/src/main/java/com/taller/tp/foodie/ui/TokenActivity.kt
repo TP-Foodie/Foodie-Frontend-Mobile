@@ -9,8 +9,7 @@ import com.taller.tp.foodie.model.common.auth.AuthErrors
 import com.taller.tp.foodie.model.requestHandlers.SendTokenRequestHandler
 import com.taller.tp.foodie.services.AuthService
 import com.taller.tp.foodie.utils.emailIsValid
-import kotlinx.android.synthetic.main.activity_token.email_field
-import kotlinx.android.synthetic.main.activity_token.email_field_layout
+import kotlinx.android.synthetic.main.activity_token.*
 import java.lang.ref.WeakReference
 
 class TokenActivity : AppCompatActivity() {
@@ -31,7 +30,7 @@ class TokenActivity : AppCompatActivity() {
 
     private fun sendToken() {
         val requestHandler = SendTokenRequestHandler(WeakReference(this))
-        AuthService(this, requestHandler).sendToken(email_field.text.toString())
+        AuthService(requestHandler).sendToken(email_field.text.toString())
     }
 
     fun tokenPasswordPage(view: View) {

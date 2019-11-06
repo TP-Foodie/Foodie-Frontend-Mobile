@@ -26,21 +26,23 @@ import com.taller.tp.foodie.model.Place
 import com.taller.tp.foodie.model.User
 import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import com.taller.tp.foodie.model.requestHandlers.ClientMainUserRequestHandler
+import com.taller.tp.foodie.model.requestHandlers.CleanFcmTokenRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.ClientOrderRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.CreatePlaceRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.ListPlacesRequestHandler
 import com.taller.tp.foodie.services.OrderService
 import com.taller.tp.foodie.services.PlaceService
 import com.taller.tp.foodie.services.ProfileService
+import com.taller.tp.foodie.services.UserService
 import kotlinx.android.synthetic.main.activity_client_main.*
 import org.json.JSONObject
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
-import java.lang.ref.WeakReference
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.collections.forEach
 import kotlin.collections.set
+import java.lang.ref.WeakReference
 
 
 const val REQUEST_CODE_LOCATION = 123
@@ -59,14 +61,14 @@ class ClientMainActivity : AppCompatActivity(),
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var lastSelectedMarker: Marker? = null
     private var markerPlaceMap: HashMap<Marker, Place> = HashMap()
-    var paymentMethod: Order.PAYMENT_METHOD? = null
+    private var paymentMethod: Order.PAYMENT_METHOD? = null
     lateinit var userType: User.USER_TYPE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_client_main)
 
-        ProfileService(this.applicationContext, ClientMainUserRequestHandler(WeakReference(this))).getUserProfile()
+        ProfileService(ClientMainUserRequestHandler(WeakReference(this))).getUserProfile()
 
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
@@ -86,7 +88,7 @@ class ClientMainActivity : AppCompatActivity(),
         }
 
         val paymentRadio = findViewById<RadioGroup>(R.id.payment_method_radio)
-        paymentRadio.setOnCheckedChangeListener { group, checkedId ->
+        paymentRadio.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId != -1){
                 when (checkedId){
                     R.id.cash_option -> paymentMethod = Order.PAYMENT_METHOD.CASH_PAYMENT_METHOD
@@ -95,7 +97,7 @@ class ClientMainActivity : AppCompatActivity(),
             }
         }
         val favourCheck = findViewById<CheckBox>(R.id.delivery_favour_check)
-        favourCheck.setOnCheckedChangeListener{ v, checked ->
+        favourCheck.setOnCheckedChangeListener{ _, checked ->
             val paymentLayout = findViewById<LinearLayout>(R.id.payment_layout)
             if (checked){
                 paymentLayout.visibility = View.INVISIBLE
@@ -135,8 +137,14 @@ class ClientMainActivity : AppCompatActivity(),
     }
 
     private fun signOut() {
+        // clean fcm token
+        UserService(CleanFcmTokenRequestHandler(WeakReference(this)))
+            .updateUserFcmToken("")
+    }
+
+    fun onCleanFcmTokenSuccess() {
         // clean user backend data
-        UserBackendDataHandler(applicationContext).deleteUserBackendData()
+        UserBackendDataHandler.getInstance().deleteUserBackendData()
 
         // go to login and clear task
         val intent = Intent(applicationContext, LoginActivity::class.java)
@@ -178,7 +186,7 @@ class ClientMainActivity : AppCompatActivity(),
                 val createPlaceRequestHandler = CreatePlaceRequestHandler(this)
                 val placePosition = Coordinate(marker.position.latitude, marker.position.longitude)
                 val name = findViewById<EditText>(R.id.delivery_place_input).text.toString()
-                PlaceService(this.applicationContext, createPlaceRequestHandler).create(
+                PlaceService(createPlaceRequestHandler).create(
                     placePosition,
                     name
                 )
@@ -200,7 +208,7 @@ class ClientMainActivity : AppCompatActivity(),
         val orderType: Order.TYPE
         orderType = if (isFavour) Order.TYPE.FAVOR_TYPE else Order.TYPE.NORMAL_TYPE
         val orderRequest = OrderService.OrderRequest(orderType.key, orderProduct, paymentMethod)
-        OrderService(this.applicationContext, requestHandler).makeOrder(orderRequest)
+        OrderService(requestHandler).makeOrder(orderRequest)
     }
 
     private fun validateProduct(): Boolean {
@@ -232,7 +240,7 @@ class ClientMainActivity : AppCompatActivity(),
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
         val listPlacesRequestHandler = ListPlacesRequestHandler(this)
-        PlaceService(this.applicationContext, listPlacesRequestHandler).list()
+        PlaceService(listPlacesRequestHandler).list()
     }
 
     // Called when the places are ready from the ListPlacesRequestHandler

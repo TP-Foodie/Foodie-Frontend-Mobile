@@ -1,13 +1,12 @@
 package com.taller.tp.foodie.services
 
-import android.content.Context
 import com.android.volley.Response
 import com.taller.tp.foodie.model.requestHandlers.RequestHandler
 import org.json.JSONObject
 
-class AuthService(ctx: Context, private val requestHandler: RequestHandler) {
+class AuthService(private val requestHandler: RequestHandler) {
 
-    private val client = BackService.getInstance(ctx)
+    private val client = BackService.getInstance()
 
     companion object {
         // endpoints

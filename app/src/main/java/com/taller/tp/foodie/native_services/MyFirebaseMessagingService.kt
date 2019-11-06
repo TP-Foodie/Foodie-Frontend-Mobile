@@ -13,6 +13,7 @@ import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
+import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import com.taller.tp.foodie.model.requestHandlers.UpdateFcmTokenRequestHandler
 import com.taller.tp.foodie.services.UserService
 import com.taller.tp.foodie.ui.ChatActivity
@@ -28,11 +29,14 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         // If you want to send messages to this application instance or
         // manage this apps subscriptions on the server side, send the
         // Instance ID token to your app server.
-        sendRegistrationToServer(token)
+        val currentToken = UserBackendDataHandler.getInstance().getBackendToken()
+        if (currentToken != "") {
+            sendRegistrationToServer(token)
+        }
     }
 
     private fun sendRegistrationToServer(token: String) {
-        UserService(this, UpdateFcmTokenRequestHandler()).updateUserFcmToken(token)
+        UserService(UpdateFcmTokenRequestHandler()).updateUserFcmToken(token)
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {

@@ -38,7 +38,7 @@ class RecoveryPasswordActivity : AppCompatActivity() {
 
     private fun updatePassword() {
         val requestHandler = UpdatePasswordRequestHandler(WeakReference(this))
-        AuthService(this, requestHandler).updatePassowrd(
+        AuthService(requestHandler).updatePassowrd(
             email = email_field.text.toString(),
             password = password_field.text.toString(),
             token = token_field.text.toString()

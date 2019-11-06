@@ -46,7 +46,7 @@ class OrdersActivity : AppCompatActivity(),
         val tabs = findViewById<TabLayout>(R.id.order_list_tabs)
         tabs.addOnTabSelectedListener(this)
         val listOrdersRequestHandler = ListOrdersRequestHandler(this)
-        OrderService(this, listOrdersRequestHandler).list()
+        OrderService(listOrdersRequestHandler).list()
     }
 
     fun populateOrders() {

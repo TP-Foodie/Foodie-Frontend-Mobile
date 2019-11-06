@@ -1,6 +1,5 @@
 package com.taller.tp.foodie.services
 
-import android.content.Context
 import com.android.volley.Response
 import com.taller.tp.foodie.model.DeliveryUser
 import com.taller.tp.foodie.model.Order
@@ -11,9 +10,9 @@ import org.json.JSONObject
 
 const val ORDER_RESOURCE = "/orders/"
 
-class OrderService(ctx: Context, private val requestHandler: RequestHandler) {
+class OrderService(private val requestHandler: RequestHandler) {
 
-    private val client = BackService.getInstance(ctx)
+    private val client = BackService.getInstance()
 
     fun makeOrder(orderRequest: OrderRequest) {
         requestHandler.begin()
