@@ -59,7 +59,7 @@ class ClientMainActivity : AppCompatActivity(),
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var lastSelectedMarker: Marker? = null
     private var markerPlaceMap: HashMap<Marker, Place> = HashMap()
-//    var paymentMethod: Order.PAYMENT_METHOD? = null
+    var paymentMethod: Order.PAYMENT_METHOD? = null
     lateinit var userType: User.USER_TYPE
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,12 +87,12 @@ class ClientMainActivity : AppCompatActivity(),
 
         val paymentRadio = findViewById<RadioGroup>(R.id.payment_method_radio)
         paymentRadio.setOnCheckedChangeListener { group, checkedId ->
-//            if (checkedId != -1){
-//                when (checkedId){
-//                    R.id.cash_option -> paymentMethod = Order.PAYMENT_METHOD.CASH_PAYMENT_METHOD
-//                    R.id.card_option -> paymentMethod = Order.PAYMENT_METHOD.CARD_PAYMENT_METHOD
-//                }
-//            }
+            if (checkedId != -1){
+                when (checkedId){
+                    R.id.cash_option -> paymentMethod = Order.PAYMENT_METHOD.CASH_PAYMENT_METHOD
+                    R.id.card_option -> paymentMethod = Order.PAYMENT_METHOD.CARD_PAYMENT_METHOD
+                }
+            }
         }
         val favourCheck = findViewById<CheckBox>(R.id.delivery_favour_check)
         favourCheck.setOnCheckedChangeListener{ v, checked ->

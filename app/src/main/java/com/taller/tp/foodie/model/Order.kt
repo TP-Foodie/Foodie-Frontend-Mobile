@@ -7,12 +7,12 @@ class Order(val id: String){
     private var product: OrderProduct? = null
     private var owner: User? = null
     private var delivery: DeliveryUser? = null
-//    private var paymentMethod: PAYMENT_METHOD = PAYMENT_METHOD.CASH_PAYMENT_METHOD
+    private var paymentMethod: PAYMENT_METHOD = PAYMENT_METHOD.CASH_PAYMENT_METHOD
 
-//    enum class PAYMENT_METHOD(val label: String) {
-//        CASH_PAYMENT_METHOD("Efectivo"),
-//        CARD_PAYMENT_METHOD("Tarjeta de Credito")
-//    }
+    enum class PAYMENT_METHOD(val label: String) {
+        CASH_PAYMENT_METHOD("Efectivo"),
+        CARD_PAYMENT_METHOD("Tarjeta de Credito")
+    }
     enum class STATUS(val key: String) {
         TAKEN_STATUS("TS"),
         WAITING_STATUS("WS"),
@@ -93,13 +93,13 @@ class Order(val id: String){
     fun getPlace(): Place{
         return product!!.place
     }
-//
-//    fun getPaymentMethod(): String{
-//        return paymentMethod.label
-//    }
-//
-//    fun setPaymentMethod(paymentMethod: String): Order{
-//        this.paymentMethod = PAYMENT_METHOD.valueOf(paymentMethod)
-//        return this
-//    }
+
+    fun getPaymentMethod(): String{
+        return paymentMethod.label
+    }
+
+    fun setPaymentMethod(paymentMethod: String): Order{
+        this.paymentMethod = PAYMENT_METHOD.valueOf(paymentMethod)
+        return this
+    }
 }
