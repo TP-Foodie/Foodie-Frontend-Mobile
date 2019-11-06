@@ -21,7 +21,6 @@ class ProfileActivity : AppCompatActivity() {
 
     private fun getUserProfile() {
         ProfileService(
-            this.applicationContext,
             GetUserProfileRequestHandler(WeakReference(this))
         ).getUserProfile()
     }

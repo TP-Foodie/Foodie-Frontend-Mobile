@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
 
     fun signOut(view: View) {
         // clean user backend data
-        UserBackendDataHandler(applicationContext).deleteUserBackendData()
+        UserBackendDataHandler.getInstance().deleteUserBackendData()
 
         // go to login and clear task
         val intent = Intent(applicationContext, LoginActivity::class.java)

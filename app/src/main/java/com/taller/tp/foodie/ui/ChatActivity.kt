@@ -70,7 +70,7 @@ class ChatActivity : AppCompatActivity() {
 
             messagesList.add(0, messageData)
 
-            ChatService(applicationContext, SendMessageRequestHandler(this))
+            ChatService(SendMessageRequestHandler(this))
                 .sendMessage(chatId!!, messageData)
 
             message_text.setText("")
@@ -112,7 +112,7 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun getMyData() {
-        ProfileService(applicationContext, GetUserForChatRequestHandler(WeakReference(this)))
+        ProfileService(GetUserForChatRequestHandler(WeakReference(this)))
             .getUserForChat()
     }
 
@@ -123,17 +123,17 @@ class ChatActivity : AppCompatActivity() {
             chat?.uid_1!!
         }
 
-        ProfileService(applicationContext, GetOtherUserForChatRequestHandler(WeakReference(this)))
+        ProfileService(GetOtherUserForChatRequestHandler(WeakReference(this)))
             .getOtherUserForChat(otherUserId)
     }
 
     private fun getChat() {
-        ChatService(applicationContext, GetChatRequestHandler(this))
+        ChatService(GetChatRequestHandler(this))
             .getChat(chatId!!)
     }
 
     private fun getChatMessages() {
-        ChatService(applicationContext, ListChatMessagesRequestHandler(this))
+        ChatService(ListChatMessagesRequestHandler(this))
             .getChatMessages(chatId!!)
     }
 

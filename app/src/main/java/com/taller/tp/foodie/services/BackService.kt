@@ -1,11 +1,14 @@
 package com.taller.tp.foodie.services
 
-import android.content.Context
 import android.util.Log
 import com.android.volley.NetworkResponse
 import com.android.volley.RequestQueue
 import com.android.volley.Response
-import com.android.volley.toolbox.*
+import com.android.volley.toolbox.HttpHeaderParser
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.JsonRequest
+import com.android.volley.toolbox.Volley
+import com.taller.tp.foodie.MyApplication
 import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import org.json.JSONArray
 import org.json.JSONObject
@@ -13,15 +16,15 @@ import java.util.*
 
 const val SERVICE_ARRAY_RESPONSE = "service-array-response"
 
-open class BackService constructor(context: Context) {
+open class BackService {
 
     companion object {
         @Volatile
         private var INSTANCE: BackService? = null
 
-        fun getInstance(context: Context) =
+        fun getInstance() =
             INSTANCE ?: synchronized(this) {
-                INSTANCE ?: BackService(context).also {
+                INSTANCE ?: BackService().also {
                     INSTANCE = it
                 }
             }
@@ -30,14 +33,15 @@ open class BackService constructor(context: Context) {
     private val requestQueue: RequestQueue by lazy {
         // applicationContext is key, it keeps you from leaking the
         // Activity or BroadcastReceiver if someone passes one in.
-        Volley.newRequestQueue(context.applicationContext)
+        val appContext = MyApplication.getContext()
+        Volley.newRequestQueue(appContext)
     }
 
-    private val url = getUrl(context)
-    private val authToken = UserBackendDataHandler(context).getBackendToken()
+    private val url = getUrl()
 
-    private fun getUrl(ctx: Context): String {
-        val stream = ctx.assets.open("environment.properties")
+    private fun getUrl(): String {
+        val appContext = MyApplication.getContext()
+        val stream = appContext.assets.open("environment.properties")
         val properties = Properties()
         properties.load(stream)
         return properties.getProperty("foodie-back.url")
@@ -58,6 +62,7 @@ open class BackService constructor(context: Context) {
                 onError) {
                 override fun getHeaders(): MutableMap<String, String> {
                     val headers = HashMap<String, String>()
+                    val authToken = UserBackendDataHandler.getInstance().getBackendToken()
                     headers["Authorization"] = "Bearer $authToken"
                     return headers
                 }
@@ -82,6 +87,7 @@ open class BackService constructor(context: Context) {
                 onError) {
                 override fun getHeaders(): MutableMap<String, String> {
                     val headers = HashMap<String, String>()
+                    val authToken = UserBackendDataHandler.getInstance().getBackendToken()
                     headers["Authorization"] = "Bearer $authToken"
                     return headers
                 }
@@ -108,6 +114,7 @@ open class BackService constructor(context: Context) {
             ) {
                 override fun getHeaders(): MutableMap<String, String> {
                     val headers = HashMap<String, String>()
+                    val authToken = UserBackendDataHandler.getInstance().getBackendToken()
                     headers["Authorization"] = "Bearer $authToken"
                     return headers
                 }
@@ -132,7 +139,6 @@ open class BackService constructor(context: Context) {
     ) {
         try {
             val finalUrl = url + method
-
             val patchRequest = object : JsonObjectRequest(
                 Method.PATCH,
                 finalUrl, jsonRequest,
@@ -141,6 +147,7 @@ open class BackService constructor(context: Context) {
             ) {
                 override fun getHeaders(): MutableMap<String, String> {
                     val headers = HashMap<String, String>()
+                    val authToken = UserBackendDataHandler.getInstance().getBackendToken()
                     headers["Authorization"] = "Bearer $authToken"
                     return headers
                 }

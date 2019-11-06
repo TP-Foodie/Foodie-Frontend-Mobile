@@ -11,11 +11,6 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
-import com.facebook.login.LoginManager
-import com.facebook.login.LoginResult
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
@@ -42,7 +37,6 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private var mGoogleSignInClient: GoogleSignInClient? = null
-    private var mCallbackManager: CallbackManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +45,6 @@ class LoginActivity : AppCompatActivity() {
         setupGotoRegister()
 
         configureGoogleSignIn()
-        configureFacebookSignIn()
         configurePasswordLogin()
     }
 
@@ -75,37 +68,6 @@ class LoginActivity : AppCompatActivity() {
     private fun signInGoogle() {
         val signInIntent = mGoogleSignInClient?.signInIntent
         startActivityForResult(signInIntent, RC_SIGN_IN)
-    }
-
-    private fun configureFacebookSignIn() {
-        logOutFacebookButton()
-
-        mCallbackManager = CallbackManager.Factory.create()
-
-        facebook_SignInButton.setPermissions("email", "public_profile")
-        facebook_SignInButton.registerCallback(
-            mCallbackManager,
-            object : FacebookCallback<LoginResult> {
-                override fun onSuccess(loginResult: LoginResult) {
-                    // send token to backend
-                    authenticateWithBackend(loginResult.accessToken.token)
-                }
-
-                override fun onCancel() {
-                    // facebook:onCancel
-                }
-
-                override fun onError(error: FacebookException) {
-                    // facebook:onError
-                    Log.e("Error Facebook Login", error.message)
-
-                    ErrorHandler.handleError(login_layout)
-                }
-            })
-    }
-
-    private fun logOutFacebookButton() {
-        LoginManager.getInstance().logOut()
     }
 
     private fun configurePasswordLogin() {
@@ -154,9 +116,6 @@ class LoginActivity : AppCompatActivity() {
 
                 ErrorHandler.handleError(login_layout)
             }
-        } else {
-            // Pass the activity result back to the Facebook SDK
-            mCallbackManager?.onActivityResult(requestCode, resultCode, data)
         }
     }
 
@@ -171,17 +130,17 @@ class LoginActivity : AppCompatActivity() {
             return
         }
 
-        AuthService(this.applicationContext, FederatedAuthRequestHandler(WeakReference(this)))
+        AuthService(FederatedAuthRequestHandler(WeakReference(this)))
             .federatedAuthenticationWithBackend(token)
     }
 
     fun checkIfFederatedIsRegistered() {
-        AuthService(this, FederatedIsRegisteredRequestHandler(WeakReference(this)))
+        AuthService(FederatedIsRegisteredRequestHandler(WeakReference(this)))
             .checkIfFederatedIsRegistered()
     }
 
     private fun authenticateWithBackend(email: String, password: String) {
-        AuthService(this.applicationContext, EmailAuthFromLoginRequestHandler(WeakReference(this)))
+        AuthService(EmailAuthFromLoginRequestHandler(WeakReference(this)))
             .emailAndPasswordAuthenticationWithBackend(email, password)
     }
 
