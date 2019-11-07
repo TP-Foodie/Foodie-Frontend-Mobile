@@ -17,10 +17,8 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.taller.tp.foodie.R
-import com.taller.tp.foodie.model.Chat
-import com.taller.tp.foodie.model.Coordinate
-import com.taller.tp.foodie.model.DeliveryUser
-import com.taller.tp.foodie.model.Order
+import com.taller.tp.foodie.model.*
+import com.taller.tp.foodie.model.requestHandlers.AssignOrderChatRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.AssignOrderDeliveryRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.AvailableDeliveryRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.CreateChatRequestHandler
@@ -173,5 +171,9 @@ class ChooseDeliveryActivity : AppCompatActivity(),
     fun createChat(order: Order?) {
         val chat = Chat(order?.getOwner()?.id!!, order.getDelivery()?.id!!, order.id)
         ChatService(CreateChatRequestHandler(this)).createChat(chat)
+    }
+
+    fun assignChat(chat: ChatFetched) {
+        OrderService(AssignOrderChatRequestHandler(this)).assignChat(chat)
     }
 }
