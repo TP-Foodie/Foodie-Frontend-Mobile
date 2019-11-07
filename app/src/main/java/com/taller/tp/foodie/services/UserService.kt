@@ -2,6 +2,7 @@ package com.taller.tp.foodie.services
 
 import android.graphics.Bitmap
 import com.android.volley.Response
+import com.taller.tp.foodie.model.User
 import com.taller.tp.foodie.model.common.ImageStringConversor
 import com.taller.tp.foodie.model.requestHandlers.RequestHandler
 import org.json.JSONObject
@@ -28,6 +29,22 @@ class UserService(private val requestHandler: RequestHandler) {
         const val SUBSCRIPTION_FIELD = "subscription"
 
         const val FCM_TOKEN_FIELD = "fcmToken"
+
+        fun fromUserJson(json: JSONObject): User{
+            val id = json.getString("id")
+            val email = json.getString("email")
+            val lastName = json.getString("last_name")
+            val type = json.getString("type")
+            val name = json.getString("name")
+            val phone = json.optString("phone", null)
+            val image = json.getString("profile_image")
+
+            return User(id, name, image)
+                .setType(type)
+                .setEmail(email)
+                .setLastName(lastName)
+                .setPhone(phone)
+        }
     }
 
     fun register(

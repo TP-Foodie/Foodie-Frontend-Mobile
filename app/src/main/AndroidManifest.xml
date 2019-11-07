@@ -51,6 +51,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="${MAP_API_KEY}" />
 
+        <activity android:name=".ui.OrderDetailActivity" />
         <activity android:name=".ui.WelcomeActivity" />
         <activity android:name=".ui.LauncherActivity">
             <intent-filter>
@@ -81,6 +82,14 @@
         <activity
             android:name=".ui.ProfileActivity"
             android:label="@string/choose_delivery"
+            android:parentActivityName=".ui.ClientMainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.ClientMainActivity" />
+        </activity>
+        <activity
+            android:name=".ui.OrdersActivity"
+            android:label="@string/orders"
             android:parentActivityName=".ui.ClientMainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"

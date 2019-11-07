@@ -67,4 +67,16 @@
     <string name="deliveries_title">Deliveries Realizados</string>
     <string name="sent_msg_title">Mensajes Enviados</string>
 
+    <!-- Orders -->
+    <string name="pending_orders">Pendientes</string>
+    <string name="completed_orders">Completadas</string>
+    <string name="loading_orders">Cargando Pedidos..</string>
+    <string name="deliver_order">Entregar</string>
+    <string name="empty_order_list">No hay Pedidos</string>
+    <string name="payment_method_label">Método de pago</string>
+    <string name="cash_method_label">Pago Efectivo</string>
+    <string name="card_method_label">Pago con Tarjeta</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+
 </resources>

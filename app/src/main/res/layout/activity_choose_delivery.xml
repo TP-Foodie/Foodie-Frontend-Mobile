@@ -69,16 +69,21 @@
                         <LinearLayout
                             android:id="@+id/dummy_name"
                             android:layout_width="match_parent"
-                            android:layout_height="66dp"
-                            android:layout_weight="1"
+                            android:layout_height="55dp"
                             android:orientation="vertical" />
 
                         <TextView
                             android:id="@+id/delivery_name"
                             android:layout_width="match_parent"
-                            android:layout_height="128dp"
+                            android:layout_height="20dp"
                             android:layout_gravity="center"
-                            android:layout_weight="1"
+                            android:textColor="@android:color/background_dark" />
+
+                        <TextView
+                            android:id="@+id/delivery_rep"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_gravity="center"
                             android:textColor="@android:color/background_dark" />
 
                     </LinearLayout>
