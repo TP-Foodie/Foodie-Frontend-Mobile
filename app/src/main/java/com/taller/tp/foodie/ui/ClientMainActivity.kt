@@ -91,8 +91,8 @@ class ClientMainActivity : AppCompatActivity(),
         paymentRadio.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId != -1){
                 when (checkedId){
-                    R.id.cash_option -> paymentMethod = Order.PAYMENT_METHOD.CASH_PAYMENT_METHOD
-                    R.id.card_option -> paymentMethod = Order.PAYMENT_METHOD.CARD_PAYMENT_METHOD
+                    R.id.cash_option -> paymentMethod = Order.PAYMENT_METHOD.CPM
+                    R.id.card_option -> paymentMethod = Order.PAYMENT_METHOD.CRPM
                 }
             }
         }
@@ -200,6 +200,7 @@ class ClientMainActivity : AppCompatActivity(),
         val isFavour= findViewById<CheckBox>(R.id.delivery_favour_check).isChecked
         if (isFavour)
             paymentMethod = null
+
         val product = findViewById<TextView>(R.id.delivery_what_input)
 
         val requestHandler = ClientOrderRequestHandler(this)

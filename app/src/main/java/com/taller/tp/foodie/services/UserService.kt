@@ -36,7 +36,7 @@ class UserService(private val requestHandler: RequestHandler) {
             val lastName = json.getString("last_name")
             val type = json.getString("type")
             val name = json.getString("name")
-            val phone = json.getString("phone")
+            val phone = json.optString("phone", null)
             val image = json.getString("profile_image")
 
             return User(id, name, image)

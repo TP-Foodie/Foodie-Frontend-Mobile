@@ -16,6 +16,7 @@ import com.taller.tp.foodie.model.Order
 import com.taller.tp.foodie.model.User
 import com.taller.tp.foodie.model.requestHandlers.ListOrdersRequestHandler
 import com.taller.tp.foodie.services.OrderService
+import com.taller.tp.foodie.services.ProfileService
 
 const val DETAIL_ORDER_KEY = "DETAIL_ORDER_KEY"
 
@@ -31,7 +32,7 @@ class OrdersActivity : AppCompatActivity(),
 
     lateinit var userType: User.USER_TYPE
 
-    private var allOrders: ArrayList<Order> = ArrayList()
+    private var allOrders: List<Order> = ArrayList()
 
     private fun loadUserType() {
         val intentUserType = intent.getStringExtra(CLIENT_TYPE_KEY)
@@ -46,7 +47,9 @@ class OrdersActivity : AppCompatActivity(),
         val tabs = findViewById<TabLayout>(R.id.order_list_tabs)
         tabs.addOnTabSelectedListener(this)
         val listOrdersRequestHandler = ListOrdersRequestHandler(this)
-        OrderService(listOrdersRequestHandler).list()
+        if (userType == User.USER_TYPE.DELIVERY)
+            listOrdersRequestHandler.byDelivery()
+        OrderService(listOrdersRequestHandler).listByUser(userType)
     }
 
     fun populateOrders() {
@@ -107,7 +110,19 @@ class OrdersActivity : AppCompatActivity(),
         populateOrders()
     }
 
-    fun setOrders(orders: java.util.ArrayList<Order>) {
+    fun setOrders(orders: List<Order>) {
         allOrders = orders
     }
+
+    fun filterOrders(deliveryId: String) {
+        val filtered = allOrders.filter { order ->
+            order.getDelivery() != null && order.getDelivery()!!.id == deliveryId
+        }
+        setOrders(filtered)
+    }
+    fun askForDelivery() {
+        ProfileService(ListOrdersRequestHandler(this).forFilter()).getUserProfile()
+    }
+
+
 }

@@ -1,14 +1,12 @@
 package com.taller.tp.foodie.services
 
 import com.android.volley.Response
-import com.taller.tp.foodie.model.DeliveryUser
-import com.taller.tp.foodie.model.Order
-import com.taller.tp.foodie.model.OrderProduct
-import com.taller.tp.foodie.model.Place
+import com.taller.tp.foodie.model.*
 import com.taller.tp.foodie.model.requestHandlers.RequestHandler
 import org.json.JSONObject
 
 const val ORDER_RESOURCE = "/orders/"
+const val ORDER_PLACED_RESOURCE = "/orders/placed"
 
 class OrderService(private val requestHandler: RequestHandler) {
 
@@ -48,12 +46,17 @@ class OrderService(private val requestHandler: RequestHandler) {
         return jsonRequest
     }
 
-    fun list(){
+    fun listByUser(userType: User.USER_TYPE){
         requestHandler.begin()
 
         val listener = Response.Listener<JSONObject> { requestHandler.onSuccess(it) }
         val errorListener = Response.ErrorListener { requestHandler.onError(it) }
-        client.doGetArray(ORDER_RESOURCE, listener, errorListener)
+        // TODO TEMPORAL HASTA Q LO PUEDA FILTRAR EL SERVER
+        if (userType == User.USER_TYPE.DELIVERY)
+            client.doGetArray(ORDER_RESOURCE, listener, errorListener)
+        else
+            client.doGetArray(ORDER_PLACED_RESOURCE, listener, errorListener)
+
     }
 
     fun find(orderId: String){
@@ -72,8 +75,16 @@ class OrderService(private val requestHandler: RequestHandler) {
             val status = json.getString("status")
             val number = json.getInt("number")
 
+            // Delivery
+            var deliveryUser: DeliveryUser? = null
+            if (!json.isNull("delivery")){
+                val deliveryJson = json.getJSONObject("delivery")
+                val delivery = UserService.fromUserJson(deliveryJson)
+                deliveryUser = DeliveryUser(delivery.id!!, delivery.name, delivery.image)
+            }
+
             val order = Order(id).setType(orderType)
-                .setStatus(status).setNumber(number)
+                .setStatus(status).setNumber(number).setDelivery(deliveryUser)
 
             if (!withDetail)
                 return order
@@ -84,14 +95,6 @@ class OrderService(private val requestHandler: RequestHandler) {
             // Owner
             val ownerJson = json.getJSONObject("owner")
             val owner = UserService.fromUserJson(ownerJson)
-
-            // Delivery
-            var deliveryUser: DeliveryUser? = null
-            if (!json.isNull("delivery")){
-                val deliveryJson = json.getJSONObject("delivery")
-                val delivery = UserService.fromUserJson(deliveryJson)
-                deliveryUser = DeliveryUser(delivery.id!!, delivery.name, delivery.image)
-            }
 
             return order.setProduct(orderProduct).setOwner(owner).setDelivery(deliveryUser)
         }

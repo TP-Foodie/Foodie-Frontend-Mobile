@@ -128,8 +128,9 @@ class ChooseDeliveryActivity : AppCompatActivity(),
     override fun onMarkerClick(marker : Marker): Boolean {
         lastSelectedMarker = marker
         val delivery = markerPlaceMap[marker]
-        val getDeliveryDetail = AvailableDeliveryRequestHandler(this).forDetail()
-        ProfileService(getDeliveryDetail).getOtherUserForChat(delivery!!.id!!)
+        val deliveryId = delivery!!.id!!
+        val getDeliveryDetail = AvailableDeliveryRequestHandler(this).forDetail(deliveryId)
+        ProfileService(getDeliveryDetail).getOtherUserForChat(deliveryId)
         return false
     }
 

@@ -15,11 +15,13 @@ import org.json.JSONObject
 class AvailableDeliveryRequestHandler(private val activity: ChooseDeliveryActivity) : RequestHandler {
     private enum class OPERATION { LIST, GET_DETAIL }
     private var op: OPERATION = OPERATION.LIST
+    private var deliveryId: String? = null
 
     override fun begin() {}
 
-    fun forDetail() : AvailableDeliveryRequestHandler{
+    fun forDetail(deliveryId: String) : AvailableDeliveryRequestHandler{
         op = OPERATION.GET_DETAIL
+        this.deliveryId = deliveryId
         return this
     }
 
@@ -40,7 +42,8 @@ class AvailableDeliveryRequestHandler(private val activity: ChooseDeliveryActivi
                 activity.configureMapWithDeliveries(deliveries)
             }
             OPERATION.GET_DETAIL -> {
-                val delivery = UserService.fromUserJson(response!!)
+                response!!.put("id", deliveryId)
+                val delivery = UserService.fromUserJson(response)
                 val deliveryUser = DeliveryUser(delivery.id!!, delivery.name, delivery.image)
 
                 activity.onMarkerSetDetail(deliveryUser)
