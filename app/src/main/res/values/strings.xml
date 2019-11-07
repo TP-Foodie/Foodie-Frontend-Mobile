@@ -76,6 +76,7 @@
     <string name="payment_method_label">Método de pago</string>
     <string name="cash_method_label">Pago Efectivo</string>
     <string name="card_method_label">Pago con Tarjeta</string>
+    <string name="btn_chat">Chat</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 

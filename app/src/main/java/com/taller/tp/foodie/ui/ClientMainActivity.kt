@@ -25,24 +25,16 @@ import com.taller.tp.foodie.model.Order
 import com.taller.tp.foodie.model.Place
 import com.taller.tp.foodie.model.User
 import com.taller.tp.foodie.model.common.UserBackendDataHandler
-import com.taller.tp.foodie.model.requestHandlers.ClientMainUserRequestHandler
-import com.taller.tp.foodie.model.requestHandlers.CleanFcmTokenRequestHandler
-import com.taller.tp.foodie.model.requestHandlers.ClientOrderRequestHandler
-import com.taller.tp.foodie.model.requestHandlers.CreatePlaceRequestHandler
-import com.taller.tp.foodie.model.requestHandlers.ListPlacesRequestHandler
+import com.taller.tp.foodie.model.requestHandlers.*
 import com.taller.tp.foodie.services.OrderService
 import com.taller.tp.foodie.services.PlaceService
 import com.taller.tp.foodie.services.ProfileService
 import com.taller.tp.foodie.services.UserService
-import kotlinx.android.synthetic.main.activity_client_main.*
 import org.json.JSONObject
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
-import kotlin.collections.forEach
-import kotlin.collections.set
 import java.lang.ref.WeakReference
+import kotlin.collections.set
 
 
 const val REQUEST_CODE_LOCATION = 123
@@ -81,12 +73,6 @@ class ClientMainActivity : AppCompatActivity(),
     }
 
     private fun buildListeners() {
-        chat_button.setOnClickListener {
-            val intent = Intent(applicationContext, ChatActivity::class.java)
-            intent.putExtra(ChatActivity.CHAT_ID, "5db70abc476c15daf15899f0")
-            startActivity(intent)
-        }
-
         val paymentRadio = findViewById<RadioGroup>(R.id.payment_method_radio)
         paymentRadio.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId != -1){
