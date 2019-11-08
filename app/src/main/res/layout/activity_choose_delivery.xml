@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/choose_delivery_context"
@@ -40,20 +39,14 @@
                 android:background="@android:drawable/dialog_holo_light_frame"
                 android:orientation="horizontal">
 
-                <LinearLayout
-                    android:id="@+id/image_layout"
-                    android:layout_width="126dp"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/delivery_photo"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    android:contentDescription="@string/delivery_photo" />
 
-                    <ImageView
-                        android:id="@+id/delivery_photo"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:contentDescription="@string/delivery_photo"
-                        tools:srcCompat="@tools:sample/backgrounds/scenic" />
-                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/delivery_info_layout"

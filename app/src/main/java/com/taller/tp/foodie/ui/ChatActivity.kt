@@ -62,6 +62,10 @@ class ChatActivity : AppCompatActivity() {
     }
 
     private fun setupClickListeners() {
+        btn_back.setOnClickListener {
+            onBackPressed()
+        }
+
         btn_send_message.setOnClickListener {
             val message = message_text.text.toString().trim()
 
@@ -146,6 +150,7 @@ class ChatActivity : AppCompatActivity() {
     @SuppressLint("SetTextI18n")
     private fun setupChatToolbar() {
         user_name.text = otherData?.name + " " + otherData?.last_name
+        profile_image.setImageURI(otherData?.profile_image)
     }
 
     private fun updateChatMessagesUI() {
