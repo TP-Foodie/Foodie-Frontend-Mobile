@@ -35,7 +35,7 @@ class ProfileActivity : AppCompatActivity() {
         phone.text = data.phone
 
         deliveries.text = data.deliveries_completed.toString()
-        sent_msg.text = data.sent_messages.toString()
+        sent_msg.text = data.messages_sent.toString()
     }
 }
 

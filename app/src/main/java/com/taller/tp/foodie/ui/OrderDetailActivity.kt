@@ -40,7 +40,7 @@ class OrderDetailActivity : AppCompatActivity() {
 
         btn_chat.setOnClickListener {
             val intent = Intent(applicationContext, ChatActivity::class.java)
-            intent.putExtra(ChatActivity.CHAT_ID, order?.getChat()?.id)
+            intent.putExtra(ChatActivity.CHAT_ID, order?.getIdChat())
             startActivity(intent)
         }
     }

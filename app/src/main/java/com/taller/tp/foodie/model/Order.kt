@@ -7,7 +7,7 @@ class Order(val id: String){
     private var product: OrderProduct? = null
     private var owner: User? = null
     private var delivery: DeliveryUser? = null
-    private var chat: ChatFetched? = null
+    private var id_chat: String? = null
 //    private var paymentMethod: PAYMENT_METHOD = PAYMENT_METHOD.CPM
 
     enum class PAYMENT_METHOD {
@@ -95,13 +95,13 @@ class Order(val id: String){
         return product!!.place
     }
 
-    fun setChat(chat: ChatFetched?): Order {
-        this.chat = chat
+    fun setIdChat(idChat: String?): Order {
+        this.id_chat = idChat
         return this
     }
 
-    fun getChat(): ChatFetched? {
-        return this.chat
+    fun getIdChat(): String? {
+        return this.id_chat
     }
 
 //    fun getPaymentMethod(): String{

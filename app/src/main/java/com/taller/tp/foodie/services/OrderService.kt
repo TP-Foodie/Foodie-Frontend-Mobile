@@ -110,6 +110,9 @@ class OrderService(private val requestHandler: RequestHandler) {
             val ownerJson = json.getJSONObject("owner")
             val owner = UserService.fromUserJson(ownerJson)
 
+            // Chat
+            order.setIdChat(json.getString("id_chat"))
+
             return order.setProduct(orderProduct).setOwner(owner).setDelivery(deliveryUser)
         }
 
@@ -132,7 +135,8 @@ class OrderService(private val requestHandler: RequestHandler) {
 
         private fun buildAssignChatRequest(chat: ChatFetched): JSONObject {
             val jsonRequest = JSONObject()
-            jsonRequest.put("chat", chat.id)
+            jsonRequest.put("status", Order.STATUS.TAKEN_STATUS.key)
+            jsonRequest.put("id_chat", chat.id)
             return jsonRequest
         }
 
