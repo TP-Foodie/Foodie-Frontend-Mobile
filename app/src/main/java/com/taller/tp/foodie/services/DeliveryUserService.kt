@@ -35,13 +35,10 @@ class DeliveryUserService(private val requestHandler: RequestHandler) {
 
     companion object{
         fun fromAvailableDeliveryJson(json: JSONObject): DeliveryUser{
-            val id = json.getString("_id")
+            val id = json.getString("id")
             val name = json.getString("name")
             val imageUrl = json.getString("profile_image")
-            val coordinatesArrayJSON = json.getJSONArray("coordinates")
-            val coordinatesJSON = JSONObject()
-            coordinatesJSON.put("latitude", coordinatesArrayJSON.get(0))
-            coordinatesJSON.put("longitude", coordinatesArrayJSON.get(1))
+            val coordinatesJSON = json.getJSONObject("location")
             val coordinates = CoordinateService.fromCoordinateJson(coordinatesJSON)
             val deliveryUser = DeliveryUser(id, name, imageUrl)
             deliveryUser.coordinates = coordinates
