@@ -16,11 +16,6 @@
         app:layout_constraintVertical_chainStyle="packed"
         tools:context=".ui.TokenActivity">
 
-        <include
-            android:id="@+id/include3"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="0dp" />
-
         <LinearLayout
             android:id="@+id/header_layout"
             android:layout_width="375dp"
