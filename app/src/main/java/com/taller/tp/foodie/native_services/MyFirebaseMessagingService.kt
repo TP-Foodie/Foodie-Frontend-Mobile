@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.*
 import android.media.RingtoneManager
 import android.os.Build
 import android.util.Log
@@ -17,6 +18,9 @@ import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import com.taller.tp.foodie.model.requestHandlers.UpdateFcmTokenRequestHandler
 import com.taller.tp.foodie.services.UserService
 import com.taller.tp.foodie.ui.ChatActivity
+import java.io.IOException
+import java.net.HttpURLConnection
+import java.net.URL
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
@@ -76,6 +80,12 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 PendingIntent.FLAG_ONE_SHOT
             )
 
+            val normalImage = getBitmapFromURL(data["senderProfileImage"])
+            var circularImage: Bitmap? = null
+            if (normalImage != null) {
+                circularImage = getCircleBitmap(normalImage)
+            }
+
             val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
             val notificationBuilder =
                 NotificationCompat.Builder(this, data["channelId"] ?: error(""))
@@ -91,6 +101,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                     .setContentTitle(data["title"])
                     .setContentText(data["body"])
                     .setGroup(data["group"])
+                    .setLargeIcon(circularImage)
                     .setGroupSummary(true)
                     .setSound(defaultSoundUri)
 
@@ -137,5 +148,47 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         intent.putExtra("chat_id", data["group"])
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
         Log.e("FCMService", "Local Broadcast SENT")
+    }
+
+    private fun getCircleBitmap(bitmap: Bitmap): Bitmap {
+        val output = Bitmap.createBitmap(
+            bitmap.width,
+            bitmap.height, Bitmap.Config.ARGB_8888
+        )
+        val canvas = Canvas(output)
+
+        val color = Color.RED
+        val paint = Paint()
+        val rect = Rect(0, 0, bitmap.width, bitmap.height)
+        val rectF = RectF(rect)
+
+        paint.isAntiAlias = true
+        canvas.drawARGB(0, 0, 0, 0)
+        paint.color = color
+        canvas.drawOval(rectF, paint)
+
+        paint.xfermode = PorterDuffXfermode(PorterDuff.Mode.SRC_IN)
+        canvas.drawBitmap(bitmap, rect, rect, paint)
+
+        bitmap.recycle()
+
+        return output
+    }
+
+    companion object {
+        fun getBitmapFromURL(src: String?): Bitmap? {
+            return try {
+                val url = URL(src)
+                val connection = url.openConnection() as HttpURLConnection
+                connection.doInput = true
+                connection.connect()
+                val input = connection.inputStream
+                BitmapFactory.decodeStream(input)
+            } catch (e: IOException) {
+                // Log exception
+                null
+            }
+
+        }
     }
 }
