@@ -53,7 +53,6 @@
     <string name="general_success">Operación Exitosa!</string>
     <string name="default_notification_channel_id">default notification channel</string>
     <string name="chat_message_margin">a</string>
-    <string name="chat_button">CHAT</string>
 
     <string name="btn_send_token">Enviar token</string>
     <string name="btn_forgot_password">Olvidaste la contraseña?</string>
@@ -76,7 +75,6 @@
     <string name="payment_method_label">Método de pago</string>
     <string name="cash_method_label">Pago Efectivo</string>
     <string name="card_method_label">Pago con Tarjeta</string>
-
-    <!-- TODO: Remove or change this placeholder text -->
+    <string name="btn_chat">Chat</string>
 
 </resources>

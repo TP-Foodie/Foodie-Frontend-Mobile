@@ -5,6 +5,10 @@
     <size
         android:width="15dp"
         android:height="15dp" />
-    <solid android:color="#000000" />
+    <gradient
+        android:angle="90"
+        android:endColor="#E3678A"
+        android:startColor="#F3916D"
+        android:type="linear" />
     <corners android:radius="1000dp" />
 </shape>
