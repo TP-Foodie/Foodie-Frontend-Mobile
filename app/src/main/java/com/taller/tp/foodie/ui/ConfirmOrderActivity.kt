@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -17,18 +16,18 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.taller.tp.foodie.R
-import com.taller.tp.foodie.model.Coordinate
-import com.taller.tp.foodie.model.DeliveryUser
-import com.taller.tp.foodie.model.Order
-import com.taller.tp.foodie.model.User
+import com.taller.tp.foodie.model.*
+import com.taller.tp.foodie.model.requestHandlers.AssignOrderChatRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.AssignOrderDeliveryRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.ConfirmOrderRequestHandler
+import com.taller.tp.foodie.model.requestHandlers.CreateChatRequestHandler
+import com.taller.tp.foodie.services.ChatService
 import com.taller.tp.foodie.services.DeliveryUserService
 import com.taller.tp.foodie.services.OrderService
 import com.taller.tp.foodie.services.ProfileService
+import kotlinx.android.synthetic.main.activity_confirm_order.*
 import org.json.JSONObject
 import pub.devrel.easypermissions.EasyPermissions
-import java.net.URL
 
 const val SUCCESSFUL_ORDER_KEY = "SUCCESSFUL_ORDER_KEY"
 
@@ -144,16 +143,16 @@ class ConfirmOrderActivity : AppCompatActivity(),
         val deliveryLayout = findViewById<LinearLayout>(R.id.delivery_layout)
         val deliveryName = findViewById<TextView>(R.id.delivery_name)
         val deliveryRep = findViewById<TextView>(R.id.delivery_rep)
-        val deliveryPhoto = findViewById<ImageView>(R.id.delivery_photo)
+        val layout = findViewById<LinearLayout>(R.id.order_layout)
         deliveryLayout.visibility = View.VISIBLE
         deliveryName.text = String.format("Nombre: %s", delivery.name)
         deliveryName.visibility = View.VISIBLE
         deliveryRep.text = String.format("Reputación: %d", delivery.reputation)
         deliveryRep.visibility = View.VISIBLE
+        layout.visibility = View.VISIBLE
         if (delivery.image.isNullOrEmpty()) return
         runOnUiThread {
-            val url = URL(delivery.image)
-            BitmapLoader(deliveryPhoto, url).execute(0)
+            delivery_photo.setImageURI(delivery.image)
         }
     }
 
@@ -171,6 +170,15 @@ class ConfirmOrderActivity : AppCompatActivity(),
             putExtra(SUCCESSFUL_ORDER_KEY, true)
         }
         startActivity(intent)
+    }
+
+    fun createChat(order: Order?) {
+        val chat = Chat(order?.getOwner()?.id!!, order.getDelivery()?.id!!, order.id)
+        ChatService(CreateChatRequestHandler(this)).createChat(chat)
+    }
+
+    fun assignChat(chat: ChatFetched) {
+        OrderService(AssignOrderChatRequestHandler(this)).assignChat(chat)
     }
 
     fun updatePrice(price: Double) {

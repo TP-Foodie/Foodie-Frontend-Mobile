@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Button Back Dimensions-->
+    <dimen name="padding_btn_back">8dp</dimen>
+    <dimen name="margin_start_btn_back">8dp</dimen>
+</resources>

@@ -87,7 +87,7 @@ dependencies {
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
 
     // Firebase Messaging
-    implementation 'com.google.firebase:firebase-messaging:20.0.0'
+    implementation 'com.google.firebase:firebase-messaging:20.0.1'
 
     // Json serializer/deserializer from Objecto to JSON and viceversa
     implementation 'com.google.code.gson:gson:2.8.6'

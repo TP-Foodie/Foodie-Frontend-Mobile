@@ -30,6 +30,20 @@ class OrderService(private val requestHandler: RequestHandler) {
         update(order, buildUpdateStatusRequest(order,status))
     }
 
+    fun assignChat(chat: ChatFetched) {
+        updateWithOrderId(chat.id_order, buildAssignChatRequest(chat))
+    }
+
+    private fun updateWithOrderId(orderId: String, body: JSONObject) {
+        requestHandler.begin()
+
+        val listener = Response.Listener<JSONObject> { requestHandler.onSuccess(it) }
+        val errorListener = Response.ErrorListener { requestHandler.onError(it) }
+
+        val resource = String.format("%s%s", ORDER_RESOURCE, orderId)
+        client.doPatch(resource, listener, body, errorListener)
+    }
+
     fun update(order: Order, body: JSONObject) {
         requestHandler.begin()
 
@@ -106,6 +120,9 @@ class OrderService(private val requestHandler: RequestHandler) {
             val ownerJson = json.getJSONObject("owner")
             val owner = UserService.fromUserJson(ownerJson)
 
+            // Chat
+            order.setIdChat(json.getString("id_chat"))
+
             return order.setProduct(orderProduct).setOwner(owner).setDelivery(deliveryUser)
         }
 
@@ -123,6 +140,13 @@ class OrderService(private val requestHandler: RequestHandler) {
             val jsonRequest = JSONObject()
             jsonRequest.put("status",Order.STATUS.TAKEN_STATUS.key)
             jsonRequest.put("delivery", deliveryUser.id)
+            return jsonRequest
+        }
+
+        private fun buildAssignChatRequest(chat: ChatFetched): JSONObject {
+            val jsonRequest = JSONObject()
+            jsonRequest.put("status", Order.STATUS.TAKEN_STATUS.key)
+            jsonRequest.put("id_chat", chat.id)
             return jsonRequest
         }
 

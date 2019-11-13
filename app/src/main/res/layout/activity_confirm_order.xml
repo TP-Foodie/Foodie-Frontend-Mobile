@@ -75,13 +75,13 @@
                         android:layout_height="164dp"
                         android:orientation="horizontal">
 
-                        <ImageView
+                        <com.facebook.drawee.view.SimpleDraweeView
                             android:id="@+id/delivery_photo"
-                            android:layout_width="0dp"
-                            android:layout_height="158dp"
-                            android:layout_weight="1"
-                            android:contentDescription="@string/delivery_photo"
-                            tools:srcCompat="@tools:sample/backgrounds/scenic" />
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="16dp"
+                            android:contentDescription="@string/delivery_photo" />
                     </LinearLayout>
 
                     <LinearLayout
