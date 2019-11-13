@@ -83,7 +83,7 @@ class ConfirmOrderActivity : AppCompatActivity(),
             val deliveryUser = markerPlaceMap[marker]
             val assignDelivery = AssignOrderDeliveryRequestHandler(this)
             OrderService(assignDelivery)
-                .assignDelivery(pendingOrder!!, deliveryUser!!)
+                .confirmOrder(pendingOrder!!, deliveryUser!!)
         }
     }
 
@@ -185,5 +185,6 @@ class ConfirmOrderActivity : AppCompatActivity(),
         val orderPriceText = findViewById<TextView>(R.id.order_price)
         val priceLabel = getString(R.string.order_price_label)
         orderPriceText.text = String.format(priceLabel, price)
+        pendingOrder!!.setQuotation(price)
     }
 }

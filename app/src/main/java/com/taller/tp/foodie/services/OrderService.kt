@@ -22,8 +22,8 @@ class OrderService(private val requestHandler: RequestHandler) {
         client.doPost(ORDER_RESOURCE, listener, toOrderRequestJson(orderRequest), errorListener)
     }
 
-    fun assignDelivery(order: Order, deliveryUser: DeliveryUser) {
-        update(order, buildAssignDeliveryRequest(deliveryUser))
+    fun confirmOrder(order: Order, deliveryUser: DeliveryUser) {
+        update(order, buildConfirmOrderRequest(order, deliveryUser))
     }
 
     fun updateStatus(order: Order, status: Order.STATUS) {
@@ -123,6 +123,10 @@ class OrderService(private val requestHandler: RequestHandler) {
             // Chat
             order.setIdChat(json.getString("id_chat"))
 
+            // Quotation
+            if (!json.isNull("quotation"))
+                order.setQuotation(json.getDouble("quotation"))
+
             return order.setProduct(orderProduct).setOwner(owner).setDelivery(deliveryUser)
         }
 
@@ -136,10 +140,11 @@ class OrderService(private val requestHandler: RequestHandler) {
             return OrderProduct(productName, place)
         }
 
-        private fun buildAssignDeliveryRequest(deliveryUser: DeliveryUser) : JSONObject{
+        private fun buildConfirmOrderRequest(order: Order, deliveryUser: DeliveryUser) : JSONObject{
             val jsonRequest = JSONObject()
             jsonRequest.put("status",Order.STATUS.TAKEN_STATUS.key)
             jsonRequest.put("delivery", deliveryUser.id)
+            jsonRequest.put("quotation", order.getQuotation())
             return jsonRequest
         }
 
