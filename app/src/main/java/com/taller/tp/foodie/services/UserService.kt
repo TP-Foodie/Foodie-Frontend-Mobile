@@ -38,12 +38,14 @@ class UserService(private val requestHandler: RequestHandler) {
             val name = json.getString("name")
             val phone = json.optString("phone", null)
             val image = json.getString("profile_image")
+            val reputation = json.optInt("reputation", 0)
 
             return User(id, name, image)
                 .setType(type)
                 .setEmail(email)
                 .setLastName(lastName)
                 .setPhone(phone)
+                .setReputation(reputation)
         }
     }
 

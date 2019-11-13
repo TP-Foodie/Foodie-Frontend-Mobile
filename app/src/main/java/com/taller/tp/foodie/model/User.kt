@@ -27,4 +27,11 @@ open class User(val id: String?, val name: String, val image: String?){
         this.type= USER_TYPE.valueOf(type)
         return this
     }
+
+    var reputation: Int? = null
+        get() = field
+    fun setReputation(reputation: Int?) : User {
+        this.reputation = reputation
+        return this
+    }
 }

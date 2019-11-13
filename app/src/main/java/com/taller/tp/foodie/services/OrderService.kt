@@ -7,6 +7,7 @@ import org.json.JSONObject
 
 const val ORDER_RESOURCE = "/orders/"
 const val ORDER_PLACED_RESOURCE = "/orders/placed"
+const val ORDER_QUOTATION_RESOURCE = "/quotation"
 
 class OrderService(private val requestHandler: RequestHandler) {
 
@@ -65,6 +66,15 @@ class OrderService(private val requestHandler: RequestHandler) {
         val listener = Response.Listener<JSONObject> { requestHandler.onSuccess(it) }
         val errorListener = Response.ErrorListener { requestHandler.onError(it) }
         client.doGetObject(ORDER_RESOURCE+orderId, listener, errorListener)
+    }
+
+    fun getPrice(orderId: String){
+        requestHandler.begin()
+
+        val listener = Response.Listener<JSONObject> { requestHandler.onSuccess(it) }
+        val errorListener = Response.ErrorListener { requestHandler.onError(it) }
+        val resource = ORDER_RESOURCE+orderId+ ORDER_QUOTATION_RESOURCE
+        client.doGetObject(resource, listener, errorListener)
     }
 
     companion object {

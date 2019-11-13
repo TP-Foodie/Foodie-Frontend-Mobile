@@ -72,8 +72,8 @@
                 android:value=".ui.MainActivity" />
         </activity>
         <activity
-            android:name=".ui.ChooseDeliveryActivity"
-            android:label="@string/choose_delivery"
+            android:name=".ui.ConfirmOrderActivity"
+            android:label="@string/confirm_order"
             android:parentActivityName=".ui.ClientMainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -81,7 +81,7 @@
         </activity>
         <activity
             android:name=".ui.ProfileActivity"
-            android:label="@string/choose_delivery"
+            android:label="@string/profile_btn"
             android:parentActivityName=".ui.ClientMainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
