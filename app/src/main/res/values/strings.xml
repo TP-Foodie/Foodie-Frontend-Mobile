@@ -82,6 +82,10 @@
     <string name="card_method_label">Pago con Tarjeta</string>
     <string name="btn_chat">Chat</string>
     <string name="order_price_label">$%.2f</string>
+    <string name="waiting_status_label">En espera</string>
+    <string name="taken_status_label">En viaje</string>
+    <string name="cancelled_status_label">Cancelado</string>
+    <string name="delivered_status_label">Entregado</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 

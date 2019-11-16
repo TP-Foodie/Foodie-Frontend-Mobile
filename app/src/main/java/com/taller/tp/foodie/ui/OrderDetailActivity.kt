@@ -128,10 +128,20 @@ class OrderDetailActivity : AppCompatActivity() {
         val orderType= findViewById<TextView>(R.id.order_type)
         orderType.text = String.format("Tipo de Pedido: %s", order.getType())
         val orderStatus = findViewById<TextView>(R.id.order_status)
-        orderStatus.text = String.format("Estado: %s", order.getStatus())
+        orderStatus.text = String.format("Estado: %s", getStatusLabel(order.getStatus()))
         val orderProduct = findViewById<TextView>(R.id.order_product)
         orderProduct.text = String.format("Producto: %s", order.getProduct())
         val orderPlace = findViewById<TextView>(R.id.order_place)
         orderPlace.text = String.format("Lugar: %s", order.getPlace().name)
+    }
+
+    private fun getStatusLabel(status: Order.STATUS): String{
+        when(status){
+            Order.STATUS.WAITING_STATUS -> getString(R.string.waiting_status_label)
+            Order.STATUS.TAKEN_STATUS -> getString(R.string.taken_status_label)
+            Order.STATUS.CANCELLED_STATUS -> getString(R.string.cancelled_status_label)
+            Order.STATUS.DELIVERED_STATUS -> getString(R.string.delivered_status_label)
+        }
+        return ""
     }
 }
