@@ -81,5 +81,7 @@
     <string name="status_title">Estado</string>
     <string name="product_title">Producto</string>
     <string name="place_title">Lugar</string>
+    <string name="btn_change_profile">Editar</string>
+    <string name="btn_confirm_changes">Confirmar</string>
 
 </resources>
