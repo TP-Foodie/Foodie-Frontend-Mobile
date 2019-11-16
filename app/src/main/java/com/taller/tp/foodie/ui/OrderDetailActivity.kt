@@ -2,6 +2,9 @@ package com.taller.tp.foodie.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.ContextMenu
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -11,7 +14,6 @@ import com.taller.tp.foodie.model.Order
 import com.taller.tp.foodie.model.User
 import com.taller.tp.foodie.model.requestHandlers.OrderDetailRequestHandler
 import com.taller.tp.foodie.services.OrderService
-import kotlinx.android.synthetic.main.activity_order_detail.*
 
 
 class OrderDetailActivity : AppCompatActivity() {
@@ -35,19 +37,74 @@ class OrderDetailActivity : AppCompatActivity() {
             OrderService(OrderDetailRequestHandler(this)).find(orderId)
         }
 
-        val confirmDeliveryButton = findViewById<Button>(R.id.confirm_delivery_button)
-        confirmDeliveryButton.setOnClickListener { confirmDeliveryButtonListener() }
-
-        btn_chat.setOnClickListener {
-            val intent = Intent(applicationContext, ChatActivity::class.java)
-            intent.putExtra(ChatActivity.CHAT_ID, order?.getIdChat())
-            startActivity(intent)
+        with(findViewById<Button>(R.id.order_actions_button)){
+            registerForContextMenu(this)
         }
     }
 
-    private fun confirmDeliveryButtonListener() {
-        OrderService(OrderDetailRequestHandler(this).forUpdate())
-            .updateStatus(order!!, Order.STATUS.DELIVERED_STATUS)
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        val deliverOption = menu!!.getItem(0).setVisible(false)
+        val unassignOption = menu.getItem(1).setVisible(false)
+        val assignOption = menu.getItem(2).setVisible(false)
+        val cancelOption = menu.getItem(3).setVisible(false)
+        val chatOption = menu.getItem(4).setVisible(false)
+        when(order!!.getStatus()){
+            Order.STATUS.WAITING_STATUS -> {
+                if (userType == User.USER_TYPE.CUSTOMER) {
+                    cancelOption.setVisible(true)
+                } else {
+                    assignOption.setVisible(true)
+                }
+            }
+            Order.STATUS.TAKEN_STATUS -> {
+                chatOption.setVisible(true)
+                if (userType == User.USER_TYPE.CUSTOMER)
+                    cancelOption.setVisible(true)
+                else {
+                    deliverOption.setVisible(true)
+                    unassignOption.setVisible(true)
+                }
+            }
+            Order.STATUS.DELIVERED_STATUS -> {}
+        }
+        return true
+    }
+
+    override fun onCreateContextMenu(
+        menu: ContextMenu?,
+        v: View?,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+        val inflater = menuInflater
+        inflater.inflate(R.menu.order_action_menu, menu)
+        onPrepareOptionsMenu(menu)
+    }
+
+    override fun onContextItemSelected(item: MenuItem?): Boolean {
+        when (item!!.itemId){
+            R.id.deliver_order_option -> {
+                OrderService(OrderDetailRequestHandler(this).forUpdate())
+                    .updateStatus(order!!, Order.STATUS.DELIVERED_STATUS)
+                return true
+            }
+            R.id.unassign_order_option -> {
+                return true
+            }
+            R.id.assign_order_option -> {
+                return true
+            }
+            R.id.cancel_order_option -> {
+                return true
+            }
+            R.id.chat_order_option -> {
+                val intent = Intent(applicationContext, ChatActivity::class.java)
+                intent.putExtra(ChatActivity.CHAT_ID, order?.getIdChat())
+                startActivity(intent)
+                return true
+            }
+            else -> return false
+        }
     }
 
     fun populateFields(order: Order) {
@@ -66,14 +123,5 @@ class OrderDetailActivity : AppCompatActivity() {
         orderProduct.text = String.format("Producto: %s", order.getProduct())
         val orderPlace = findViewById<TextView>(R.id.order_place)
         orderPlace.text = String.format("Lugar: %s", order.getPlace().name)
-        setupActions()
     }
-
-    private fun setupActions() {
-        if (userType != User.USER_TYPE.DELIVERY || order!!.getStatus() != Order.STATUS.TAKEN_STATUS) {
-            val confirmDeliveryButton = findViewById<Button>(R.id.confirm_delivery_button)
-            confirmDeliveryButton.visibility = View.INVISIBLE
-        }
-    }
-
 }

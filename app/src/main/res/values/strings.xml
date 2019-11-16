@@ -70,7 +70,12 @@
     <string name="pending_orders">Pendientes</string>
     <string name="completed_orders">Completadas</string>
     <string name="loading_orders">Cargando Pedidos..</string>
+    <string name="order_actions">Acciones</string>
     <string name="deliver_order">Entregar</string>
+    <string name="unassign_order">Desasignarme</string>
+    <string name="assign_order">Asignar Delivery</string>
+    <string name="cancel_order">Cancelar Pedido</string>
+    <string name="chat_order">Chat</string>
     <string name="empty_order_list">No hay Pedidos</string>
     <string name="payment_method_label">Método de pago</string>
     <string name="cash_method_label">Pago Efectivo</string>
