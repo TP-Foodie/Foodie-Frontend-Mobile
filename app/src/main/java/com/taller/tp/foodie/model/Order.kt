@@ -18,7 +18,8 @@ class Order(val id: String){
     enum class STATUS(val key: String) {
         TAKEN_STATUS("TS"),
         WAITING_STATUS("WS"),
-        DELIVERED_STATUS("DS");
+        DELIVERED_STATUS("DS"),
+        CANCELLED_STATUS("CS");
 
         companion object{
             fun fromKey(key: String?): STATUS {
@@ -26,6 +27,7 @@ class Order(val id: String){
                     "TS" -> return TAKEN_STATUS
                     "WS" -> return WAITING_STATUS
                     "DS" -> return DELIVERED_STATUS
+                    "CS" -> return CANCELLED_STATUS
                 }
                 throw RuntimeException("Unreachable")
             }

@@ -64,7 +64,10 @@ class OrderDetailActivity : AppCompatActivity() {
                     unassignOption.setVisible(true)
                 }
             }
-            Order.STATUS.DELIVERED_STATUS -> {}
+            Order.STATUS.DELIVERED_STATUS, Order.STATUS.CANCELLED_STATUS -> {
+                val actionsButton = findViewById<Button>(R.id.order_actions_button)
+                actionsButton.visibility = View.INVISIBLE
+            }
         }
         return true
     }
@@ -89,7 +92,7 @@ class OrderDetailActivity : AppCompatActivity() {
             }
             R.id.unassign_order_option -> {
                 OrderService(OrderDetailRequestHandler(this).forUpdate())
-                    .updateStatus(order!!, Order.STATUS.WAITING_STATUS)
+                    .unassignOrder(order!!)
                 return true
             }
             R.id.assign_order_option -> {
@@ -100,6 +103,8 @@ class OrderDetailActivity : AppCompatActivity() {
                 return true
             }
             R.id.cancel_order_option -> {
+                OrderService(OrderDetailRequestHandler(this).forUpdate())
+                    .cancelOrder(order!!)
                 return true
             }
             R.id.chat_order_option -> {

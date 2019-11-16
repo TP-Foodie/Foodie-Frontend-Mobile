@@ -23,11 +23,30 @@ class OrderService(private val requestHandler: RequestHandler) {
     }
 
     fun confirmOrder(order: Order, deliveryUser: DeliveryUser) {
-        update(order, buildConfirmOrderRequest(order, deliveryUser))
+        val jsonRequest = JSONObject()
+        jsonRequest.put("status",Order.STATUS.TAKEN_STATUS.key)
+        jsonRequest.put("delivery", deliveryUser.id)
+        jsonRequest.put("quotation", order.getQuotation())
+        update(order, jsonRequest)
     }
 
     fun updateStatus(order: Order, status: Order.STATUS) {
-        update(order, buildUpdateStatusRequest(order,status))
+        val jsonRequest = JSONObject()
+        jsonRequest.put("status", status.key)
+        jsonRequest.put("delivery", order.getDelivery()!!.id)
+        update(order, jsonRequest)
+    }
+
+    fun cancelOrder(order: Order) {
+        val jsonRequest = JSONObject()
+        jsonRequest.put("status", Order.STATUS.CANCELLED_STATUS.key)
+        update(order, jsonRequest)
+    }
+
+    fun unassignOrder(order: Order) {
+        val jsonRequest = JSONObject()
+        jsonRequest.put("status", Order.STATUS.WAITING_STATUS.key)
+        update(order, jsonRequest)
     }
 
     fun assignChat(chat: ChatFetched) {
@@ -52,13 +71,6 @@ class OrderService(private val requestHandler: RequestHandler) {
 
         val resource = String.format("%s%s", ORDER_RESOURCE, order.id)
         client.doPatch(resource, listener, body, errorListener)
-    }
-
-    private fun buildUpdateStatusRequest(order: Order, status: Order.STATUS): JSONObject {
-        val jsonRequest = JSONObject()
-        jsonRequest.put("status", status.key)
-        jsonRequest.put("delivery", order.getDelivery()!!.id)
-        return jsonRequest
     }
 
     fun listByUser(userType: User.USER_TYPE){
@@ -186,14 +198,6 @@ class OrderService(private val requestHandler: RequestHandler) {
             val placeName = placeJson.getString("name")
             val place = Place(placeName, coordinates)
             return OrderProduct(productName, place)
-        }
-
-        private fun buildConfirmOrderRequest(order: Order, deliveryUser: DeliveryUser) : JSONObject{
-            val jsonRequest = JSONObject()
-            jsonRequest.put("status",Order.STATUS.TAKEN_STATUS.key)
-            jsonRequest.put("delivery", deliveryUser.id)
-            jsonRequest.put("quotation", order.getQuotation())
-            return jsonRequest
         }
 
         private fun buildAssignChatRequest(chat: ChatFetched): JSONObject {
