@@ -52,7 +52,6 @@ class OrderDetailActivity : AppCompatActivity() {
             Order.STATUS.WAITING_STATUS -> {
                 if (userType == User.USER_TYPE.CUSTOMER) {
                     cancelOption.setVisible(true)
-                } else {
                     assignOption.setVisible(true)
                 }
             }
@@ -89,9 +88,15 @@ class OrderDetailActivity : AppCompatActivity() {
                 return true
             }
             R.id.unassign_order_option -> {
+                OrderService(OrderDetailRequestHandler(this).forUpdate())
+                    .updateStatus(order!!, Order.STATUS.WAITING_STATUS)
                 return true
             }
             R.id.assign_order_option -> {
+                val intent = Intent(this, ConfirmOrderActivity::class.java).apply {
+                    putExtra(CLIENT_NEW_ORDER_KEY, OrderService.toJson(order!!).toString())
+                }
+                startActivity(intent)
                 return true
             }
             R.id.cancel_order_option -> {

@@ -130,6 +130,54 @@ class OrderService(private val requestHandler: RequestHandler) {
             return order.setProduct(orderProduct).setOwner(owner).setDelivery(deliveryUser)
         }
 
+        fun toJson(order: Order) : JSONObject {
+            val orderJson = JSONObject()
+            orderJson.put("id", order.id)
+            orderJson.put("type", order.getType())
+            orderJson.put("status", order.getStatus().key)
+            orderJson.put("number", order.getNumber())
+            orderJson.put("id_chat", order.getIdChat())
+            orderJson.put("quotation", order.getQuotation())
+
+            if (order.getDelivery() != null){
+                val delivery = order.getDelivery()!!
+                val deliveryJson = JSONObject()
+                deliveryJson.put("email", delivery.email)
+                deliveryJson.put("id", delivery.id)
+                deliveryJson.put("last_name", delivery.lastName)
+                deliveryJson.put("name", delivery.name)
+                deliveryJson.put("phone", delivery.phone)
+                deliveryJson.put("profile_image", delivery.image)
+                deliveryJson.put("type", delivery.type)
+                orderJson.put("delivery", deliveryJson)
+            }
+
+            if (order.getOwner() != null){
+                val owner = order.getOwner()!!
+                val ownerJson = JSONObject()
+                ownerJson.put("email", owner.email)
+                ownerJson.put("id", owner.id)
+                ownerJson.put("last_name", owner.lastName)
+                ownerJson.put("name", owner.name)
+                ownerJson.put("phone", owner.phone)
+                ownerJson.put("profile_image", owner.image)
+                ownerJson.put("type", owner.type)
+                orderJson.put("owner", ownerJson)
+            }
+
+            val productJson = JSONObject()
+            productJson.put("name", order.getProduct())
+            val placeJson = JSONObject()
+            val coordinatesJson = JSONObject()
+            coordinatesJson.put("latitude", order.getPlace().coordinate.latitude)
+            coordinatesJson.put("longitude", order.getPlace().coordinate.longitude)
+            placeJson.put("coordinates", coordinatesJson)
+            placeJson.put("name", order.getPlace().name)
+            productJson.put("place", placeJson)
+            orderJson.put("product", productJson)
+            return orderJson
+        }
+
         private fun fromOrderProductJson(json: JSONObject): OrderProduct {
             val productName = json.getString("name")
             val placeJson = json.getJSONObject("place")
