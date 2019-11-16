@@ -32,8 +32,8 @@ class UserService(private val requestHandler: RequestHandler) {
 
         fun fromUserJson(json: JSONObject): User{
             val id = json.getString("id")
-            val email = json.getString("email")
-            val lastName = json.getString("last_name")
+            val email = json.optString("email", "")
+            val lastName = json.optString("last_name", "")
             val type = json.getString("type")
             val name = json.getString("name")
             val phone = json.optString("phone", null)

@@ -87,7 +87,7 @@ class OrderDetailActivity : AppCompatActivity() {
         when (item!!.itemId){
             R.id.deliver_order_option -> {
                 OrderService(OrderDetailRequestHandler(this).forUpdate())
-                    .updateStatus(order!!, Order.STATUS.DELIVERED_STATUS)
+                    .deliverOrder(order!!)
                 return true
             }
             R.id.unassign_order_option -> {

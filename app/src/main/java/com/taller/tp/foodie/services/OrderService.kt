@@ -30,10 +30,9 @@ class OrderService(private val requestHandler: RequestHandler) {
         update(order, jsonRequest)
     }
 
-    fun updateStatus(order: Order, status: Order.STATUS) {
+    fun deliverOrder(order: Order) {
         val jsonRequest = JSONObject()
-        jsonRequest.put("status", status.key)
-        jsonRequest.put("delivery", order.getDelivery()!!.id)
+        jsonRequest.put("status", Order.STATUS.DELIVERED_STATUS.key)
         update(order, jsonRequest)
     }
 
@@ -50,7 +49,9 @@ class OrderService(private val requestHandler: RequestHandler) {
     }
 
     fun assignChat(chat: ChatFetched) {
-        updateWithOrderId(chat.id_order, buildAssignChatRequest(chat))
+        val jsonRequest = JSONObject()
+        jsonRequest.put("id_chat", chat.id)
+        updateWithOrderId(chat.id_order, jsonRequest)
     }
 
     private fun updateWithOrderId(orderId: String, body: JSONObject) {
@@ -198,13 +199,6 @@ class OrderService(private val requestHandler: RequestHandler) {
             val placeName = placeJson.getString("name")
             val place = Place(placeName, coordinates)
             return OrderProduct(productName, place)
-        }
-
-        private fun buildAssignChatRequest(chat: ChatFetched): JSONObject {
-            val jsonRequest = JSONObject()
-            jsonRequest.put("status", Order.STATUS.TAKEN_STATUS.key)
-            jsonRequest.put("id_chat", chat.id)
-            return jsonRequest
         }
 
         private fun toOrderRequestJson(orderRequest: OrderRequest) : JSONObject{
