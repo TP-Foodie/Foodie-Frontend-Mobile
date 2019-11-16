@@ -12,9 +12,6 @@
     <string name="tv_federated_login">Iniciar sesión con Redes Sociales</string>
     <string name="btn_log_in">Iniciar Sesión</string>
 
-    <string name="facebook_app_id">512098179352207</string>
-    <string name="fb_login_protocol_scheme">fb512098179352207</string>
-
     <!-- Login and Register -->
     <string name="hint_email_et">Email</string>
     <string name="hint_password_et">Contraseña</string>
