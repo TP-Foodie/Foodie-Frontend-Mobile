@@ -76,5 +76,10 @@
     <string name="cash_method_label">Pago Efectivo</string>
     <string name="card_method_label">Pago con Tarjeta</string>
     <string name="btn_chat">Chat</string>
+    <string name="owner_title">Propietario</string>
+    <string name="type_title">Tipo</string>
+    <string name="status_title">Estado</string>
+    <string name="product_title">Producto</string>
+    <string name="place_title">Lugar</string>
 
 </resources>

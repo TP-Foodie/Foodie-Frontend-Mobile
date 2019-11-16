@@ -7,92 +7,186 @@
     android:layout_height="match_parent"
     tools:context=".ui.OrderDetailActivity">
 
+    <TextView
+        android:id="@+id/order_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="12dp"
+        android:textAlignment="center"
+        android:textSize="38sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <LinearLayout
         android:id="@+id/order_detail_layout"
-        android:layout_width="407dp"
-        android:layout_height="519dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintBottom_toTopOf="@id/confirm_delivery_button"
+        app:layout_constraintTop_toBottomOf="@id/order_number">
 
-        <TextView
-            android:id="@+id/order_number"
+        <RelativeLayout
+            android:id="@+id/rl_owner"
             android:layout_width="match_parent"
-            android:layout_height="80dp"
-            android:textAlignment="center"
-            android:textSize="40sp" />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/order_owner"
+            <TextView
+                android:id="@+id/owner_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:text="@string/owner_title"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/order_owner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/owner_title"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_type"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:textAlignment="center"
-            android:textSize="24sp" />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/order_type"
+            <TextView
+                android:id="@+id/type_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:text="@string/type_title"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/order_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/type_title"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_status"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:textAlignment="center"
-            android:textSize="24sp" />
+            android:layout_height="wrap_content">
 
+            <TextView
+                android:id="@+id/status_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:text="@string/status_title"
+                android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/order_status"
+            <TextView
+                android:id="@+id/order_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/status_title"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_product"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:textAlignment="center"
-            android:textSize="24sp" />
+            android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/order_product"
-            android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:textAlignment="center"
-            android:textSize="24sp" />
+            <TextView
+                android:id="@+id/product_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:text="@string/product_title"
+                android:textSize="14sp" />
 
-        <TextView
-            android:id="@+id/order_place"
+            <TextView
+                android:id="@+id/order_product"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/product_title"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_place"
             android:layout_width="match_parent"
-            android:layout_height="70dp"
-            android:textAlignment="center"
-            android:textSize="24sp" />
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/place_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:text="@string/place_title"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/order_place"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/place_title"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
+                android:textColor="@android:color/white"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/layout_confirm"
-        android:layout_width="415dp"
-        android:layout_height="71dp"
-        android:orientation="horizontal"
+    <Button
+        android:id="@+id/confirm_delivery_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="12dp"
+        android:text="@string/deliver_order"
+        android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/order_detail_layout">
-
-        <LinearLayout
-            android:id="@+id/dummy1"
-            android:layout_width="256dp"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/confirm_delivery_button"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/deliver_order" />
-    </LinearLayout>
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btn_chat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="12dp"
         android:text="@string/btn_chat"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/layout_confirm" />
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
