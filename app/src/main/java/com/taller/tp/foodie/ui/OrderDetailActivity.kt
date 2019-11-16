@@ -17,7 +17,7 @@ import kotlinx.android.synthetic.main.activity_order_detail.*
 class OrderDetailActivity : AppCompatActivity() {
 
     private var order: Order? = null
-    lateinit var userType: User.USER_TYPE
+    private lateinit var userType: User.USER_TYPE
 
     private fun loadUserType() {
         val intentUserType = intent.getStringExtra(CLIENT_TYPE_KEY)
@@ -41,6 +41,7 @@ class OrderDetailActivity : AppCompatActivity() {
         btn_chat.setOnClickListener {
             val intent = Intent(applicationContext, ChatActivity::class.java)
             intent.putExtra(ChatActivity.CHAT_ID, order?.getIdChat())
+            intent.putExtra(ChatActivity.ORDER_STATUS, order?.getStatus()?.key)
             startActivity(intent)
         }
     }
@@ -70,9 +71,12 @@ class OrderDetailActivity : AppCompatActivity() {
     }
 
     private fun setupActions() {
-        if (userType != User.USER_TYPE.DELIVERY || order!!.getStatus() != Order.STATUS.TAKEN_STATUS) {
-            val confirmDeliveryButton = findViewById<Button>(R.id.confirm_delivery_button)
-            confirmDeliveryButton.visibility = View.INVISIBLE
+        if (userType == User.USER_TYPE.DELIVERY && order?.getStatus() == Order.STATUS.TAKEN_STATUS) {
+            confirm_delivery_button.visibility = View.VISIBLE
+        }
+
+        if (order?.getStatus() != Order.STATUS.WAITING_STATUS) {
+            btn_chat.visibility = View.VISIBLE
         }
     }
 

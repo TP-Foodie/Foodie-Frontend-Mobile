@@ -11,10 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.taller.tp.foodie.R
-import com.taller.tp.foodie.model.ChatFetched
-import com.taller.tp.foodie.model.ChatMessage
-import com.taller.tp.foodie.model.ErrorHandler
-import com.taller.tp.foodie.model.UserProfileFetched
+import com.taller.tp.foodie.model.*
 import com.taller.tp.foodie.model.requestHandlers.*
 import com.taller.tp.foodie.services.ChatService
 import com.taller.tp.foodie.services.ProfileService
@@ -33,8 +30,11 @@ class ChatActivity : AppCompatActivity() {
 
     private var chatAdapter: ChatAdapter? = null
 
+    private var messagesCanBeSend = true
+
     companion object {
         const val CHAT_ID = "chatId"
+        const val ORDER_STATUS = "orderStatus"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +42,12 @@ class ChatActivity : AppCompatActivity() {
         setContentView(R.layout.activity_chat)
 
         chatId = intent.getStringExtra(CHAT_ID)
+
+        // check if messages can be send
+        val orderStatus = intent.getStringExtra(ORDER_STATUS)
+        if (orderStatus != null && orderStatus == Order.STATUS.DELIVERED_STATUS.key) {
+            messagesCanBeSend = false
+        }
 
         if (!checkPreconditionsAreMet()) {
             ErrorHandler.handleError(chat_layout)
@@ -67,6 +73,14 @@ class ChatActivity : AppCompatActivity() {
         }
 
         btn_send_message.setOnClickListener {
+            if (!messagesCanBeSend) {
+                ErrorHandler.handleError(
+                    chat_layout,
+                    "Ups! No se pueden enviar mensajes luego de completarse el pedido"
+                )
+                return@setOnClickListener
+            }
+
             val message = message_text.text.toString().trim()
 
             val cal = Calendar.getInstance()
