@@ -19,7 +19,7 @@ import com.taller.tp.foodie.services.OrderService
 class OrderDetailActivity : AppCompatActivity() {
 
     private var order: Order? = null
-    lateinit var userType: User.USER_TYPE
+    private lateinit var userType: User.USER_TYPE
 
     private fun loadUserType() {
         val intentUserType = intent.getStringExtra(CLIENT_TYPE_KEY)
@@ -111,6 +111,7 @@ class OrderDetailActivity : AppCompatActivity() {
             R.id.chat_order_option -> {
                 val intent = Intent(applicationContext, ChatActivity::class.java)
                 intent.putExtra(ChatActivity.CHAT_ID, order?.getIdChat())
+                intent.putExtra(ChatActivity.ORDER_STATUS, order?.getStatus()?.key)
                 startActivity(intent)
                 return true
             }
