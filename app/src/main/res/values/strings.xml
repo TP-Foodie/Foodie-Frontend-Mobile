@@ -80,7 +80,6 @@
     <string name="payment_method_label">Método de pago</string>
     <string name="cash_method_label">Pago Efectivo</string>
     <string name="card_method_label">Pago con Tarjeta</string>
-    <string name="btn_chat">Chat</string>
     <string name="order_price_label">$%.2f</string>
     <string name="waiting_status_label">En espera</string>
     <string name="taken_status_label">En viaje</string>
