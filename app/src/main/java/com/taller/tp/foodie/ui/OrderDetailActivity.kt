@@ -65,6 +65,7 @@ class OrderDetailActivity : AppCompatActivity() {
                 }
             }
             Order.STATUS.DELIVERED_STATUS, Order.STATUS.CANCELLED_STATUS -> {
+                chatOption.setVisible(true)
                 val actionsButton = findViewById<Button>(R.id.order_actions_button)
                 actionsButton.visibility = View.INVISIBLE
             }
@@ -137,11 +138,10 @@ class OrderDetailActivity : AppCompatActivity() {
 
     private fun getStatusLabel(status: Order.STATUS): String{
         when(status){
-            Order.STATUS.WAITING_STATUS -> getString(R.string.waiting_status_label)
-            Order.STATUS.TAKEN_STATUS -> getString(R.string.taken_status_label)
-            Order.STATUS.CANCELLED_STATUS -> getString(R.string.cancelled_status_label)
-            Order.STATUS.DELIVERED_STATUS -> getString(R.string.delivered_status_label)
+            Order.STATUS.WAITING_STATUS -> return getString(R.string.waiting_status_label)
+            Order.STATUS.TAKEN_STATUS -> return getString(R.string.taken_status_label)
+            Order.STATUS.CANCELLED_STATUS -> return getString(R.string.cancelled_status_label)
+            Order.STATUS.DELIVERED_STATUS -> return getString(R.string.delivered_status_label)
         }
-        return ""
     }
 }
