@@ -12,9 +12,6 @@
     <string name="tv_federated_login">Iniciar sesión con Redes Sociales</string>
     <string name="btn_log_in">Iniciar Sesión</string>
 
-    <string name="facebook_app_id">512098179352207</string>
-    <string name="fb_login_protocol_scheme">fb512098179352207</string>
-
     <!-- Login and Register -->
     <string name="hint_email_et">Email</string>
     <string name="hint_password_et">Contraseña</string>
@@ -80,6 +77,13 @@
     <string name="payment_method_label">Método de pago</string>
     <string name="cash_method_label">Pago Efectivo</string>
     <string name="card_method_label">Pago con Tarjeta</string>
+    <string name="owner_title">Propietario</string>
+    <string name="type_title">Tipo</string>
+    <string name="status_title">Estado</string>
+    <string name="product_title">Producto</string>
+    <string name="place_title">Lugar</string>
+    <string name="btn_change_profile">Editar</string>
+    <string name="btn_confirm_changes">Confirmar</string>
     <string name="order_price_label">$%.2f</string>
     <string name="waiting_status_label">En espera</string>
     <string name="taken_status_label">En viaje</string>
