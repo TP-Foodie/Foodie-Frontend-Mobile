@@ -74,6 +74,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             // set notifcation on click action
             val intent = Intent(this, ChatActivity::class.java)
             intent.putExtra(ChatActivity.CHAT_ID, data["group"])
+            intent.putExtra(ChatActivity.ORDER_STATUS, "notDeliveredStatus")
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             val pendingIntent = PendingIntent.getActivity(
                 this, 0, intent,
