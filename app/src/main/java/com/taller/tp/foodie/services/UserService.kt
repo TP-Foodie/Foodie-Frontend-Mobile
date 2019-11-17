@@ -112,4 +112,23 @@ class UserService(private val requestHandler: RequestHandler) {
 
         client.doPatch(ME_RESOURCE, listener, requestObject, errorListener)
     }
+
+    fun changeUserProfile(data: Map<String, String>) {
+        requestHandler.begin()
+
+        val listener = Response.Listener<JSONObject> { response ->
+            requestHandler.onSuccess(response)
+        }
+        val errorListener = Response.ErrorListener { error ->
+            requestHandler.onError(error)
+        }
+
+        // build json request
+        val requestObject = JSONObject()
+        for ((key, value) in data) {
+            requestObject.put(key, value)
+        }
+
+        client.doPatch(ME_RESOURCE, listener, requestObject, errorListener)
+    }
 }
