@@ -53,19 +53,19 @@ class OrderDetailActivity : AppCompatActivity() {
     fun populateFields(order: Order) {
         this.order = order
         val orderNumber = findViewById<TextView>(R.id.order_number)
-        orderNumber.text = String.format("Perdido Nro. %s", order.getNumber().toString())
+        orderNumber.text = String.format("Pedido Nro. %s", order.getNumber().toString())
         val orderOwner = findViewById<TextView>(R.id.order_owner)
         val owner = if (order.getOwner() == null) "" else
             String.format("%s %s", order.getOwner()!!.name, order.getOwner()!!.lastName)
-        orderOwner.text = String.format("Propietario: %s", owner)
+        orderOwner.text = String.format("%s", owner)
         val orderType= findViewById<TextView>(R.id.order_type)
-        orderType.text = String.format("Tipo de Pedido: %s", order.getType())
+        orderType.text = String.format("%s", order.getType())
         val orderStatus = findViewById<TextView>(R.id.order_status)
-        orderStatus.text = String.format("Estado: %s", order.getStatus())
+        orderStatus.text = String.format("%s", order.getStatus())
         val orderProduct = findViewById<TextView>(R.id.order_product)
-        orderProduct.text = String.format("Producto: %s", order.getProduct())
+        orderProduct.text = String.format("%s", order.getProduct())
         val orderPlace = findViewById<TextView>(R.id.order_place)
-        orderPlace.text = String.format("Lugar: %s", order.getPlace().name)
+        orderPlace.text = String.format("%s", order.getPlace().name)
         setupActions()
     }
 

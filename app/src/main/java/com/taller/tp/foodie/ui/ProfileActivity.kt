@@ -1,6 +1,7 @@
 package com.taller.tp.foodie.ui
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.taller.tp.foodie.R
@@ -15,6 +16,10 @@ class ProfileActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profile)
+
+        btn_change_profile.setOnClickListener {
+            startActivity(Intent(applicationContext, ChangeProfileActivity::class.java))
+        }
 
         getUserProfile()
     }
@@ -36,6 +41,12 @@ class ProfileActivity : AppCompatActivity() {
 
         deliveries.text = data.deliveries_completed.toString()
         sent_msg.text = data.messages_sent.toString()
+    }
+
+    override fun onRestart() {
+        super.onRestart()
+
+        getUserProfile()
     }
 }
 
