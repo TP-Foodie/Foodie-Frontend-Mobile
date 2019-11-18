@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:layout_weight="1"
+    android:orientation="vertical">
+
+    <item
+        android:id="@+id/deliver_order_option"
+        android:title="@string/deliver_order" />
+    <item
+        android:id="@+id/unassign_order_option"
+        android:title="@string/unassign_order" />
+    <item
+        android:id="@+id/assign_order_option"
+        android:title="@string/assign_order" />
+    <item
+        android:id="@+id/cancel_order_option"
+        android:title="@string/cancel_order" />
+    <item
+        android:id="@+id/chat_order_option"
+        android:title="@string/chat_order" />
+</menu>

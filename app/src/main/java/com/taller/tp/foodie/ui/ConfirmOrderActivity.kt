@@ -19,20 +19,20 @@ import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.*
 import com.taller.tp.foodie.model.requestHandlers.AssignOrderChatRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.AssignOrderDeliveryRequestHandler
-import com.taller.tp.foodie.model.requestHandlers.AvailableDeliveryRequestHandler
+import com.taller.tp.foodie.model.requestHandlers.ConfirmOrderRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.CreateChatRequestHandler
 import com.taller.tp.foodie.services.ChatService
 import com.taller.tp.foodie.services.DeliveryUserService
 import com.taller.tp.foodie.services.OrderService
 import com.taller.tp.foodie.services.ProfileService
-import kotlinx.android.synthetic.main.activity_choose_delivery.*
+import kotlinx.android.synthetic.main.activity_confirm_order.*
 import org.json.JSONObject
 import pub.devrel.easypermissions.EasyPermissions
 
 const val SUCCESSFUL_ORDER_KEY = "SUCCESSFUL_ORDER_KEY"
 
 const val DELIVERY_EMPTY_ERROR = "Por favor, elija un delivery para que le lleve el pedido"
-class ChooseDeliveryActivity : AppCompatActivity(),
+class ConfirmOrderActivity : AppCompatActivity(),
     GoogleMap.OnMarkerClickListener,
     OnMapReadyCallback {
 
@@ -44,10 +44,13 @@ class ChooseDeliveryActivity : AppCompatActivity(),
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_choose_delivery)
+        setContentView(R.layout.activity_confirm_order)
         val mapFragment = supportFragmentManager
             .findFragmentById(R.id.map) as SupportMapFragment
         mapFragment.getMapAsync(this)
+
+        val deliveryLayout = findViewById<LinearLayout>(R.id.delivery_layout)
+        deliveryLayout.visibility = View.INVISIBLE
 
         val confirmDeliveryButton = findViewById<Button>(R.id.confirm_delivery_button)
         confirmDeliveryButton.setOnClickListener { confirmDeliveryButtonListener() }
@@ -56,9 +59,11 @@ class ChooseDeliveryActivity : AppCompatActivity(),
         if (pendingOrderJson != null) {
             pendingOrder = OrderService.fromOrderJson(JSONObject(pendingOrderJson))
             placeCoordinate = pendingOrder!!.getPlace().coordinate
+            val confirmOrderRequestHandler = ConfirmOrderRequestHandler(this)
+            confirmOrderRequestHandler.forGetPrice()
+            OrderService(confirmOrderRequestHandler).getPrice(pendingOrder!!.id)
         }
 
-        findViewById<LinearLayout>(R.id.order_layout).visibility = View.INVISIBLE
     }
 
     private fun createMarker(delivery: DeliveryUser): MarkerOptions? {
@@ -78,7 +83,7 @@ class ChooseDeliveryActivity : AppCompatActivity(),
             val deliveryUser = markerPlaceMap[marker]
             val assignDelivery = AssignOrderDeliveryRequestHandler(this)
             OrderService(assignDelivery)
-                .assignDelivery(pendingOrder!!, deliveryUser!!)
+                .confirmOrder(pendingOrder!!, deliveryUser!!)
         }
     }
 
@@ -97,11 +102,11 @@ class ChooseDeliveryActivity : AppCompatActivity(),
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        val listPlacesRequestHandler = AvailableDeliveryRequestHandler(this)
+        val listPlacesRequestHandler = ConfirmOrderRequestHandler(this)
         DeliveryUserService(listPlacesRequestHandler).availableDeliveries(placeCoordinate!!)
     }
 
-    // Called when the deliveries are ready from the AvailableDeliveryRequestHandler
+    // Called when the deliveries are ready from the ConfirmOrderRequestHandler
     fun configureMapWithDeliveries(deliveries: ArrayList<DeliveryUser>){
         deliveries.forEach { delivery ->
             val marker = mMap.addMarker(createMarker(delivery))
@@ -121,7 +126,7 @@ class ChooseDeliveryActivity : AppCompatActivity(),
             uiSettings.isTiltGesturesEnabled = true
             uiSettings.isRotateGesturesEnabled = true
 
-            setOnMarkerClickListener(this@ChooseDeliveryActivity)
+            setOnMarkerClickListener(this@ConfirmOrderActivity)
         }
     }
 
@@ -129,20 +134,23 @@ class ChooseDeliveryActivity : AppCompatActivity(),
         lastSelectedMarker = marker
         val delivery = markerPlaceMap[marker]
         val deliveryId = delivery!!.id!!
-        val getDeliveryDetail = AvailableDeliveryRequestHandler(this).forDetail(deliveryId)
+        val getDeliveryDetail = ConfirmOrderRequestHandler(this).forDetail(deliveryId)
         ProfileService(getDeliveryDetail).getOtherUserForChat(deliveryId)
         return false
     }
 
-    fun onMarkerSetDetail(delivery: DeliveryUser){
+    fun onMarkerSetDetail(delivery: User){
+        val deliveryLayout = findViewById<LinearLayout>(R.id.delivery_layout)
         val deliveryName = findViewById<TextView>(R.id.delivery_name)
         val deliveryRep = findViewById<TextView>(R.id.delivery_rep)
         val layout = findViewById<LinearLayout>(R.id.order_layout)
+        deliveryLayout.visibility = View.VISIBLE
         deliveryName.text = String.format("Nombre: %s", delivery.name)
         deliveryName.visibility = View.VISIBLE
-        deliveryRep.text = String.format("Reputación: %d", 0) //TODO CUANDO ESTE BIEN EL USER SERVICE
+        deliveryRep.text = String.format("Reputación: %d", delivery.reputation)
         deliveryRep.visibility = View.VISIBLE
         layout.visibility = View.VISIBLE
+        if (delivery.image.isNullOrEmpty()) return
         runOnUiThread {
             delivery_photo.setImageURI(delivery.image)
         }
@@ -171,5 +179,12 @@ class ChooseDeliveryActivity : AppCompatActivity(),
 
     fun assignChat(chat: ChatFetched) {
         OrderService(AssignOrderChatRequestHandler(this)).assignChat(chat)
+    }
+
+    fun updatePrice(price: Double) {
+        val orderPriceText = findViewById<TextView>(R.id.order_price)
+        val priceLabel = getString(R.string.order_price_label)
+        orderPriceText.text = String.format(priceLabel, price)
+        pendingOrder!!.setQuotation(price)
     }
 }
