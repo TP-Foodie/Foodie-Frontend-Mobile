@@ -22,6 +22,8 @@ class OrderDetailActivity : AppCompatActivity() {
     private var order: Order? = null
     private lateinit var userType: User.USER_TYPE
 
+    private var updateIsUnassign = false
+
     private fun loadUserType() {
         val intentUserType = intent.getStringExtra(CLIENT_TYPE_KEY)
         this.userType = User.USER_TYPE.valueOf(intentUserType)
@@ -90,6 +92,7 @@ class OrderDetailActivity : AppCompatActivity() {
             R.id.unassign_order_option -> {
                 OrderService(OrderDetailRequestHandler(this).forUpdate())
                     .unassignOrder(order!!)
+                updateIsUnassign = true
                 return true
             }
             R.id.assign_order_option -> {
@@ -148,6 +151,15 @@ class OrderDetailActivity : AppCompatActivity() {
             Order.STATUS.TAKEN_STATUS -> getString(R.string.taken_status_label)
             Order.STATUS.CANCELLED_STATUS -> getString(R.string.cancelled_status_label)
             Order.STATUS.DELIVERED_STATUS -> getString(R.string.delivered_status_label)
+        }
+    }
+
+    fun onUpdateSuccess() {
+        if (updateIsUnassign) {
+            onBackPressed()
+        } else {
+            finish()
+            startActivity(intent)
         }
     }
 }

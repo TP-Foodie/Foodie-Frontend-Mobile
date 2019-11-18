@@ -33,8 +33,7 @@ open class OrderDetailRequestHandler(private val activity: OrderDetailActivity) 
                 activity.populateFields(order)
             }
             OPERATION.UPDATE -> {
-                activity.finish()
-                activity.startActivity(activity.getIntent())
+                activity.onUpdateSuccess()
             }
         }
     }
