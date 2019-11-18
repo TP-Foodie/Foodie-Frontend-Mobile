@@ -4,12 +4,20 @@ import android.graphics.Bitmap
 import com.android.volley.Response
 import com.taller.tp.foodie.model.User
 import com.taller.tp.foodie.model.common.ImageStringConversor
+import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import com.taller.tp.foodie.model.requestHandlers.RequestHandler
 import org.json.JSONObject
 
 class UserService(private val requestHandler: RequestHandler) {
 
     private val client = BackService.getInstance()
+
+    private val listener = Response.Listener<JSONObject> { response ->
+        requestHandler.onSuccess(response)
+    }
+    private val errorListener = Response.ErrorListener { error ->
+        requestHandler.onError(error)
+    }
 
     companion object {
         // endpoint
@@ -45,6 +53,17 @@ class UserService(private val requestHandler: RequestHandler) {
                 .setLastName(lastName)
                 .setPhone(phone)
         }
+
+        fun isUserLoggedIn(): Boolean {
+            // check token and user id are not empty
+            val token = UserBackendDataHandler.getInstance().getBackendToken()
+
+            if (token.isEmpty()) {
+                return false
+            }
+
+            return true
+        }
     }
 
     fun register(
@@ -53,14 +72,6 @@ class UserService(private val requestHandler: RequestHandler) {
     ) {
         requestHandler.begin()
 
-        val listener = Response.Listener<JSONObject> { response ->
-            requestHandler.onSuccess(response)
-        }
-        val errorListener = Response.ErrorListener { error ->
-            requestHandler.onError(error)
-        }
-
-        // build json request
         val requestObject = JSONObject()
         requestObject.put(EMAIL_FIELD, email)
         requestObject.put(PASSWORD_FIELD, password)
@@ -81,14 +92,6 @@ class UserService(private val requestHandler: RequestHandler) {
     fun finishRegister(userType: String, subscription: String) {
         requestHandler.begin()
 
-        val listener = Response.Listener<JSONObject> { response ->
-            requestHandler.onSuccess(response)
-        }
-        val errorListener = Response.ErrorListener { error ->
-            requestHandler.onError(error)
-        }
-
-        // build json request
         val requestObject = JSONObject()
         requestObject.put(TYPE_FIELD, userType)
         requestObject.put(SUBSCRIPTION_FIELD, subscription)
@@ -99,19 +102,25 @@ class UserService(private val requestHandler: RequestHandler) {
     fun updateUserFcmToken(fcmToken: String) {
         requestHandler.begin()
 
-        val listener = Response.Listener<JSONObject> { response ->
-            requestHandler.onSuccess(response)
-        }
-        val errorListener = Response.ErrorListener { error ->
-            requestHandler.onError(error)
-        }
-
-        // build json request
         val requestObject = JSONObject()
         requestObject.put(FCM_TOKEN_FIELD, fcmToken)
 
         client.doPatch(ME_RESOURCE, listener, requestObject, errorListener)
     }
+
+    fun updateLocation() {
+        requestHandler.begin()
+
+        val requestObject = JSONObject(mapOf(
+            "location" to mapOf(
+                "latitude" to 1,
+                "longitude" to 1
+            )
+        ))
+
+        client.doPatch(ME_RESOURCE, listener, requestObject, errorListener)
+    }
+
 
     fun changeUserProfile(data: Map<String, String>) {
         requestHandler.begin()

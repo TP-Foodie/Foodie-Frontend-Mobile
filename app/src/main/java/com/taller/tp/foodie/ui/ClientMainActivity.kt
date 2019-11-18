@@ -1,6 +1,8 @@
 package com.taller.tp.foodie.ui
 
 import android.Manifest
+import android.app.ActivityManager
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.location.Location
@@ -26,10 +28,7 @@ import com.taller.tp.foodie.model.Place
 import com.taller.tp.foodie.model.User
 import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import com.taller.tp.foodie.model.requestHandlers.*
-import com.taller.tp.foodie.services.OrderService
-import com.taller.tp.foodie.services.PlaceService
-import com.taller.tp.foodie.services.ProfileService
-import com.taller.tp.foodie.services.UserService
+import com.taller.tp.foodie.services.*
 import org.json.JSONObject
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
@@ -70,7 +69,24 @@ class ClientMainActivity : AppCompatActivity(),
         buildListeners()
 
         showSuccessfullOrderMessage()
+
+        if (!isTrackingServiceRunning()) {
+            Intent(this, TrackingService::class.java).also { intent ->
+                startService(intent)
+            }
+        }
     }
+
+    private fun isTrackingServiceRunning(): Boolean {
+        val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for (service in manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (TrackingService::class.java.simpleName == service.service.className) {
+                return true
+            }
+        }
+        return false
+    }
+
 
     private fun buildListeners() {
         val paymentRadio = findViewById<RadioGroup>(R.id.payment_method_radio)

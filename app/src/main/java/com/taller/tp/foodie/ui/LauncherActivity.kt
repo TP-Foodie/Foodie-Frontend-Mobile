@@ -7,6 +7,8 @@ import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import com.taller.tp.foodie.model.requestHandlers.CheckRegistrationRequestHandler
 import com.taller.tp.foodie.services.AuthService
+import com.taller.tp.foodie.services.TrackingService
+import com.taller.tp.foodie.services.UserService
 import java.lang.ref.WeakReference
 
 class LauncherActivity : AppCompatActivity() {
@@ -14,7 +16,7 @@ class LauncherActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
 
-        val userIsLogged = isUserLoggedIn()
+        val userIsLogged = UserService.isUserLoggedIn()
 
         if (!userIsLogged) {
             // go to login activity
@@ -27,17 +29,6 @@ class LauncherActivity : AppCompatActivity() {
             AuthService(CheckRegistrationRequestHandler(WeakReference(this)))
                 .checkIfUserIsRegistered()
         }
-    }
-
-    private fun isUserLoggedIn(): Boolean {
-        // check token and user id are not empty
-        val token = UserBackendDataHandler.getInstance().getBackendToken()
-
-        if (token.isEmpty()) {
-            return false
-        }
-
-        return true
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
