@@ -39,6 +39,9 @@ class OrderDetailActivity : AppCompatActivity() {
 
         loadUserType()
 
+        val actionsButton = findViewById<Button>(R.id.order_actions_button)
+        actionsButton.setOnClickListener { openContextMenu(it) }
+
         val orderId = intent.getStringExtra(DETAIL_ORDER_KEY)
         if (orderId != null) {
             OrderService(OrderDetailRequestHandler(this)).find(orderId)
