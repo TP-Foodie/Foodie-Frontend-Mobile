@@ -14,6 +14,7 @@ import com.taller.tp.foodie.model.Order
 import com.taller.tp.foodie.model.User
 import com.taller.tp.foodie.model.requestHandlers.OrderDetailRequestHandler
 import com.taller.tp.foodie.services.OrderService
+import kotlinx.android.synthetic.main.activity_order_detail.*
 
 
 class OrderDetailActivity : AppCompatActivity() {
@@ -37,9 +38,6 @@ class OrderDetailActivity : AppCompatActivity() {
             OrderService(OrderDetailRequestHandler(this)).find(orderId)
         }
 
-        with(findViewById<Button>(R.id.order_actions_button)){
-            registerForContextMenu(this)
-        }
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
@@ -51,23 +49,21 @@ class OrderDetailActivity : AppCompatActivity() {
         when(order!!.getStatus()){
             Order.STATUS.WAITING_STATUS -> {
                 if (userType == User.USER_TYPE.CUSTOMER) {
-                    cancelOption.setVisible(true)
-                    assignOption.setVisible(true)
+                    cancelOption.isVisible = true
+                    assignOption.isVisible = true
                 }
             }
             Order.STATUS.TAKEN_STATUS -> {
-                chatOption.setVisible(true)
+                chatOption.isVisible = true
                 if (userType == User.USER_TYPE.CUSTOMER)
-                    cancelOption.setVisible(true)
+                    cancelOption.isVisible = true
                 else {
-                    deliverOption.setVisible(true)
-                    unassignOption.setVisible(true)
+                    deliverOption.isVisible = true
+                    unassignOption.isVisible = true
                 }
             }
             Order.STATUS.DELIVERED_STATUS, Order.STATUS.CANCELLED_STATUS -> {
-                chatOption.setVisible(true)
-                val actionsButton = findViewById<Button>(R.id.order_actions_button)
-                actionsButton.visibility = View.INVISIBLE
+                chatOption.isVisible = true
             }
         }
         return true
@@ -135,14 +131,23 @@ class OrderDetailActivity : AppCompatActivity() {
         orderProduct.text = String.format("%s", order.getProduct())
         val orderPlace = findViewById<TextView>(R.id.order_place)
         orderPlace.text = String.format("%s", order.getPlace().name)
+
+        // ui logic
+        if (order.getStatus() != Order.STATUS.CANCELLED_STATUS || !order.getIdChat().isNullOrEmpty()) {
+            order_actions_button.visibility = View.VISIBLE
+        }
+
+        with(findViewById<Button>(R.id.order_actions_button)) {
+            registerForContextMenu(this)
+        }
     }
 
     private fun getStatusLabel(status: Order.STATUS): String{
-        when(status){
-            Order.STATUS.WAITING_STATUS -> return getString(R.string.waiting_status_label)
-            Order.STATUS.TAKEN_STATUS -> return getString(R.string.taken_status_label)
-            Order.STATUS.CANCELLED_STATUS -> return getString(R.string.cancelled_status_label)
-            Order.STATUS.DELIVERED_STATUS -> return getString(R.string.delivered_status_label)
+        return when (status) {
+            Order.STATUS.WAITING_STATUS -> getString(R.string.waiting_status_label)
+            Order.STATUS.TAKEN_STATUS -> getString(R.string.taken_status_label)
+            Order.STATUS.CANCELLED_STATUS -> getString(R.string.cancelled_status_label)
+            Order.STATUS.DELIVERED_STATUS -> getString(R.string.delivered_status_label)
         }
     }
 }
