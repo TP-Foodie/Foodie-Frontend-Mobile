@@ -1,6 +1,7 @@
 package com.taller.tp.foodie.services
 
 import android.graphics.Bitmap
+import android.location.Location
 import com.android.volley.Response
 import com.taller.tp.foodie.model.User
 import com.taller.tp.foodie.model.common.ImageStringConversor
@@ -108,13 +109,13 @@ class UserService(private val requestHandler: RequestHandler) {
         client.doPatch(ME_RESOURCE, listener, requestObject, errorListener)
     }
 
-    fun updateLocation() {
+    fun updateLocation(location: Location) {
         requestHandler.begin()
 
         val requestObject = JSONObject(mapOf(
             "location" to mapOf(
-                "latitude" to 1,
-                "longitude" to 1
+                "latitude" to location.latitude,
+                "longitude" to location.longitude
             )
         ))
 

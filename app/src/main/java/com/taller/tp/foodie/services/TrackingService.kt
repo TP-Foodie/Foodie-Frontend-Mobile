@@ -2,8 +2,10 @@ package com.taller.tp.foodie.services
 
 import android.app.IntentService
 import android.content.Intent
+import android.location.Location
 import android.util.Log
 import com.android.volley.VolleyError
+import com.google.android.gms.location.LocationServices
 import com.taller.tp.foodie.model.requestHandlers.RequestHandler
 import org.json.JSONObject
 import java.lang.Thread.sleep
@@ -14,14 +16,23 @@ class TrackingService : IntentService("TrackingService") {
     var error = false
     var processing = false
 
+    var cachedLocation: Location? = null
+
     private val userService = UserService(TrackingRequestHandler(this))
 
     override fun onHandleIntent(intent: Intent?) {
+        val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+
         while (UserService.isUserLoggedIn()) {
             try {
                 Log.e("Info", "Processing: $processing")
                 if (!processing){
-                    userService.updateLocation()
+                    fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
+                        if (location != null && location != cachedLocation) {
+                            cachedLocation = location
+                            userService.updateLocation(location)
+                        }
+                    }
                 }
             } catch (e: Exception) {
                 Log.e(TrackingService::class.java.toString(), "Error updating location", e)

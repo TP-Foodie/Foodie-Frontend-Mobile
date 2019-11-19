@@ -72,7 +72,7 @@ class ClientMainActivity : AppCompatActivity(),
 
         if (!isTrackingServiceRunning()) {
             Intent(this, TrackingService::class.java).also { intent ->
-                startService(intent)
+                applicationContext.startService(intent)
             }
         }
     }
