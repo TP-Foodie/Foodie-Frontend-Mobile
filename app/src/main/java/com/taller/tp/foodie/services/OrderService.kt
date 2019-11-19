@@ -197,7 +197,8 @@ class OrderService(private val requestHandler: RequestHandler) {
             val coordinates =
                 CoordinateService.fromCoordinateJson(placeJson.getJSONObject("coordinates"))
             val placeName = placeJson.getString("name")
-            val place = Place(placeName, coordinates)
+            val placeImage = placeJson.getString("image")
+            val place = Place(placeName, coordinates, placeImage)
             return OrderProduct(productName, place)
         }
 

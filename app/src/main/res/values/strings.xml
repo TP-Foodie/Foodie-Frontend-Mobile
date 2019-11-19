@@ -89,6 +89,7 @@
     <string name="taken_status_label">En viaje</string>
     <string name="cancelled_status_label">Cancelado</string>
     <string name="delivered_status_label">Entregado</string>
+    <string name="productos">Productos</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 
