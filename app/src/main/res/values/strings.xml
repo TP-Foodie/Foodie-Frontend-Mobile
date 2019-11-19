@@ -91,6 +91,8 @@
     <string name="delivered_status_label">Entregado</string>
     <string name="productos">Productos</string>
     <string name="comprar">Comprar</string>
+    <string name="decrement_button">-</string>
+    <string name="increment_button">+</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 
