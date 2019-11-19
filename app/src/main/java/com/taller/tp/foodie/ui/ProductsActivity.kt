@@ -1,13 +1,15 @@
 package com.taller.tp.foodie.ui
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.taller.tp.foodie.R
+import com.taller.tp.foodie.model.ListOrderderProduct
 import com.taller.tp.foodie.model.OrderedProduct
+import com.taller.tp.foodie.model.Place
 import com.taller.tp.foodie.model.ProductFetched
 import com.taller.tp.foodie.model.requestHandlers.ListProductsRequestHandler
 import com.taller.tp.foodie.services.ProductsService
@@ -23,20 +25,22 @@ interface ClickListener {
 class ProductsActivity : AppCompatActivity(), ClickListener {
 
     companion object {
-        const val PLACE_ID = "placeId"
-        const val PLACE_NAME = "placeName"
+        const val PLACE = "place"
     }
 
     private lateinit var products: MutableList<ProductFetched>
     private var orderedProducts = hashMapOf<String, OrderedProduct>()
+    private lateinit var place: Place
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_products)
 
-        place_name.text = intent.getStringExtra(PLACE_NAME)
+        place = intent.getParcelableExtra(PLACE)
 
-        getProductsFromPlace(intent.getStringExtra(PLACE_ID))
+        place_name.text = place.name
+
+        getProductsFromPlace(place.id)
 
         setupUI()
 
@@ -44,7 +48,17 @@ class ProductsActivity : AppCompatActivity(), ClickListener {
     }
 
     private fun setupClickListeners() {
+        btn_buy_product.setOnClickListener {
+            val intent = Intent(applicationContext, OrderDataActivity::class.java)
 
+            val listProducts = mutableListOf<OrderedProduct>()
+            for ((_, prod) in orderedProducts) {
+                listProducts.add(prod)
+            }
+            val listOrderedProduct = ListOrderderProduct(listProducts)
+            intent.putExtra(OrderDataActivity.PRODUCTS, listOrderedProduct)
+            startActivity(intent)
+        }
     }
 
     private fun setupUI() {
@@ -58,8 +72,6 @@ class ProductsActivity : AppCompatActivity(), ClickListener {
     }
 
     fun onSuccessListProducts(products: MutableList<ProductFetched>) {
-        Log.e("ProductsList", products.toString())
-
         this.products = products
         for (product in products) {
             orderedProducts[product.id] = OrderedProduct(0, product)

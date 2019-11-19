@@ -26,7 +26,7 @@ class PlaceService(private val requestHandler: RequestHandler) {
             val coordinateJson = json.getJSONObject("coordinates")
             val coordinate = CoordinateService.fromCoordinateJson(coordinateJson)
             val image = json.getString("image")
-            return Place(name, coordinate, image).setId(id)
+            return Place(id, name, coordinate, image)
         }
     }
 

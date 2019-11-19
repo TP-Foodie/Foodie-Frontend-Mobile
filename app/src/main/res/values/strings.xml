@@ -93,6 +93,8 @@
     <string name="comprar">Comprar</string>
     <string name="decrement_button">-</string>
     <string name="increment_button">+</string>
+    <string name="favour_method_label">Favor</string>
+    <string name="confirm_order_btn">Confirmar Pedido</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 

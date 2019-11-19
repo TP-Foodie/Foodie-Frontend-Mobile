@@ -3,6 +3,7 @@ package com.taller.tp.foodie.services
 import com.android.volley.Response
 import com.taller.tp.foodie.model.*
 import com.taller.tp.foodie.model.requestHandlers.RequestHandler
+import org.json.JSONArray
 import org.json.JSONObject
 
 const val ORDER_RESOURCE = "/orders/"
@@ -126,8 +127,12 @@ class OrderService(private val requestHandler: RequestHandler) {
             if (!withDetail)
                 return order
             // Product
-            val productJson = json.getJSONObject("product")
-            val orderProduct = fromOrderProductJson(productJson)
+            val productsJson = json.getJSONArray("ordered_products")
+            val prodsList = mutableListOf<OrderedProduct>()
+            for (i in 0 until productsJson.length()) {
+                val orderedProd = productsJson.getJSONObject(i)
+                prodsList.add(ProductsService.fromOrderedProductJson(orderedProd))
+            }
 
             // Owner
             val ownerJson = json.getJSONObject("owner")
@@ -140,7 +145,7 @@ class OrderService(private val requestHandler: RequestHandler) {
             if (!json.isNull("quotation"))
                 order.setQuotation(json.getDouble("quotation"))
 
-            return order.setProduct(orderProduct).setOwner(owner).setDelivery(deliveryUser)
+            return order.setProducts(prodsList).setOwner(owner).setDelivery(deliveryUser)
         }
 
         fun toJson(order: Order) : JSONObject {
@@ -178,8 +183,18 @@ class OrderService(private val requestHandler: RequestHandler) {
                 orderJson.put("owner", ownerJson)
             }
 
-            val productJson = JSONObject()
-            productJson.put("name", order.getProduct())
+            val jsonOrderProductArray = JSONArray()
+            for (prod in order.getProducts()) {
+                val prodJson = JSONObject()
+                prodJson.put("quantity", prod.quantity)
+                prodJson.put("product", prod.productFetched.id)
+                jsonOrderProductArray.put(prodJson)
+            }
+
+            orderJson.put("ordered_products", jsonOrderProductArray)
+
+            // TODO : revisar esto
+            /*
             val placeJson = JSONObject()
             val coordinatesJson = JSONObject()
             coordinatesJson.put("latitude", order.getPlace().coordinate.latitude)
@@ -188,6 +203,7 @@ class OrderService(private val requestHandler: RequestHandler) {
             placeJson.put("name", order.getPlace().name)
             productJson.put("place", placeJson)
             orderJson.put("product", productJson)
+             */
             return orderJson
         }
 
@@ -196,25 +212,30 @@ class OrderService(private val requestHandler: RequestHandler) {
             val placeJson = json.getJSONObject("place")
             val coordinates =
                 CoordinateService.fromCoordinateJson(placeJson.getJSONObject("coordinates"))
+            val placeId = placeJson.getString("id")
             val placeName = placeJson.getString("name")
             val placeImage = placeJson.getString("image")
-            val place = Place(placeName, coordinates, placeImage)
+            val place = Place(placeId, placeName, coordinates, placeImage)
             return OrderProduct(productName, place)
         }
 
         private fun toOrderRequestJson(orderRequest: OrderRequest) : JSONObject{
             val jsonOrder = JSONObject()
             jsonOrder.put("order_type", orderRequest.orderType)
-            val jsonOrderProduct = JSONObject()
-            jsonOrderProduct.put("name", orderRequest.orderProduct.product)
-            jsonOrderProduct.put("place", orderRequest.orderProduct.placeId)
-            jsonOrder.put("product",jsonOrderProduct)
+            val jsonOrderProductArray = JSONArray()
+            for (prod in orderRequest.orderProduct.products) {
+                val prodJson = JSONObject()
+                prodJson.put("quantity", prod.quantity)
+                prodJson.put("product", prod.productFetched.id)
+                jsonOrderProductArray.put(prodJson)
+            }
+
+            jsonOrder.put("ordered_products", jsonOrderProductArray)
             // Payment method
-            val paymentMethod: String?
-            if (orderRequest.paymentMethod == null)
-                paymentMethod = null
+            val paymentMethod: String? = if (orderRequest.paymentMethod == null)
+                null
             else
-                paymentMethod = orderRequest.paymentMethod.name
+                orderRequest.paymentMethod.name
             jsonOrder.put("payment_method", paymentMethod)
             return jsonOrder
         }
@@ -224,5 +245,5 @@ class OrderService(private val requestHandler: RequestHandler) {
                        val orderProduct: OrderProductRequest,
                        val paymentMethod: Order.PAYMENT_METHOD?)
 
-    class OrderProductRequest(val product: String, val placeId: String)
+    class OrderProductRequest(val products: MutableList<OrderedProduct>)
 }

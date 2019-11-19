@@ -2,6 +2,7 @@ package com.taller.tp.foodie.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
@@ -57,6 +58,7 @@ class ConfirmOrderActivity : AppCompatActivity(),
 
         val pendingOrderJson = intent.getStringExtra(CLIENT_NEW_ORDER_KEY)
         if (pendingOrderJson != null) {
+            Log.e("OrderJson", "order json: " + pendingOrderJson)
             pendingOrder = OrderService.fromOrderJson(JSONObject(pendingOrderJson))
             placeCoordinate = pendingOrder!!.getPlace().coordinate
             val confirmOrderRequestHandler = ConfirmOrderRequestHandler(this)

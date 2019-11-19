@@ -74,24 +74,23 @@ class ClientMainActivity : AppCompatActivity(),
         signOutButton.setOnClickListener { signOut() }
 
         val profileButton = findViewById<Button>(R.id.profile_button)
-        profileButton.setOnClickListener { profileButtonListener() }
+        profileButton.setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
+        }
 
         val orderListButton = findViewById<Button>(R.id.orders_button)
-        orderListButton.setOnClickListener { orderListButtonListener() }
+        orderListButton.setOnClickListener {
+            val intent = Intent(this, OrdersActivity::class.java).apply {
+                putExtra(CLIENT_TYPE_KEY, userType.name)
+            }
+            startActivity(intent)
+        }
 
         btn_products.setOnClickListener {
             val intent = Intent(applicationContext, ProductsActivity::class.java)
-            intent.putExtra(ProductsActivity.PLACE_NAME, markerPlaceMap[lastSelectedMarker]?.name)
-            intent.putExtra(ProductsActivity.PLACE_ID, markerPlaceMap[lastSelectedMarker]?.getId())
+            intent.putExtra(ProductsActivity.PLACE, markerPlaceMap[lastSelectedMarker])
             startActivity(intent)
         }
-    }
-
-    private fun orderListButtonListener() {
-        val intent = Intent(this, OrdersActivity::class.java).apply {
-            putExtra(CLIENT_TYPE_KEY, userType.name)
-        }
-        startActivity(intent)
     }
 
     private fun signOut() {
@@ -127,10 +126,6 @@ class ClientMainActivity : AppCompatActivity(),
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                     .infoWindowAnchor(0.5F, 0F)
                     .zIndex(0F)
-    }
-
-    private fun profileButtonListener(){
-        startActivity(Intent(this, ProfileActivity::class.java))
     }
 
     override fun onMapReady(googleMap: GoogleMap) {

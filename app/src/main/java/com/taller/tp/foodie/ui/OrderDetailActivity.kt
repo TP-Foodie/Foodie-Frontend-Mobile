@@ -15,11 +15,13 @@ import com.taller.tp.foodie.model.User
 import com.taller.tp.foodie.model.requestHandlers.OrderDetailRequestHandler
 import com.taller.tp.foodie.services.OrderService
 import kotlinx.android.synthetic.main.activity_order_detail.*
+import org.json.JSONObject
 
 
 class OrderDetailActivity : AppCompatActivity() {
 
     private var order: Order? = null
+    private lateinit var orderAsJson: JSONObject
     private lateinit var userType: User.USER_TYPE
 
     private var updateIsUnassign = false
@@ -97,7 +99,7 @@ class OrderDetailActivity : AppCompatActivity() {
             }
             R.id.assign_order_option -> {
                 val intent = Intent(this, ConfirmOrderActivity::class.java).apply {
-                    putExtra(CLIENT_NEW_ORDER_KEY, OrderService.toJson(order!!).toString())
+                    putExtra(CLIENT_NEW_ORDER_KEY, orderAsJson.toString())
                 }
                 startActivity(intent)
                 return true
@@ -118,7 +120,8 @@ class OrderDetailActivity : AppCompatActivity() {
         }
     }
 
-    fun populateFields(order: Order) {
+    fun populateFields(order: Order, response: JSONObject) {
+        this.orderAsJson = response
         this.order = order
         val orderNumber = findViewById<TextView>(R.id.order_number)
         orderNumber.text = String.format("Pedido Nro. %s", order.getNumber().toString())
@@ -131,7 +134,8 @@ class OrderDetailActivity : AppCompatActivity() {
         val orderStatus = findViewById<TextView>(R.id.order_status)
         orderStatus.text = String.format("%s", getStatusLabel(order.getStatus()))
         val orderProduct = findViewById<TextView>(R.id.order_product)
-        orderProduct.text = String.format("%s", order.getProduct())
+        // TODO: change this
+        orderProduct.text = String.format("%s", order.getProducts()[0].productFetched.name)
         val orderPlace = findViewById<TextView>(R.id.order_place)
         orderPlace.text = String.format("%s", order.getPlace().name)
 

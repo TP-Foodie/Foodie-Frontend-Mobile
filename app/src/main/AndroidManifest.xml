@@ -16,7 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.ProductsActivity"></activity>
+        <activity android:name=".ui.OrderDataActivity"></activity>
+        <activity android:name=".ui.ProductsActivity" />
         <activity android:name=".ui.ChangeProfileActivity" />
         <activity android:name=".ui.ChatActivity" />
 
