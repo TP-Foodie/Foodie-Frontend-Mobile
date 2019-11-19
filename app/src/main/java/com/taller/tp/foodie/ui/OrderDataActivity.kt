@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.ErrorHandler
 import com.taller.tp.foodie.model.ListOrderderProduct
@@ -11,6 +12,7 @@ import com.taller.tp.foodie.model.Order
 import com.taller.tp.foodie.model.OrderedProduct
 import com.taller.tp.foodie.model.requestHandlers.ClientOrderRequestHandler
 import com.taller.tp.foodie.services.OrderService
+import com.taller.tp.foodie.ui.ui_adapters.OrderDetailProductsAdapter
 import kotlinx.android.synthetic.main.activity_order_data.*
 import org.json.JSONObject
 
@@ -32,6 +34,9 @@ class OrderDataActivity : AppCompatActivity() {
             intent.getParcelableExtra<ListOrderderProduct>(PRODUCTS).orderedProductsList
 
         setupListeners()
+
+        setupProductsLayout()
+        products_list.adapter = OrderDetailProductsAdapter(orderedProducts)
     }
 
     private fun setupListeners() {
@@ -68,5 +73,11 @@ class OrderDataActivity : AppCompatActivity() {
         val intent = Intent(this, ConfirmOrderActivity::class.java)
         intent.putExtra(CLIENT_NEW_ORDER_KEY, response.toString())
         startActivity(intent)
+    }
+
+    private fun setupProductsLayout() {
+        val manager = LinearLayoutManager(applicationContext)
+        manager.reverseLayout = true
+        products_list.layoutManager = manager
     }
 }

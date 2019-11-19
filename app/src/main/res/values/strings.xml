@@ -75,9 +75,9 @@
     <string name="card_method_label">Pago con Tarjeta</string>
     <string name="owner_title">Propietario</string>
     <string name="type_title">Tipo</string>
-    <string name="status_title">Estado</string>
-    <string name="product_title">Producto</string>
-    <string name="place_title">Lugar</string>
+    <string name="name_title">Nombre</string>
+    <string name="products_title">Productos</string>
+    <string name="payment_method_title">Método de Pago</string>
     <string name="btn_change_profile">Editar</string>
     <string name="btn_confirm_changes">Confirmar</string>
     <string name="order_price_label">$%.2f</string>

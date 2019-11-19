@@ -31,6 +31,7 @@
 
         <RelativeLayout
             android:id="@+id/rl_owner"
+            android:visibility="gone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
@@ -84,24 +85,24 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/rl_status"
+            android:id="@+id/rl_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/status_title"
+                android:id="@+id/name_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="12dp"
-                android:text="@string/status_title"
+                android:text="@string/name_title"
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/order_status"
+                android:id="@+id/order_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/status_title"
+                android:layout_below="@id/name_title"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="12dp"
@@ -111,51 +112,48 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/rl_product"
+            android:id="@+id/rl_products"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/product_title"
+                android:id="@+id/products_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="12dp"
-                android:text="@string/product_title"
+                android:text="@string/products_title"
                 android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/order_product"
-                android:layout_width="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/products_list"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/product_title"
-                android:layout_centerHorizontal="true"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="12dp"
-                android:textColor="@android:color/white"
-                android:textSize="18sp" />
+                android:layout_below="@id/products_title" />
 
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/rl_place"
+            android:id="@+id/rl_payment_method"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/place_title"
+                android:id="@+id/payment_method_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="12dp"
-                android:text="@string/place_title"
+                android:text="@string/payment_method_title"
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/order_place"
+                android:id="@+id/order_payment_method"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/place_title"
+                android:layout_below="@id/payment_method_title"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="12dp"
@@ -166,31 +164,16 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/layout_confirm"
-        android:layout_width="415dp"
-        android:layout_height="71dp"
-        android:orientation="horizontal"
+    <Button
+        android:id="@+id/order_actions_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:elevation="8dp"
+        android:text="@string/order_actions"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/order_detail_layout">
-
-        <LinearLayout
-            android:id="@+id/dummy1"
-            android:layout_width="256dp"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/order_actions_button"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:text="@string/order_actions"
-            android:visibility="invisible" />
-    </LinearLayout>
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

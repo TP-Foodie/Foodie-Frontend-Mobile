@@ -9,11 +9,13 @@ import android.view.View
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.Order
 import com.taller.tp.foodie.model.User
 import com.taller.tp.foodie.model.requestHandlers.OrderDetailRequestHandler
 import com.taller.tp.foodie.services.OrderService
+import com.taller.tp.foodie.ui.ui_adapters.OrderDetailProductsAdapter
 import kotlinx.android.synthetic.main.activity_order_detail.*
 import org.json.JSONObject
 
@@ -120,23 +122,36 @@ class OrderDetailActivity : AppCompatActivity() {
         }
     }
 
+    private fun setupProductsLayout() {
+        val manager = LinearLayoutManager(applicationContext)
+        manager.reverseLayout = true
+        products_list.layoutManager = manager
+    }
+
     fun populateFields(order: Order, response: JSONObject) {
         this.orderAsJson = response
         this.order = order
-        val orderNumber = findViewById<TextView>(R.id.order_number)
-        orderNumber.text = String.format("Pedido Nro. %s", order.getNumber().toString())
-        val orderOwner = findViewById<TextView>(R.id.order_owner)
-        val owner = if (order.getOwner() == null) "" else
-            String.format("%s %s", order.getOwner()!!.name, order.getOwner()!!.lastName)
-        orderOwner.text = String.format("%s", owner)
+
+        if (userType == User.USER_TYPE.DELIVERY) {
+            rl_owner.visibility = View.VISIBLE
+            val orderOwner = findViewById<TextView>(R.id.order_owner)
+            val owner = if (order.getOwner() == null) "" else
+                String.format("%s %s", order.getOwner()!!.name, order.getOwner()!!.lastName)
+            orderOwner.text = String.format("%s", owner)
+        }
+
+        order_number.text = String.format("Pedido Nro. %s", order.getNumber().toString())
+
         val orderType= findViewById<TextView>(R.id.order_type)
         orderType.text = String.format("%s", order.getType())
-        val orderStatus = findViewById<TextView>(R.id.order_status)
+
+        val orderStatus = findViewById<TextView>(R.id.order_name)
         orderStatus.text = String.format("%s", getStatusLabel(order.getStatus()))
-        val orderProduct = findViewById<TextView>(R.id.order_product)
-        // TODO: change this
-        orderProduct.text = String.format("%s", order.getProducts()[0].productFetched.name)
-        val orderPlace = findViewById<TextView>(R.id.order_place)
+
+        setupProductsLayout()
+        products_list.adapter = OrderDetailProductsAdapter(order.getProducts())
+
+        val orderPlace = findViewById<TextView>(R.id.order_payment_method)
         orderPlace.text = String.format("%s", order.getPlace().name)
 
         // ui logic
