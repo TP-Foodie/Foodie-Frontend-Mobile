@@ -90,6 +90,7 @@
     <string name="cancelled_status_label">Cancelado</string>
     <string name="delivered_status_label">Entregado</string>
     <string name="productos">Productos</string>
+    <string name="comprar">Comprar</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 

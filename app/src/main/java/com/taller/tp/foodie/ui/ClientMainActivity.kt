@@ -78,6 +78,13 @@ class ClientMainActivity : AppCompatActivity(),
 
         val orderListButton = findViewById<Button>(R.id.orders_button)
         orderListButton.setOnClickListener { orderListButtonListener() }
+
+        btn_products.setOnClickListener {
+            val intent = Intent(applicationContext, ProductsActivity::class.java)
+            intent.putExtra(ProductsActivity.PLACE_NAME, markerPlaceMap[lastSelectedMarker]?.name)
+            intent.putExtra(ProductsActivity.PLACE_ID, markerPlaceMap[lastSelectedMarker]?.getId())
+            startActivity(intent)
+        }
     }
 
     private fun orderListButtonListener() {
