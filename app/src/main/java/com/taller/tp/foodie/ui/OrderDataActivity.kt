@@ -7,9 +7,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.ErrorHandler
-import com.taller.tp.foodie.model.ListOrderderProduct
 import com.taller.tp.foodie.model.Order
 import com.taller.tp.foodie.model.OrderedProduct
+import com.taller.tp.foodie.model.common.HeavyDataTransferingHandler
 import com.taller.tp.foodie.model.requestHandlers.ClientOrderRequestHandler
 import com.taller.tp.foodie.services.OrderService
 import com.taller.tp.foodie.ui.ui_adapters.OrderDetailProductsAdapter
@@ -17,10 +17,6 @@ import kotlinx.android.synthetic.main.activity_order_data.*
 import org.json.JSONObject
 
 class OrderDataActivity : AppCompatActivity() {
-
-    companion object {
-        const val PRODUCTS = "products"
-    }
 
     private lateinit var orderedProducts: MutableList<OrderedProduct>
     private var paymentMethod: Order.PAYMENT_METHOD? = null
@@ -30,8 +26,7 @@ class OrderDataActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_order_data)
 
-        orderedProducts =
-            intent.getParcelableExtra<ListOrderderProduct>(PRODUCTS).orderedProductsList
+        orderedProducts = HeavyDataTransferingHandler.getInstance().getOrderedProducts()
 
         setupListeners()
 
@@ -71,7 +66,8 @@ class OrderDataActivity : AppCompatActivity() {
 
     fun saveAndChooseDelivery(response: JSONObject) {
         val intent = Intent(this, ConfirmOrderActivity::class.java)
-        intent.putExtra(CLIENT_NEW_ORDER_KEY, response.toString())
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        HeavyDataTransferingHandler.getInstance().saveOrderJson(response.toString())
         startActivity(intent)
     }
 

@@ -7,10 +7,10 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.taller.tp.foodie.R
-import com.taller.tp.foodie.model.ListOrderderProduct
 import com.taller.tp.foodie.model.OrderedProduct
 import com.taller.tp.foodie.model.Place
 import com.taller.tp.foodie.model.ProductFetched
+import com.taller.tp.foodie.model.common.HeavyDataTransferingHandler
 import com.taller.tp.foodie.model.requestHandlers.ListProductsRequestHandler
 import com.taller.tp.foodie.services.ProductsService
 import com.taller.tp.foodie.ui.ui_adapters.ProductsAdapter
@@ -53,10 +53,12 @@ class ProductsActivity : AppCompatActivity(), ClickListener {
 
             val listProducts = mutableListOf<OrderedProduct>()
             for ((_, prod) in orderedProducts) {
-                listProducts.add(prod)
+                if (prod.quantity != 0)
+                    listProducts.add(prod)
             }
-            val listOrderedProduct = ListOrderderProduct(listProducts)
-            intent.putExtra(OrderDataActivity.PRODUCTS, listOrderedProduct)
+
+            HeavyDataTransferingHandler.getInstance().saveOrderedProducts(listProducts)
+
             startActivity(intent)
         }
     }

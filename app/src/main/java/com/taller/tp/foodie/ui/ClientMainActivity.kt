@@ -167,7 +167,7 @@ class ClientMainActivity : AppCompatActivity(),
     }
 
     override fun onMarkerClick(marker : Marker): Boolean {
-        place_layout.visibility = View.VISIBLE
+        choose_place_hint.visibility = View.GONE
 
         if (userType == User.USER_TYPE.CUSTOMER)
             btn_products.visibility = View.VISIBLE
@@ -176,9 +176,11 @@ class ClientMainActivity : AppCompatActivity(),
 
         val place = markerPlaceMap[marker]
         if (place != null){
+            place_name.visibility = View.VISIBLE
             place_name.text = place.name
+            place_image.visibility = View.VISIBLE
             place_image.setImageURI(place.image)
-
+            place_reputation.visibility = View.VISIBLE
             val current = LatLng(place.coordinate.latitude, place.coordinate.longitude)
             mMap.moveCamera(CameraUpdateFactory.newLatLng(current))
         }

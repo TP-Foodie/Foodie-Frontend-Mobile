@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.Order
 import com.taller.tp.foodie.model.User
+import com.taller.tp.foodie.model.common.HeavyDataTransferingHandler
 import com.taller.tp.foodie.model.requestHandlers.OrderDetailRequestHandler
 import com.taller.tp.foodie.services.OrderService
 import com.taller.tp.foodie.ui.ui_adapters.OrderDetailProductsAdapter
@@ -100,9 +101,9 @@ class OrderDetailActivity : AppCompatActivity() {
                 return true
             }
             R.id.assign_order_option -> {
-                val intent = Intent(this, ConfirmOrderActivity::class.java).apply {
-                    putExtra(CLIENT_NEW_ORDER_KEY, orderAsJson.toString())
-                }
+                val intent = Intent(this, ConfirmOrderActivity::class.java)
+                HeavyDataTransferingHandler.getInstance().saveOrderJson(orderAsJson.toString())
+                //intent.putExtra(CLIENT_NEW_ORDER_KEY, orderAsJson.toString())
                 startActivity(intent)
                 return true
             }
