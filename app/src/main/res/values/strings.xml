@@ -73,7 +73,6 @@
     <string name="cash_method_label">Pago Efectivo</string>
     <string name="card_method_label">Pago con Tarjeta</string>
     <string name="owner_title">Propietario</string>
-    <string name="type_title">Tipo</string>
     <string name="place_name_title">Lugar</string>
     <string name="products_title">Productos</string>
     <string name="payment_method_title">Método de Pago</string>
