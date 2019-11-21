@@ -55,11 +55,23 @@ class OrderDataActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            if (order_name.text.isNullOrEmpty()) {
+                ErrorHandler.handleError(
+                    order_data_layout,
+                    "Por favor indique un nombre para su pedido"
+                )
+                return@setOnClickListener
+            }
+
             val requestHandler = ClientOrderRequestHandler(this)
 
             val orderProduct = OrderService.OrderProductRequest(orderedProducts)
             val orderType = if (isFavour) Order.TYPE.FAVOR_TYPE else Order.TYPE.NORMAL_TYPE
-            val orderRequest = OrderService.OrderRequest(orderType.key, orderProduct, paymentMethod)
+            val orderRequest = OrderService.OrderRequest(
+                order_name.text.trim().toString(),
+                orderType.key, orderProduct, paymentMethod
+            )
+
             OrderService(requestHandler).makeOrder(orderRequest)
         }
     }

@@ -19,17 +19,17 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <RelativeLayout
-            android:id="@+id/rl_name"
+            android:id="@+id/rl_order_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/name_title"
+                android:id="@+id/order_name_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="12dp"
-                android:text="@string/name_title"
+                android:text="@string/order_name_title"
                 android:textSize="14sp" />
 
             <EditText
@@ -37,21 +37,11 @@
                 style="@style/Widget.AppCompat.EditText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/name_title"
+                android:layout_below="@id/order_name_title"
                 android:importantForAutofill="no"
                 android:inputType="text"
                 android:textColor="@android:color/white"
                 tools:ignore="LabelFor" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/name_title"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp"
-                android:textColor="@android:color/white"
-                android:textSize="18sp" />
 
         </RelativeLayout>
 

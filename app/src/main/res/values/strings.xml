@@ -74,7 +74,7 @@
     <string name="card_method_label">Pago con Tarjeta</string>
     <string name="owner_title">Propietario</string>
     <string name="type_title">Tipo</string>
-    <string name="name_title">Nombre</string>
+    <string name="place_name_title">Lugar</string>
     <string name="products_title">Productos</string>
     <string name="payment_method_title">Método de Pago</string>
     <string name="btn_change_profile">Editar</string>
@@ -92,6 +92,7 @@
     <string name="confirm_delivery">Confirmar Delivery</string>
     <string name="choose_delivery_hint">Elige un delivery</string>
     <string name="choose_place_hint">Elige tu restaurante favorito</string>
+    <string name="order_name_title">Nombre</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 

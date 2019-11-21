@@ -65,7 +65,7 @@ class OrderService(private val requestHandler: RequestHandler) {
         client.doPatch(resource, listener, body, errorListener)
     }
 
-    fun update(order: Order, body: JSONObject) {
+    private fun update(order: Order, body: JSONObject) {
         requestHandler.begin()
 
         val listener = Response.Listener<JSONObject> { requestHandler.onSuccess(it) }
@@ -112,6 +112,7 @@ class OrderService(private val requestHandler: RequestHandler) {
             val orderType = json.getString("type")
             val status = json.getString("status")
             val number = json.getInt("number")
+            val name = json.getString("name")
 
             // Delivery
             var deliveryUser: DeliveryUser? = null
@@ -123,6 +124,7 @@ class OrderService(private val requestHandler: RequestHandler) {
 
             val order = Order(id).setType(orderType)
                 .setStatus(status).setNumber(number).setDelivery(deliveryUser)
+                .setName(name)
 
             if (!withDetail)
                 return order
@@ -148,79 +150,9 @@ class OrderService(private val requestHandler: RequestHandler) {
             return order.setProducts(prodsList).setOwner(owner).setDelivery(deliveryUser)
         }
 
-        fun toJson(order: Order) : JSONObject {
-            val orderJson = JSONObject()
-            orderJson.put("id", order.id)
-            orderJson.put("type", order.getType())
-            orderJson.put("status", order.getStatus().key)
-            orderJson.put("number", order.getNumber())
-            orderJson.put("id_chat", order.getIdChat())
-            orderJson.put("quotation", order.getQuotation())
-
-            if (order.getDelivery() != null){
-                val delivery = order.getDelivery()!!
-                val deliveryJson = JSONObject()
-                deliveryJson.put("email", delivery.email)
-                deliveryJson.put("id", delivery.id)
-                deliveryJson.put("last_name", delivery.lastName)
-                deliveryJson.put("name", delivery.name)
-                deliveryJson.put("phone", delivery.phone)
-                deliveryJson.put("profile_image", delivery.image)
-                deliveryJson.put("type", delivery.type)
-                orderJson.put("delivery", deliveryJson)
-            }
-
-            if (order.getOwner() != null){
-                val owner = order.getOwner()!!
-                val ownerJson = JSONObject()
-                ownerJson.put("email", owner.email)
-                ownerJson.put("id", owner.id)
-                ownerJson.put("last_name", owner.lastName)
-                ownerJson.put("name", owner.name)
-                ownerJson.put("phone", owner.phone)
-                ownerJson.put("profile_image", owner.image)
-                ownerJson.put("type", owner.type)
-                orderJson.put("owner", ownerJson)
-            }
-
-            val jsonOrderProductArray = JSONArray()
-            for (prod in order.getProducts()) {
-                val prodJson = JSONObject()
-                prodJson.put("quantity", prod.quantity)
-                prodJson.put("product", prod.productFetched.id)
-                jsonOrderProductArray.put(prodJson)
-            }
-
-            orderJson.put("ordered_products", jsonOrderProductArray)
-
-            // TODO : revisar esto
-            /*
-            val placeJson = JSONObject()
-            val coordinatesJson = JSONObject()
-            coordinatesJson.put("latitude", order.getPlace().coordinate.latitude)
-            coordinatesJson.put("longitude", order.getPlace().coordinate.longitude)
-            placeJson.put("coordinates", coordinatesJson)
-            placeJson.put("name", order.getPlace().name)
-            productJson.put("place", placeJson)
-            orderJson.put("product", productJson)
-             */
-            return orderJson
-        }
-
-        private fun fromOrderProductJson(json: JSONObject): OrderProduct {
-            val productName = json.getString("name")
-            val placeJson = json.getJSONObject("place")
-            val coordinates =
-                CoordinateService.fromCoordinateJson(placeJson.getJSONObject("coordinates"))
-            val placeId = placeJson.getString("id")
-            val placeName = placeJson.getString("name")
-            val placeImage = placeJson.getString("image")
-            val place = Place(placeId, placeName, coordinates, placeImage)
-            return OrderProduct(productName, place)
-        }
-
         private fun toOrderRequestJson(orderRequest: OrderRequest) : JSONObject{
             val jsonOrder = JSONObject()
+            jsonOrder.put("name", orderRequest.name)
             jsonOrder.put("order_type", orderRequest.orderType)
             val jsonOrderProductArray = JSONArray()
             for (prod in orderRequest.orderProduct.products) {
@@ -231,6 +163,7 @@ class OrderService(private val requestHandler: RequestHandler) {
             }
 
             jsonOrder.put("ordered_products", jsonOrderProductArray)
+
             // Payment method
             val paymentMethod: String? = if (orderRequest.paymentMethod == null)
                 null
@@ -241,9 +174,11 @@ class OrderService(private val requestHandler: RequestHandler) {
         }
     }
 
-    class OrderRequest(val orderType: String,
-                       val orderProduct: OrderProductRequest,
-                       val paymentMethod: Order.PAYMENT_METHOD?)
+    class OrderRequest(
+        val name: String,
+        val orderType: String,
+        val orderProduct: OrderProductRequest,
+        val paymentMethod: Order.PAYMENT_METHOD?)
 
     class OrderProductRequest(val products: MutableList<OrderedProduct>)
 }

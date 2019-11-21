@@ -141,19 +141,12 @@ class OrderDetailActivity : AppCompatActivity() {
             orderOwner.text = String.format("%s", owner)
         }
 
-        order_number.text = String.format("Pedido Nro. %s", order.getNumber().toString())
-
-        val orderType= findViewById<TextView>(R.id.order_type)
-        orderType.text = String.format("%s", order.getType())
-
-        val orderStatus = findViewById<TextView>(R.id.order_name)
-        orderStatus.text = String.format("%s", getStatusLabel(order.getStatus()))
+        order_name.text = order.getName()
 
         setupProductsLayout()
         products_list.adapter = OrderDetailProductsAdapter(order.getProducts())
 
-        val orderPlace = findViewById<TextView>(R.id.order_payment_method)
-        orderPlace.text = String.format("%s", order.getPlace().name)
+        order_place_name.text = order.getPlace().name
 
         // ui logic
         if (order.getStatus() != Order.STATUS.CANCELLED_STATUS || !order.getIdChat().isNullOrEmpty()) {

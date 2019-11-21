@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/order_row_context"
     android:layout_width="match_parent"
@@ -11,15 +10,17 @@
     tools:context=".ui.OrderRowView">
 
     <TextView
-        android:id="@+id/order_row_header"
+        android:id="@+id/order_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
         android:textSize="20sp"/>
 
     <TextView
-        android:id="@+id/order_row_detail"
+        android:id="@+id/order_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textStyle="bold"
         android:textSize="14sp"/>
 
 </LinearLayout>

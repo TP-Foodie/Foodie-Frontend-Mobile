@@ -8,7 +8,7 @@
     tools:context=".ui.OrderDetailActivity">
 
     <TextView
-        android:id="@+id/order_number"
+        android:id="@+id/order_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
@@ -27,7 +27,7 @@
         android:layout_marginTop="24dp"
         android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/order_number">
+        app:layout_constraintTop_toBottomOf="@id/order_name">
 
         <RelativeLayout
             android:id="@+id/rl_owner"
@@ -58,51 +58,24 @@
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/rl_type"
+            android:id="@+id/rl_place_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/type_title"
+                android:id="@+id/place_name_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="12dp"
-                android:text="@string/type_title"
+                android:text="@string/place_name_title"
                 android:textSize="14sp" />
 
             <TextView
-                android:id="@+id/order_type"
+                android:id="@+id/order_place_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/type_title"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp"
-                android:textColor="@android:color/white"
-                android:textSize="18sp" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/rl_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/name_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="12dp"
-                android:text="@string/name_title"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/order_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/name_title"
+                android:layout_below="@id/place_name_title"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="12dp"
@@ -132,33 +105,6 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="12dp"
                 android:layout_below="@id/products_title" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/rl_payment_method"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/payment_method_title"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="12dp"
-                android:text="@string/payment_method_title"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/order_payment_method"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/payment_method_title"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp"
-                android:textColor="@android:color/white"
-                android:textSize="18sp" />
 
         </RelativeLayout>
 

@@ -4,6 +4,7 @@ class Order(val id: String){
     private var status: STATUS? = null
     private var type: String? = null
     private var number: Int? = null
+    private var name: String? = null
     private lateinit var ordered_products: List<OrderedProduct>
     private var owner: User? = null
     private var delivery: DeliveryUser? = null
@@ -82,6 +83,15 @@ class Order(val id: String){
 
     fun setNumber(number: Int): Order{
         this.number = number
+        return this
+    }
+
+    fun getName(): String? {
+        return this.name
+    }
+
+    fun setName(name: String): Order {
+        this.name = name
         return this
     }
 
