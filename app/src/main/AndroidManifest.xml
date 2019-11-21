@@ -57,7 +57,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAKGbgumg6fjr4839UFBarjoVS2HOwGCvY" />
 
-        <activity android:name=".ui.OrderDetailActivity" />
+        <activity android:name=".ui.OrderDetailActivity"
+            android:parentActivityName=".ui.OrderDetailActivity" />
+
+        <activity android:name=".ui.FollowDeliveryActivity" />
         <activity android:name=".ui.WelcomeActivity" />
         <activity android:name=".ui.LauncherActivity">
             <intent-filter>

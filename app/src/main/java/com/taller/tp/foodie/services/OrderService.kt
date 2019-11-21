@@ -135,7 +135,6 @@ class OrderService(private val requestHandler: RequestHandler) {
 
         private fun buildAssignChatRequest(chat: ChatFetched): JSONObject {
             val jsonRequest = JSONObject()
-            jsonRequest.put("status", Order.STATUS.TAKEN_STATUS.key)
             jsonRequest.put("id_chat", chat.id)
             return jsonRequest
         }

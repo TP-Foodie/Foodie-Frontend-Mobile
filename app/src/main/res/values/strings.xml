@@ -80,5 +80,6 @@
     <string name="place_title">Lugar</string>
     <string name="btn_change_profile">Editar</string>
     <string name="btn_confirm_changes">Confirmar</string>
+    <string name="follow_deliver">Mapa</string>
 
 </resources>

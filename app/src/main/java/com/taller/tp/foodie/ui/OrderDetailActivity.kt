@@ -38,12 +38,21 @@ class OrderDetailActivity : AppCompatActivity() {
         val confirmDeliveryButton = findViewById<Button>(R.id.confirm_delivery_button)
         confirmDeliveryButton.setOnClickListener { confirmDeliveryButtonListener() }
 
+        val followDeliveryButton = findViewById<Button>(R.id.follow_delivery)
+        followDeliveryButton.setOnClickListener { followDeliveryListener() }
+
         btn_chat.setOnClickListener {
             val intent = Intent(applicationContext, ChatActivity::class.java)
             intent.putExtra(ChatActivity.CHAT_ID, order?.getIdChat())
             intent.putExtra(ChatActivity.ORDER_STATUS, order?.getStatus()?.key)
             startActivity(intent)
         }
+    }
+
+    private fun followDeliveryListener() {
+        val intent = Intent(applicationContext, FollowDeliveryActivity::class.java)
+        intent.putExtra("delivery_id", order!!.getDelivery()!!.id)
+        startActivity(intent)
     }
 
     private fun confirmDeliveryButtonListener() {
@@ -73,6 +82,8 @@ class OrderDetailActivity : AppCompatActivity() {
     private fun setupActions() {
         if (userType == User.USER_TYPE.DELIVERY && order?.getStatus() == Order.STATUS.TAKEN_STATUS) {
             confirm_delivery_button.visibility = View.VISIBLE
+        } else if (order?.getStatus() == Order.STATUS.TAKEN_STATUS) {
+            follow_delivery.visibility = View.VISIBLE
         }
 
         if (order?.getStatus() != Order.STATUS.WAITING_STATUS) {

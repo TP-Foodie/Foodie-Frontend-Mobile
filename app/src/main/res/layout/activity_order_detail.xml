@@ -179,6 +179,17 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
+        android:id="@+id/follow_delivery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:text="@string/follow_deliver"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btn_chat"
+        app:layout_constraintStart_toEndOf="@+id/confirm_delivery_button" />
+
+    <Button
         android:id="@+id/btn_chat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
