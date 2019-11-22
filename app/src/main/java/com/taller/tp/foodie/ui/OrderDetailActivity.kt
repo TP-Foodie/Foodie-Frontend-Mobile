@@ -7,7 +7,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.taller.tp.foodie.R
@@ -135,10 +134,38 @@ class OrderDetailActivity : AppCompatActivity() {
 
         if (userType == User.USER_TYPE.DELIVERY) {
             rl_owner.visibility = View.VISIBLE
-            val orderOwner = findViewById<TextView>(R.id.order_owner)
-            val owner = if (order.getOwner() == null) "" else
-                String.format("%s %s", order.getOwner()!!.name, order.getOwner()!!.lastName)
-            orderOwner.text = String.format("%s", owner)
+            owner_name.text = order.getOwner()!!.name
+            owner_image.setImageURI(order.getOwner()?.image)
+
+            val priceLabel = "Envío: $%.2f"
+            quotation_price.visibility = View.VISIBLE
+            quotation_price.text = String.format(priceLabel, order.getQuotation())
+
+            var totalPrice = 0.0
+            totalPrice += order.getQuotation()!!
+            for (prod in order.getProducts()) {
+                totalPrice += (prod.quantity * prod.productFetched.price)
+            }
+            val totalPriceLabel = "Total: $%.2f"
+            total_price.visibility = View.VISIBLE
+            total_price.text = String.format(totalPriceLabel, totalPrice)
+        } else if (userType == User.USER_TYPE.CUSTOMER && order.getDelivery() != null) {
+            rl_delivery.visibility = View.VISIBLE
+            delivery_name.text = order.getDelivery()!!.name
+            delivery_image.setImageURI(order.getDelivery()?.image)
+
+            val priceLabel = "Envío: $%.2f"
+            quotation_price.visibility = View.VISIBLE
+            quotation_price.text = String.format(priceLabel, order.getQuotation())
+
+            var totalPrice = 0.0
+            totalPrice += order.getQuotation()!!
+            for (prod in order.getProducts()) {
+                totalPrice += (prod.quantity * prod.productFetched.price)
+            }
+            val totalPriceLabel = "Total: $%.2f"
+            total_price.visibility = View.VISIBLE
+            total_price.text = String.format(totalPriceLabel, totalPrice)
         }
 
         order_name.text = order.getName()
@@ -155,15 +182,6 @@ class OrderDetailActivity : AppCompatActivity() {
 
         with(findViewById<Button>(R.id.order_actions_button)) {
             registerForContextMenu(this)
-        }
-    }
-
-    private fun getStatusLabel(status: Order.STATUS): String{
-        return when (status) {
-            Order.STATUS.WAITING_STATUS -> getString(R.string.waiting_status_label)
-            Order.STATUS.TAKEN_STATUS -> getString(R.string.taken_status_label)
-            Order.STATUS.CANCELLED_STATUS -> getString(R.string.cancelled_status_label)
-            Order.STATUS.DELIVERED_STATUS -> getString(R.string.delivered_status_label)
         }
     }
 

@@ -79,10 +79,6 @@
     <string name="btn_change_profile">Editar</string>
     <string name="btn_confirm_changes">Confirmar</string>
     <string name="order_price_label">$%.2f</string>
-    <string name="waiting_status_label">En espera</string>
-    <string name="taken_status_label">En viaje</string>
-    <string name="cancelled_status_label">Cancelado</string>
-    <string name="delivered_status_label">Entregado</string>
     <string name="productos">Productos</string>
     <string name="decrement_button">-</string>
     <string name="increment_button">+</string>
@@ -92,6 +88,7 @@
     <string name="choose_delivery_hint">Elige un delivery</string>
     <string name="choose_place_hint">Elige tu restaurante favorito</string>
     <string name="order_name_title">Nombre</string>
+    <string name="delivery_title">Delivery</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 

@@ -3,7 +3,6 @@ package com.taller.tp.foodie.ui
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
@@ -117,7 +116,7 @@ class ConfirmOrderActivity : AppCompatActivity(),
     fun onMarkerSetDetail(delivery: User) {
         choose_delivery_hint.visibility = View.GONE
         delivery_name.visibility = View.VISIBLE
-        delivery_name.text = delivery.name
+        delivery_name.text = String.format("%s %s", delivery.name, delivery.lastName)
         delivery_reputation.visibility = View.VISIBLE
         delivery_reputation.rating = delivery.reputation?.toFloat()!!
         delivery_image.visibility = View.VISIBLE
@@ -151,9 +150,9 @@ class ConfirmOrderActivity : AppCompatActivity(),
     }
 
     fun updatePrice(price: Double) {
-        val orderPriceText = findViewById<TextView>(R.id.order_price)
+        order_price.visibility = View.VISIBLE
         val priceLabel = getString(R.string.order_price_label)
-        orderPriceText.text = String.format(priceLabel, price)
+        order_price.text = String.format(priceLabel, price)
         pendingOrder!!.setQuotation(price)
     }
 

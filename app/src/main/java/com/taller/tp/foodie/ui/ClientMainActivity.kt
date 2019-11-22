@@ -30,7 +30,6 @@ import com.taller.tp.foodie.services.PlaceService
 import com.taller.tp.foodie.services.ProfileService
 import com.taller.tp.foodie.services.UserService
 import kotlinx.android.synthetic.main.activity_client_main.*
-import org.json.JSONObject
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 import java.lang.ref.WeakReference
@@ -39,7 +38,6 @@ import kotlin.collections.set
 
 const val REQUEST_CODE_LOCATION = 123
 const val INIT_ZOOM_LEVEL = 13f
-const val CLIENT_NEW_ORDER_KEY = "CLIENT_NEW_ORDER"
 const val CLIENT_TYPE_KEY = "CLIENT_TYPE_KEY"
 
 class ClientMainActivity : AppCompatActivity(),
@@ -224,14 +222,11 @@ class ClientMainActivity : AppCompatActivity(),
 
     override fun onMarkerDrag(marker : Marker) {}
 
-    fun saveAndChooseDelivery(response: JSONObject) {
-        val intent = Intent(this, ConfirmOrderActivity::class.java).apply {
-            putExtra(CLIENT_NEW_ORDER_KEY, response.toString())
-        }
-        startActivity(intent)
-    }
-
     fun loadUserTypeComponents(user: User) {
         userType = user.type
+
+        if (userType == User.USER_TYPE.CUSTOMER) {
+            place_layout.visibility = View.VISIBLE
+        }
     }
 }
