@@ -16,6 +16,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".ui.OrderDataActivity"></activity>
+        <activity android:name=".ui.ProductsActivity" />
         <activity android:name=".ui.ChangeProfileActivity" />
         <activity android:name=".ui.ChatActivity" />
 
@@ -121,8 +123,6 @@
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" /> <!-- optional (needed if default theme has no action bar) -->
-
-
         <activity
             android:name=".ui.RecoveryPasswordActivity"
             android:parentActivityName=".ui.TokenActivity" />
