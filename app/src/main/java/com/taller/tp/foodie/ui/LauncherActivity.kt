@@ -4,10 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.taller.tp.foodie.R
-import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import com.taller.tp.foodie.model.requestHandlers.CheckRegistrationRequestHandler
 import com.taller.tp.foodie.services.AuthService
-import com.taller.tp.foodie.services.TrackingService
 import com.taller.tp.foodie.services.UserService
 import java.lang.ref.WeakReference
 

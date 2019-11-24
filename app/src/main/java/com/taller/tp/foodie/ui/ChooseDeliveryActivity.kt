@@ -130,7 +130,7 @@ class ChooseDeliveryActivity : AppCompatActivity(),
         val delivery = markerPlaceMap[marker]
         val deliveryId = delivery!!.id!!
         val getDeliveryDetail = AvailableDeliveryRequestHandler(this).forDetail(deliveryId)
-        ProfileService(getDeliveryDetail).getOtherUserForChat(deliveryId)
+        ProfileService(getDeliveryDetail).getOtherUser(deliveryId)
         return false
     }
 

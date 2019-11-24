@@ -25,7 +25,6 @@ class TrackingService : IntentService("TrackingService") {
 
         while (UserService.isUserLoggedIn()) {
             try {
-                Log.e("Info", "Processing: $processing")
                 if (!processing){
                     fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
                         if (location != null && location != cachedLocation) {
@@ -45,18 +44,15 @@ class TrackingService : IntentService("TrackingService") {
 
     private class TrackingRequestHandler(val trackingService: TrackingService) : RequestHandler {
         override fun begin() {
-            Log.e("Info", "Setting processing to true")
             this.trackingService.processing = true
         }
 
         override fun onSuccess(response: JSONObject?) {
-            Log.e("Info", "Setting processing to false")
             this.trackingService.error = false
             this.trackingService.processing = false
         }
 
         override fun onError(error: VolleyError) {
-            Log.e("Info", "Setting processing to false")
             this.trackingService.error = true
             this.trackingService.processing = false
         }

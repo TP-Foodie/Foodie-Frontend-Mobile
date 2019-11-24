@@ -31,6 +31,7 @@
         </service>
 
         <service android:name="com.taller.tp.foodie.services.TrackingService"></service>
+        <service android:name="com.taller.tp.foodie.ui.TrackingDeliveryService"></service>
 
 
         <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.
