@@ -7,16 +7,16 @@ import com.google.gson.Gson
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.ErrorHandler
 import com.taller.tp.foodie.model.Order
-import com.taller.tp.foodie.ui.ChooseDeliveryActivity
+import com.taller.tp.foodie.ui.ConfirmOrderActivity
 import org.json.JSONObject
 
 
-class AssignOrderDeliveryRequestHandler(private val activity: ChooseDeliveryActivity) : RequestHandler {
+class AssignOrderDeliveryRequestHandler(private val activity: ConfirmOrderActivity) : RequestHandler {
     override fun begin() {}
 
     override fun onError(error: VolleyError) {
         Log.e("AssignOrderDeliveryReq", "Volley error: " + error.localizedMessage)
-        ErrorHandler.handleError(activity.findViewById<View>(R.id.choose_delivery_context))
+        ErrorHandler.handleError(activity.findViewById<View>(R.id.confirm_order_context))
     }
 
     override fun onSuccess(response: JSONObject?) {

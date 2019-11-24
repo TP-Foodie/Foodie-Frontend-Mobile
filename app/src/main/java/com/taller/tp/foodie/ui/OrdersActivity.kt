@@ -28,11 +28,17 @@ class OrdersActivity : AppCompatActivity(),
     private var selectedTab: TAB = TAB.PENDING
     private val pendingStatus = intArrayOf(Order.STATUS.WAITING_STATUS.ordinal,
                                             Order.STATUS.TAKEN_STATUS.ordinal)
-    private val completedStatus = intArrayOf(Order.STATUS.DELIVERED_STATUS.ordinal)
+    private val completedStatus = intArrayOf(Order.STATUS.DELIVERED_STATUS.ordinal,
+                                                Order.STATUS.CANCELLED_STATUS.ordinal)
 
     lateinit var userType: User.USER_TYPE
 
     private var allOrders: List<Order> = ArrayList()
+
+    override fun onResume() {
+        super.onResume()
+        loadOrdersData()
+    }
 
     private fun loadUserType() {
         val intentUserType = intent.getStringExtra(CLIENT_TYPE_KEY)
@@ -42,6 +48,10 @@ class OrdersActivity : AppCompatActivity(),
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_orders)
+        loadOrdersData()
+    }
+
+    private fun loadOrdersData() {
         loadUserType()
 
         val tabs = findViewById<TabLayout>(R.id.order_list_tabs)

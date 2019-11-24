@@ -2,6 +2,9 @@ package com.taller.tp.foodie.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.ContextMenu
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.Button
 import android.widget.TextView
@@ -19,6 +22,8 @@ class OrderDetailActivity : AppCompatActivity() {
     private var order: Order? = null
     private lateinit var userType: User.USER_TYPE
 
+    private var updateIsUnassign = false
+
     private fun loadUserType() {
         val intentUserType = intent.getStringExtra(CLIENT_TYPE_KEY)
         this.userType = User.USER_TYPE.valueOf(intentUserType)
@@ -35,29 +40,82 @@ class OrderDetailActivity : AppCompatActivity() {
             OrderService(OrderDetailRequestHandler(this)).find(orderId)
         }
 
-        val confirmDeliveryButton = findViewById<Button>(R.id.confirm_delivery_button)
-        confirmDeliveryButton.setOnClickListener { confirmDeliveryButtonListener() }
+    }
 
-        val followDeliveryButton = findViewById<Button>(R.id.follow_delivery)
-        followDeliveryButton.setOnClickListener { followDeliveryListener() }
-
-        btn_chat.setOnClickListener {
-            val intent = Intent(applicationContext, ChatActivity::class.java)
-            intent.putExtra(ChatActivity.CHAT_ID, order?.getIdChat())
-            intent.putExtra(ChatActivity.ORDER_STATUS, order?.getStatus()?.key)
-            startActivity(intent)
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        val deliverOption = menu!!.getItem(0).setVisible(false)
+        val unassignOption = menu.getItem(1).setVisible(false)
+        val assignOption = menu.getItem(2).setVisible(false)
+        val cancelOption = menu.getItem(3).setVisible(false)
+        val chatOption = menu.getItem(4).setVisible(false)
+        when(order!!.getStatus()){
+            Order.STATUS.WAITING_STATUS -> {
+                if (userType == User.USER_TYPE.CUSTOMER) {
+                    cancelOption.isVisible = true
+                    assignOption.isVisible = true
+                }
+            }
+            Order.STATUS.TAKEN_STATUS -> {
+                chatOption.isVisible = true
+                if (userType == User.USER_TYPE.CUSTOMER)
+                    cancelOption.isVisible = true
+                else {
+                    deliverOption.isVisible = true
+                    unassignOption.isVisible = true
+                }
+            }
+            Order.STATUS.DELIVERED_STATUS, Order.STATUS.CANCELLED_STATUS -> {
+                chatOption.isVisible = true
+            }
         }
+        return true
     }
 
-    private fun followDeliveryListener() {
-        val intent = Intent(applicationContext, FollowDeliveryActivity::class.java)
-        intent.putExtra("delivery_id", order!!.getDelivery()!!.id)
-        startActivity(intent)
+    override fun onCreateContextMenu(
+        menu: ContextMenu?,
+        v: View?,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+        val inflater = menuInflater
+        inflater.inflate(R.menu.order_action_menu, menu)
+        onPrepareOptionsMenu(menu)
     }
 
-    private fun confirmDeliveryButtonListener() {
-        OrderService(OrderDetailRequestHandler(this).forUpdate())
-            .updateStatus(order!!, Order.STATUS.DELIVERED_STATUS)
+    override fun onContextItemSelected(item: MenuItem?): Boolean {
+        when (item!!.itemId){
+            R.id.deliver_order_option -> {
+                OrderService(OrderDetailRequestHandler(this).forUpdate())
+                    .deliverOrder(order!!)
+                return true
+            }
+            R.id.unassign_order_option -> {
+                OrderService(OrderDetailRequestHandler(this).forUpdate())
+                    .unassignOrder(order!!)
+                updateIsUnassign = true
+                return true
+            }
+            R.id.assign_order_option -> {
+                val intent = Intent(this, ConfirmOrderActivity::class.java).apply {
+                    putExtra(CLIENT_NEW_ORDER_KEY, OrderService.toJson(order!!).toString())
+                }
+                startActivity(intent)
+                return true
+            }
+            R.id.cancel_order_option -> {
+                OrderService(OrderDetailRequestHandler(this).forUpdate())
+                    .cancelOrder(order!!)
+                return true
+            }
+            R.id.chat_order_option -> {
+                val intent = Intent(applicationContext, ChatActivity::class.java)
+                intent.putExtra(ChatActivity.CHAT_ID, order?.getIdChat())
+                intent.putExtra(ChatActivity.ORDER_STATUS, order?.getStatus()?.key)
+                startActivity(intent)
+                return true
+            }
+            else -> return false
+        }
     }
 
     fun populateFields(order: Order) {
@@ -71,24 +129,50 @@ class OrderDetailActivity : AppCompatActivity() {
         val orderType= findViewById<TextView>(R.id.order_type)
         orderType.text = String.format("%s", order.getType())
         val orderStatus = findViewById<TextView>(R.id.order_status)
-        orderStatus.text = String.format("%s", order.getStatus())
+        orderStatus.text = String.format("%s", getStatusLabel(order.getStatus()))
         val orderProduct = findViewById<TextView>(R.id.order_product)
         orderProduct.text = String.format("%s", order.getProduct())
         val orderPlace = findViewById<TextView>(R.id.order_place)
         orderPlace.text = String.format("%s", order.getPlace().name)
-        setupActions()
-    }
 
-    private fun setupActions() {
-        if (userType == User.USER_TYPE.DELIVERY && order?.getStatus() == Order.STATUS.TAKEN_STATUS) {
-            confirm_delivery_button.visibility = View.VISIBLE
-        } else if (order?.getStatus() == Order.STATUS.TAKEN_STATUS) {
-            follow_delivery.visibility = View.VISIBLE
+        val followDeliveryButton = findViewById<Button>(R.id.follow_delivery)
+        followDeliveryButton.setOnClickListener { followDeliveryListener() }
+
+        // ui logic
+        if (order.getStatus() != Order.STATUS.CANCELLED_STATUS || !order.getIdChat().isNullOrEmpty()) {
+            order_actions_button.visibility = View.VISIBLE
         }
 
-        if (order?.getStatus() != Order.STATUS.WAITING_STATUS) {
-            btn_chat.visibility = View.VISIBLE
+        if (order.getStatus() == Order.STATUS.TAKEN_STATUS) {
+            followDeliveryButton.visibility = View.VISIBLE
+        }
+
+        with(findViewById<Button>(R.id.order_actions_button)) {
+            registerForContextMenu(this)
         }
     }
 
+    private fun followDeliveryListener() {
+        val intent = Intent(applicationContext, FollowDeliveryActivity::class.java)
+        intent.putExtra("delivery_id", order!!.getDelivery()!!.id)
+        startActivity(intent)
+    }
+
+    private fun getStatusLabel(status: Order.STATUS): String{
+        return when (status) {
+            Order.STATUS.WAITING_STATUS -> getString(R.string.waiting_status_label)
+            Order.STATUS.TAKEN_STATUS -> getString(R.string.taken_status_label)
+            Order.STATUS.CANCELLED_STATUS -> getString(R.string.cancelled_status_label)
+            Order.STATUS.DELIVERED_STATUS -> getString(R.string.delivered_status_label)
+        }
+    }
+
+    fun onUpdateSuccess() {
+        if (updateIsUnassign) {
+            onBackPressed()
+        } else {
+            finish()
+            startActivity(intent)
+        }
+    }
 }

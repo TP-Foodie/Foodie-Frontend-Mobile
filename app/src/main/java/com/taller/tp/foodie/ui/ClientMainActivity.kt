@@ -330,7 +330,7 @@ class ClientMainActivity : AppCompatActivity(),
     override fun onMarkerDrag(marker : Marker) {}
 
     fun saveAndChooseDelivery(response: JSONObject) {
-        val intent = Intent(this, ChooseDeliveryActivity::class.java).apply {
+        val intent = Intent(this, ConfirmOrderActivity::class.java).apply {
             putExtra(CLIENT_NEW_ORDER_KEY, response.toString())
         }
         startActivity(intent)

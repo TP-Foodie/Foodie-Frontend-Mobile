@@ -41,18 +41,20 @@ class UserService(private val requestHandler: RequestHandler) {
 
         fun fromUserJson(json: JSONObject): User{
             val id = json.getString("id")
-            val email = json.getString("email")
-            val lastName = json.getString("last_name")
+            val email = json.optString("email", "")
+            val lastName = json.optString("last_name", "")
             val type = json.getString("type")
             val name = json.getString("name")
             val phone = json.optString("phone", null)
             val image = json.getString("profile_image")
+            val reputation = json.optInt("reputation", 0)
 
             return User(id, name, image)
                 .setType(type)
                 .setEmail(email)
                 .setLastName(lastName)
                 .setPhone(phone)
+                .setReputation(reputation)
         }
 
         fun isUserLoggedIn(): Boolean {

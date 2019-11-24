@@ -45,7 +45,7 @@
     <string name="location">Necesitamos acceder a tu ubicación</string>
     <string name="order_as_favour">Pedir como favor</string>
     <string name="orders">Pedidos</string>
-    <string name="choose_delivery">Elegir Delivery</string>
+    <string name="confirm_order">Completar Pedido</string>
     <string name="delivery_photo">Foto del Delivery</string>
     <string name="general_success">Operación Exitosa!</string>
     <string name="default_notification_channel_id">default notification channel</string>
@@ -67,12 +67,16 @@
     <string name="pending_orders">Pendientes</string>
     <string name="completed_orders">Completadas</string>
     <string name="loading_orders">Cargando Pedidos..</string>
+    <string name="order_actions">Acciones</string>
     <string name="deliver_order">Entregar</string>
+    <string name="unassign_order">Desasignarme</string>
+    <string name="assign_order">Asignar Delivery</string>
+    <string name="cancel_order">Cancelar Pedido</string>
+    <string name="chat_order">Chat</string>
     <string name="empty_order_list">No hay Pedidos</string>
     <string name="payment_method_label">Método de pago</string>
     <string name="cash_method_label">Pago Efectivo</string>
     <string name="card_method_label">Pago con Tarjeta</string>
-    <string name="btn_chat">Chat</string>
     <string name="owner_title">Propietario</string>
     <string name="type_title">Tipo</string>
     <string name="status_title">Estado</string>
@@ -81,5 +85,12 @@
     <string name="btn_change_profile">Editar</string>
     <string name="btn_confirm_changes">Confirmar</string>
     <string name="follow_deliver">Mapa</string>
+    <string name="order_price_label">$%.2f</string>
+    <string name="waiting_status_label">En espera</string>
+    <string name="taken_status_label">En viaje</string>
+    <string name="cancelled_status_label">Cancelado</string>
+    <string name="delivered_status_label">Entregado</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
 
 </resources>

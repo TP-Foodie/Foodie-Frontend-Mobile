@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/confirm_order_context"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/map_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:ignore="UselessParent">
+
+        <fragment
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".ui.ClientMainActivity" />
+
+        <LinearLayout
+            android:id="@+id/order_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="594dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/dummy"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:orientation="horizontal" />
+
+            <LinearLayout
+                android:id="@+id/dummy2"
+                android:layout_width="417dp"
+                android:layout_height="325dp">
+
+                <LinearLayout
+                    android:id="@+id/order_price_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:drawable/dialog_holo_light_frame"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/order_price"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:textColor="@android:color/background_dark"
+                        android:paddingLeft="5dp"
+                        android:paddingRight="5dp"
+                        android:textSize="20sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/delivery_layout"
+                android:layout_width="359dp"
+                android:layout_height="187dp"
+                android:background="@android:drawable/dialog_holo_light_frame"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:id="@+id/image_layout"
+                        android:layout_width="126dp"
+                        android:layout_height="164dp"
+                        android:orientation="horizontal">
+
+                        <com.facebook.drawee.view.SimpleDraweeView
+                            android:id="@+id/delivery_photo"
+                            android:layout_width="80dp"
+                            android:layout_height="80dp"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginTop="16dp"
+                            android:contentDescription="@string/delivery_photo" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/delivery_info_layout"
+                        android:layout_width="158dp"
+                        android:layout_height="match_parent"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:id="@+id/dummy_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="55dp"
+                                android:orientation="vertical" />
+
+                            <TextView
+                                android:id="@+id/delivery_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center"
+                                android:paddingLeft="5dp"
+                                android:paddingRight="5dp"
+                                android:textColor="@android:color/background_dark" />
+
+                            <TextView
+                                android:id="@+id/delivery_rep"
+                                android:layout_width="match_parent"
+                                android:layout_height="50dp"
+                                android:layout_gravity="center"
+                                android:paddingLeft="5dp"
+                                android:paddingRight="5dp"
+                                android:textColor="@android:color/background_dark" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="169dp"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/dummy_confirm"
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            android:orientation="vertical" />
+
+                        <Button
+                            android:id="@+id/confirm_delivery_button"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@android:string/ok" />
+                    </LinearLayout>
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+    </FrameLayout>
+</LinearLayout>

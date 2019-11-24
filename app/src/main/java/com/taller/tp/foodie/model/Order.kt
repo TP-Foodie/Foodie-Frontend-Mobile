@@ -8,6 +8,7 @@ class Order(val id: String){
     private var owner: User? = null
     private var delivery: DeliveryUser? = null
     private var id_chat: String? = null
+    private var quotation: Double? = null
 //    private var paymentMethod: PAYMENT_METHOD = PAYMENT_METHOD.CPM
 
     enum class PAYMENT_METHOD {
@@ -17,7 +18,8 @@ class Order(val id: String){
     enum class STATUS(val key: String) {
         TAKEN_STATUS("TS"),
         WAITING_STATUS("WS"),
-        DELIVERED_STATUS("DS");
+        DELIVERED_STATUS("DS"),
+        CANCELLED_STATUS("CS");
 
         companion object{
             fun fromKey(key: String?): STATUS {
@@ -25,6 +27,7 @@ class Order(val id: String){
                     "TS" -> return TAKEN_STATUS
                     "WS" -> return WAITING_STATUS
                     "DS" -> return DELIVERED_STATUS
+                    "CS" -> return CANCELLED_STATUS
                 }
                 throw RuntimeException("Unreachable")
             }
@@ -104,12 +107,12 @@ class Order(val id: String){
         return this.id_chat
     }
 
-//    fun getPaymentMethod(): String{
-//        return paymentMethod.label
-//    }
-//
-//    fun setPaymentMethod(paymentMethod: String): Order{
-//        this.paymentMethod = PAYMENT_METHOD.valueOf(paymentMethod)
-//        return this
-//    }
+    fun getQuotation(): Double?{
+        return quotation
+    }
+
+    fun setQuotation(quotation: Double): Order{
+        this.quotation = quotation
+        return this
+    }
 }
