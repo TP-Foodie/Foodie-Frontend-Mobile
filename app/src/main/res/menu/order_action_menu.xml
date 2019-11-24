@@ -21,4 +21,7 @@
     <item
         android:id="@+id/chat_order_option"
         android:title="@string/chat_order" />
+    <item
+        android:id="@+id/follow_delivery"
+        android:title="@string/follow_deliver" />
 </menu>
