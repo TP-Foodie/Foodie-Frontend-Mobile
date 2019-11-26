@@ -37,16 +37,11 @@
     <string name="btn_signout">Sign Out</string>
 
 
-    <string name="build_order_btn">Pedir</string>
     <string name="profile_btn">Perfil</string>
-    <string name="delivery_what">Que querés pedir?</string>
-    <string name="delivery_place">Elegí donde lo buscamos</string>
     <string name="map_place_choice">Pedido</string>
     <string name="location">Necesitamos acceder a tu ubicación</string>
-    <string name="order_as_favour">Pedir como favor</string>
     <string name="orders">Pedidos</string>
     <string name="confirm_order">Completar Pedido</string>
-    <string name="delivery_photo">Foto del Delivery</string>
     <string name="general_success">Operación Exitosa!</string>
     <string name="default_notification_channel_id">default notification channel</string>
     <string name="chat_message_margin">a</string>
@@ -78,17 +73,22 @@
     <string name="cash_method_label">Pago Efectivo</string>
     <string name="card_method_label">Pago con Tarjeta</string>
     <string name="owner_title">Propietario</string>
-    <string name="type_title">Tipo</string>
-    <string name="status_title">Estado</string>
-    <string name="product_title">Producto</string>
-    <string name="place_title">Lugar</string>
+    <string name="place_name_title">Lugar</string>
+    <string name="products_title">Productos</string>
+    <string name="payment_method_title">Método de Pago</string>
     <string name="btn_change_profile">Editar</string>
     <string name="btn_confirm_changes">Confirmar</string>
     <string name="order_price_label">$%.2f</string>
-    <string name="waiting_status_label">En espera</string>
-    <string name="taken_status_label">En viaje</string>
-    <string name="cancelled_status_label">Cancelado</string>
-    <string name="delivered_status_label">Entregado</string>
+    <string name="productos">Productos</string>
+    <string name="decrement_button">-</string>
+    <string name="increment_button">+</string>
+    <string name="favour_method_label">Favor</string>
+    <string name="confirm_order_btn">Confirmar Pedido</string>
+    <string name="confirm_delivery">Confirmar Delivery</string>
+    <string name="choose_delivery_hint">Elige un delivery</string>
+    <string name="choose_place_hint">Elige tu restaurante favorito</string>
+    <string name="order_name_title">Nombre</string>
+    <string name="delivery_title">Delivery</string>
 
     <!-- TODO: Remove or change this placeholder text -->
 

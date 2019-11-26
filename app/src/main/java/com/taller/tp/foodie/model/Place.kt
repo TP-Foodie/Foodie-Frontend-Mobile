@@ -1,15 +1,8 @@
 package com.taller.tp.foodie.model
 
-class Place(val name: String, val coordinate: Coordinate){
-    private var id: String? = null
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-    fun setId(id: String): Place{
-        this.id = id
-        return this
-    }
-
-    fun getId(): String{
-        return id!!
-    }
-
-}
+@Parcelize
+data class Place(val id: String, val name: String, val coordinate: Coordinate, val image: String) :
+    Parcelable
