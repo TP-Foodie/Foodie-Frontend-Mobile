@@ -30,7 +30,7 @@ open class OrderDetailRequestHandler(private val activity: OrderDetailActivity) 
         when(op){
             OPERATION.GET -> {
                 val order = OrderService.fromOrderJson(response!!, withDetail = true)
-                activity.populateFields(order)
+                activity.populateFields(order, response)
             }
             OPERATION.UPDATE -> {
                 activity.onUpdateSuccess()
