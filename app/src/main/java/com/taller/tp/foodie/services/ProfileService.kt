@@ -31,8 +31,9 @@ class ProfileService(private val requestHandler: RequestHandler) {
 
         client.doGetObject(ME_RESOURCE, listener, errorListener)
     }
-  
-    fun getOtherUserForChat(idUser: String) {
+
+
+    fun getOtherUser(idUser: String) {
         // setup request handler
         requestHandler.begin()
 

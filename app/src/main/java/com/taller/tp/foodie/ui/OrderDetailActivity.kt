@@ -55,6 +55,8 @@ class OrderDetailActivity : AppCompatActivity() {
         val assignOption = menu.getItem(2).setVisible(false)
         val cancelOption = menu.getItem(3).setVisible(false)
         val chatOption = menu.getItem(4).setVisible(false)
+        val followDelivery = menu.getItem(5).setVisible(false)
+
         when(order!!.getStatus()){
             Order.STATUS.WAITING_STATUS -> {
                 if (userType == User.USER_TYPE.CUSTOMER) {
@@ -64,9 +66,10 @@ class OrderDetailActivity : AppCompatActivity() {
             }
             Order.STATUS.TAKEN_STATUS -> {
                 chatOption.isVisible = true
-                if (userType == User.USER_TYPE.CUSTOMER)
+                if (userType == User.USER_TYPE.CUSTOMER) {
                     cancelOption.isVisible = true
-                else {
+                    followDelivery.isVisible = true
+                } else {
                     deliverOption.isVisible = true
                     unassignOption.isVisible = true
                 }
@@ -118,6 +121,12 @@ class OrderDetailActivity : AppCompatActivity() {
                 val intent = Intent(applicationContext, ChatActivity::class.java)
                 intent.putExtra(ChatActivity.CHAT_ID, order?.getIdChat())
                 intent.putExtra(ChatActivity.ORDER_STATUS, order?.getStatus()?.key)
+                startActivity(intent)
+                return true
+            }
+            R.id.follow_delivery -> {
+                val intent = Intent(applicationContext, FollowDeliveryActivity::class.java)
+                intent.putExtra("delivery_id", order!!.getDelivery()!!.id)
                 startActivity(intent)
                 return true
             }
@@ -182,6 +191,7 @@ class OrderDetailActivity : AppCompatActivity() {
         if (order.getStatus() != Order.STATUS.CANCELLED_STATUS || !order.getIdChat().isNullOrEmpty()) {
             order_actions_button.visibility = View.VISIBLE
         }
+
 
         with(findViewById<Button>(R.id.order_actions_button)) {
             registerForContextMenu(this)

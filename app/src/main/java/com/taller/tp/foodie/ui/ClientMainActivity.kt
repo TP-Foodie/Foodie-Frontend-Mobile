@@ -1,6 +1,8 @@
 package com.taller.tp.foodie.ui
 
 import android.Manifest
+import android.app.ActivityManager
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.location.Location
@@ -28,6 +30,7 @@ import com.taller.tp.foodie.model.requestHandlers.ClientMainUserRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.ListPlacesRequestHandler
 import com.taller.tp.foodie.services.PlaceService
 import com.taller.tp.foodie.services.ProfileService
+import com.taller.tp.foodie.services.TrackingService
 import com.taller.tp.foodie.services.UserService
 import kotlinx.android.synthetic.main.activity_client_main.*
 import pub.devrel.easypermissions.AfterPermissionGranted
@@ -65,7 +68,24 @@ class ClientMainActivity : AppCompatActivity(),
         buildListeners()
 
         showSuccessfullOrderMessage()
+
+        if (!isTrackingServiceRunning()) {
+            Intent(this, TrackingService::class.java).also { intent ->
+                applicationContext.startService(intent)
+            }
+        }
     }
+
+    private fun isTrackingServiceRunning(): Boolean {
+        val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for (service in manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (TrackingService::class.java.simpleName == service.service.className) {
+                return true
+            }
+        }
+        return false
+    }
+
 
     private fun buildListeners() {
         val signOutButton = findViewById<Button>(R.id.btn_signout)
