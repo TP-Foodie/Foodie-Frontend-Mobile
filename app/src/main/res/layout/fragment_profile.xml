@@ -170,6 +170,15 @@
         android:layout_marginBottom="12dp"
         android:text="@string/btn_change_profile"
         android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/btn_signout"
+        app:layout_constraintEnd_toEndOf="@id/btn_signout"
+        app:layout_constraintStart_toStartOf="@id/btn_signout" />
+
+    <Button
+        android:id="@+id/btn_signout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/btn_signout"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

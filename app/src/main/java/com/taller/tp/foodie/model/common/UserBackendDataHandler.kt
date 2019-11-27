@@ -19,6 +19,7 @@ class UserBackendDataHandler {
         const val USER_DATA_RESOURCE_KEY = "userData"
 
         const val TOKEN = "token"
+        const val USER_TYPE = "userType"
     }
 
     /*
@@ -31,6 +32,16 @@ class UserBackendDataHandler {
             mContext.getSharedPreferences(USER_DATA_RESOURCE_KEY, Context.MODE_PRIVATE)
         with(sharedPreferences!!.edit()) {
             putString(TOKEN, token)
+            apply()
+        }
+    }
+
+    fun persistUserType(userType: String) {
+        val mContext = MyApplication.getContext()
+        val sharedPreferences =
+            mContext.getSharedPreferences(USER_DATA_RESOURCE_KEY, Context.MODE_PRIVATE)
+        with(sharedPreferences!!.edit()) {
+            putString(USER_TYPE, userType)
             apply()
         }
     }
@@ -48,6 +59,14 @@ class UserBackendDataHandler {
     }
 
 
+    fun getUserType(): String {
+        val mContext = MyApplication.getContext()
+        val sharedPreferences =
+            mContext.getSharedPreferences(USER_DATA_RESOURCE_KEY, Context.MODE_PRIVATE)
+
+        return sharedPreferences?.getString(USER_TYPE, "").toString()
+    }
+
     /*
      * Delete Data
      */
@@ -58,6 +77,7 @@ class UserBackendDataHandler {
             mContext.getSharedPreferences(USER_DATA_RESOURCE_KEY, Context.MODE_PRIVATE)
         with(sharedPreferences!!.edit()) {
             remove(TOKEN)
+            remove(USER_TYPE)
             apply()
         }
     }

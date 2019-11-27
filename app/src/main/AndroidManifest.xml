@@ -86,7 +86,7 @@
                 android:value=".ui.ClientMainActivity" />
         </activity>
         <activity
-            android:name=".ui.ProfileActivity"
+            android:name=".ui.ProfileFragment"
             android:label="@string/profile_btn"
             android:parentActivityName=".ui.ClientMainActivity">
             <meta-data
@@ -94,7 +94,7 @@
                 android:value=".ui.ClientMainActivity" />
         </activity>
         <activity
-            android:name=".ui.OrdersActivity"
+            android:name=".ui.OrdersFragment"
             android:label="@string/orders"
             android:parentActivityName=".ui.ClientMainActivity">
             <meta-data

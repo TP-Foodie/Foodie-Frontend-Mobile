@@ -4,23 +4,25 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.ListView
-import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.google.android.material.tabs.TabLayout
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.Order
 import com.taller.tp.foodie.model.User
+import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import com.taller.tp.foodie.model.requestHandlers.ListOrdersRequestHandler
 import com.taller.tp.foodie.services.OrderService
 import com.taller.tp.foodie.services.ProfileService
+import kotlinx.android.synthetic.main.fragment_orders.*
 
 const val DETAIL_ORDER_KEY = "DETAIL_ORDER_KEY"
 
-class OrdersActivity : AppCompatActivity(),
+class OrdersFragment : Fragment(),
     TabLayout.OnTabSelectedListener {
 
 
@@ -31,33 +33,27 @@ class OrdersActivity : AppCompatActivity(),
     private val completedStatus = intArrayOf(Order.STATUS.DELIVERED_STATUS.ordinal,
                                                 Order.STATUS.CANCELLED_STATUS.ordinal)
 
-    lateinit var userType: User.USER_TYPE
+    private val userType: String = UserBackendDataHandler.getInstance().getUserType()
 
     private var allOrders: List<Order> = ArrayList()
 
-    override fun onResume() {
-        super.onResume()
-        loadOrdersData()
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_orders, container, false)
     }
 
-    private fun loadUserType() {
-        val intentUserType = intent.getStringExtra(CLIENT_TYPE_KEY)
-        this.userType = User.USER_TYPE.valueOf(intentUserType)
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_orders)
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        order_list_tabs.addOnTabSelectedListener(this)
         loadOrdersData()
     }
 
     private fun loadOrdersData() {
-        loadUserType()
-
-        val tabs = findViewById<TabLayout>(R.id.order_list_tabs)
-        tabs.addOnTabSelectedListener(this)
         val listOrdersRequestHandler = ListOrdersRequestHandler(this)
-        if (userType == User.USER_TYPE.DELIVERY)
+        if (userType == User.USER_TYPE.DELIVERY.name)
             listOrdersRequestHandler.byDelivery()
         OrderService(listOrdersRequestHandler).listByUser(userType)
     }
@@ -69,18 +65,19 @@ class OrdersActivity : AppCompatActivity(),
                 TAB.COMPLETED -> completedStatus.contains(o.getStatus().ordinal)
             }
         }
-        val listAdapter = OrderListAdapter(this, orders){ order: Order? ->
-            val detailIntent = Intent(this, OrderDetailActivity::class.java).apply {
+        val listAdapter = OrderListAdapter(activity!!, orders) { order: Order? ->
+            val detailIntent =
+                Intent(activity?.applicationContext, OrderDetailActivity::class.java).apply {
                 putExtra(DETAIL_ORDER_KEY, order!!.id)
-                putExtra(CLIENT_TYPE_KEY, userType.name)
+                    putExtra(CLIENT_TYPE_KEY, userType)
             }
             startActivity(detailIntent)
         }
 
-        with(findViewById<ListView>(R.id.order_rv)) {
+        with(order_rv) {
             adapter = listAdapter
             emptyView = findViewById<View>(R.id.empty_order_view)
-            this.setOnItemClickListener(listAdapter)
+            this.onItemClickListener = listAdapter
         }
     }
 
@@ -112,8 +109,7 @@ class OrdersActivity : AppCompatActivity(),
     override fun onTabUnselected(tab: TabLayout.Tab?) {}
 
     override fun onTabSelected(tab: TabLayout.Tab?) {
-        val pos = tab!!.position
-        when (pos){
+        when (tab!!.position) {
             0 -> selectedTab = TAB.PENDING
             1 -> selectedTab = TAB.COMPLETED
         }
@@ -135,4 +131,7 @@ class OrdersActivity : AppCompatActivity(),
     }
 
 
+    companion object {
+        fun newInstance(): OrdersFragment = OrdersFragment()
+    }
 }

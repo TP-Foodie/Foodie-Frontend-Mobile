@@ -1,7 +1,6 @@
 package com.taller.tp.foodie.model.requestHandlers
 
 import android.util.Log
-import android.view.View
 import com.android.volley.VolleyError
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.ErrorHandler
@@ -16,7 +15,7 @@ class ClientMainUserRequestHandler(private val activity: WeakReference<ClientMai
 
     override fun onError(error: VolleyError) {
         Log.e("CliMainUserReq", "Volley error: " + error.localizedMessage)
-        ErrorHandler.handleError(activity.get()?.findViewById<View>(R.id.map_choice_context)!!)
+        ErrorHandler.handleError(activity.get()?.findViewById(R.id.container)!!)
     }
 
     override fun onSuccess(response: JSONObject?) {
