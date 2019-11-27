@@ -88,7 +88,7 @@ class OrdersActivity : AppCompatActivity(),
     class OrderListAdapter(context: Context,
                            demos: List<Order>,
                            val orderSelection: (order: Order?) -> Unit) :
-        ArrayAdapter<Order>(context, R.id.order_row_header, demos),
+        ArrayAdapter<Order>(context, R.id.order_name, demos),
         AdapterView.OnItemClickListener{
 
         override fun onItemClick(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
@@ -100,8 +100,8 @@ class OrdersActivity : AppCompatActivity(),
             val order: Order = getItem(position)!!
             return (convertView as? OrderRowView
                 ?: OrderRowView(context)).apply {
-                setOrderHeader(order.getNumber()!!)
-                setOrderDetail(order.getStatus().key, order.getType())
+                setOrderHeader(order.getName()!!)
+                setOrderDetail(order.getStatus().key)
                 contentDescription = order.id
             }
         }

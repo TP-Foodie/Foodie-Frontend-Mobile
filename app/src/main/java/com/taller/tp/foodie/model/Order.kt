@@ -4,7 +4,8 @@ class Order(val id: String){
     private var status: STATUS? = null
     private var type: String? = null
     private var number: Int? = null
-    private var product: OrderProduct? = null
+    private var name: String? = null
+    private lateinit var ordered_products: List<OrderedProduct>
     private var owner: User? = null
     private var delivery: DeliveryUser? = null
     private var id_chat: String? = null
@@ -85,17 +86,26 @@ class Order(val id: String){
         return this
     }
 
-    fun setProduct(product: OrderProduct): Order{
-        this.product = product
+    fun getName(): String? {
+        return this.name
+    }
+
+    fun setName(name: String): Order {
+        this.name = name
         return this
     }
 
-    fun getProduct(): String{
-        return product!!.name
+    fun setProducts(products: List<OrderedProduct>): Order {
+        this.ordered_products = products
+        return this
+    }
+
+    fun getProducts(): List<OrderedProduct> {
+        return ordered_products
     }
 
     fun getPlace(): Place{
-        return product!!.place
+        return ordered_products[0].productFetched.place
     }
 
     fun setIdChat(idChat: String?): Order {

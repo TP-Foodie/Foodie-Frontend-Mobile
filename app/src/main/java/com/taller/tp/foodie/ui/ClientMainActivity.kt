@@ -6,7 +6,7 @@ import android.graphics.Color
 import android.location.Location
 import android.os.Bundle
 import android.view.View
-import android.widget.*
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -20,17 +20,16 @@ import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import com.taller.tp.foodie.R
-import com.taller.tp.foodie.model.Coordinate
-import com.taller.tp.foodie.model.Order
 import com.taller.tp.foodie.model.Place
 import com.taller.tp.foodie.model.User
 import com.taller.tp.foodie.model.common.UserBackendDataHandler
-import com.taller.tp.foodie.model.requestHandlers.*
-import com.taller.tp.foodie.services.OrderService
+import com.taller.tp.foodie.model.requestHandlers.CleanFcmTokenRequestHandler
+import com.taller.tp.foodie.model.requestHandlers.ClientMainUserRequestHandler
+import com.taller.tp.foodie.model.requestHandlers.ListPlacesRequestHandler
 import com.taller.tp.foodie.services.PlaceService
 import com.taller.tp.foodie.services.ProfileService
 import com.taller.tp.foodie.services.UserService
-import org.json.JSONObject
+import kotlinx.android.synthetic.main.activity_client_main.*
 import pub.devrel.easypermissions.AfterPermissionGranted
 import pub.devrel.easypermissions.EasyPermissions
 import java.lang.ref.WeakReference
@@ -39,9 +38,6 @@ import kotlin.collections.set
 
 const val REQUEST_CODE_LOCATION = 123
 const val INIT_ZOOM_LEVEL = 13f
-const val PRODUCT_EMPTY_ERROR = "Por favor, ingrese el producto que desea ordenar"
-const val PLACE_EMPTY_ERROR = "Por favor, elija un lugar donde debemos retirarlo"
-const val CLIENT_NEW_ORDER_KEY = "CLIENT_NEW_ORDER"
 const val CLIENT_TYPE_KEY = "CLIENT_TYPE_KEY"
 
 class ClientMainActivity : AppCompatActivity(),
@@ -53,8 +49,7 @@ class ClientMainActivity : AppCompatActivity(),
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var lastSelectedMarker: Marker? = null
     private var markerPlaceMap: HashMap<Marker, Place> = HashMap()
-    private var paymentMethod: Order.PAYMENT_METHOD? = null
-    lateinit var userType: User.USER_TYPE
+    private lateinit var userType: User.USER_TYPE
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,53 +68,27 @@ class ClientMainActivity : AppCompatActivity(),
     }
 
     private fun buildListeners() {
-        val paymentRadio = findViewById<RadioGroup>(R.id.payment_method_radio)
-        paymentRadio.setOnCheckedChangeListener { _, checkedId ->
-            if (checkedId != -1){
-                when (checkedId){
-                    R.id.cash_option -> paymentMethod = Order.PAYMENT_METHOD.CPM
-                    R.id.card_option -> paymentMethod = Order.PAYMENT_METHOD.CRPM
-                }
-            }
-        }
-        val favourCheck = findViewById<CheckBox>(R.id.delivery_favour_check)
-        favourCheck.setOnCheckedChangeListener{ _, checked ->
-            val paymentLayout = findViewById<LinearLayout>(R.id.payment_layout)
-            if (checked){
-                paymentLayout.visibility = View.INVISIBLE
-                paymentRadio.clearCheck()
-            } else {
-                paymentLayout.visibility = View.VISIBLE
-            }
-        }
-
         val signOutButton = findViewById<Button>(R.id.btn_signout)
         signOutButton.setOnClickListener { signOut() }
 
         val profileButton = findViewById<Button>(R.id.profile_button)
-        profileButton.setOnClickListener { profileButtonListener() }
-
-        val makeOrderButton = findViewById<Button>(R.id.make_order_button)
-        makeOrderButton.setOnClickListener { makeOrderButtonListener() }
+        profileButton.setOnClickListener {
+            startActivity(Intent(this, ProfileActivity::class.java))
+        }
 
         val orderListButton = findViewById<Button>(R.id.orders_button)
-        orderListButton.setOnClickListener { orderListButtonListener() }
-    }
-
-    fun loadUserTypeComponents(user: User) {
-        userType = user.type
-        val makeOrderLayout = findViewById<LinearLayout>(R.id.make_order_layout)
-        when(userType){
-            User.USER_TYPE.DELIVERY -> makeOrderLayout.visibility = View.INVISIBLE
-            User.USER_TYPE.CUSTOMER -> makeOrderLayout.visibility = View.VISIBLE
+        orderListButton.setOnClickListener {
+            val intent = Intent(this, OrdersActivity::class.java).apply {
+                putExtra(CLIENT_TYPE_KEY, userType.name)
+            }
+            startActivity(intent)
         }
-    }
 
-    private fun orderListButtonListener() {
-        val intent = Intent(this, OrdersActivity::class.java).apply {
-            putExtra(CLIENT_TYPE_KEY, userType.name)
+        btn_products.setOnClickListener {
+            val intent = Intent(applicationContext, ProductsActivity::class.java)
+            intent.putExtra(ProductsActivity.PLACE, markerPlaceMap[lastSelectedMarker])
+            startActivity(intent)
         }
-        startActivity(intent)
     }
 
     private fun signOut() {
@@ -155,73 +124,6 @@ class ClientMainActivity : AppCompatActivity(),
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                     .infoWindowAnchor(0.5F, 0F)
                     .zIndex(0F)
-    }
-
-    private fun profileButtonListener(){
-        startActivity(Intent(this, ProfileActivity::class.java))
-    }
-
-    private fun makeOrderButtonListener(){
-        val validProduct = validateProduct()
-        val validPlace = validatePlace()
-
-        if (validProduct && validPlace) {
-            val marker = lastSelectedMarker!!
-            val place = markerPlaceMap[marker]
-            if (place == null){ // Crear el place si no existe en el server?
-                val createPlaceRequestHandler = CreatePlaceRequestHandler(this)
-                val placePosition = Coordinate(marker.position.latitude, marker.position.longitude)
-                val name = findViewById<EditText>(R.id.delivery_place_input).text.toString()
-                PlaceService(createPlaceRequestHandler).create(
-                    placePosition,
-                    name
-                )
-            } else {
-                doOrder(place)
-            }
-        }
-    }
-
-    fun doOrder(place: Place) {
-        val isFavour= findViewById<CheckBox>(R.id.delivery_favour_check).isChecked
-        if (isFavour)
-            paymentMethod = null
-
-        val product = findViewById<TextView>(R.id.delivery_what_input)
-
-        val requestHandler = ClientOrderRequestHandler(this)
-
-        val orderProduct = OrderService.OrderProductRequest(product.text.toString(), place.getId())
-        val orderType: Order.TYPE
-        orderType = if (isFavour) Order.TYPE.FAVOR_TYPE else Order.TYPE.NORMAL_TYPE
-        val orderRequest = OrderService.OrderRequest(orderType.key, orderProduct, paymentMethod)
-        OrderService(requestHandler).makeOrder(orderRequest)
-    }
-
-    private fun validateProduct(): Boolean {
-        val productField = findViewById<TextView>(R.id.delivery_what_input)
-
-        productField.error = null
-
-        if (productField.text.isEmpty()) {
-            productField.error = PRODUCT_EMPTY_ERROR
-            return false
-        }
-
-        return true
-    }
-
-    private fun validatePlace(): Boolean {
-        val placeField = findViewById<TextView>(R.id.delivery_place_input)
-        placeField.error = null
-        val marker = lastSelectedMarker
-
-        if (placeField.text.isEmpty() || marker == null) {
-            placeField.error = PLACE_EMPTY_ERROR
-            return false
-        }
-
-        return true
     }
 
     override fun onMapReady(googleMap: GoogleMap) {
@@ -263,15 +165,22 @@ class ClientMainActivity : AppCompatActivity(),
     }
 
     override fun onMarkerClick(marker : Marker): Boolean {
+        choose_place_hint.visibility = View.GONE
+
+        if (userType == User.USER_TYPE.CUSTOMER)
+            btn_products.visibility = View.VISIBLE
+
         lastSelectedMarker = marker
+
         val place = markerPlaceMap[marker]
-        val deliveryPlaceInput = findViewById<EditText>(R.id.delivery_place_input)
         if (place != null){
-            deliveryPlaceInput.setText(place.name)
+            place_name.visibility = View.VISIBLE
+            place_name.text = place.name
+            place_image.visibility = View.VISIBLE
+            place_image.setImageURI(place.image)
+            place_reputation.visibility = View.VISIBLE
             val current = LatLng(place.coordinate.latitude, place.coordinate.longitude)
             mMap.moveCamera(CameraUpdateFactory.newLatLng(current))
-        } else {
-            deliveryPlaceInput.isEnabled = true
         }
 
         return false
@@ -313,10 +222,11 @@ class ClientMainActivity : AppCompatActivity(),
 
     override fun onMarkerDrag(marker : Marker) {}
 
-    fun saveAndChooseDelivery(response: JSONObject) {
-        val intent = Intent(this, ConfirmOrderActivity::class.java).apply {
-            putExtra(CLIENT_NEW_ORDER_KEY, response.toString())
+    fun loadUserTypeComponents(user: User) {
+        userType = user.type
+
+        if (userType == User.USER_TYPE.CUSTOMER) {
+            place_layout.visibility = View.VISIBLE
         }
-        startActivity(intent)
     }
 }

@@ -7,19 +7,23 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.Order
 import com.taller.tp.foodie.model.User
+import com.taller.tp.foodie.model.common.HeavyDataTransferingHandler
 import com.taller.tp.foodie.model.requestHandlers.OrderDetailRequestHandler
 import com.taller.tp.foodie.services.OrderService
+import com.taller.tp.foodie.ui.ui_adapters.OrderDetailProductsAdapter
 import kotlinx.android.synthetic.main.activity_order_detail.*
+import org.json.JSONObject
 
 
 class OrderDetailActivity : AppCompatActivity() {
 
     private var order: Order? = null
+    private lateinit var orderAsJson: JSONObject
     private lateinit var userType: User.USER_TYPE
 
     private var updateIsUnassign = false
@@ -96,9 +100,9 @@ class OrderDetailActivity : AppCompatActivity() {
                 return true
             }
             R.id.assign_order_option -> {
-                val intent = Intent(this, ConfirmOrderActivity::class.java).apply {
-                    putExtra(CLIENT_NEW_ORDER_KEY, OrderService.toJson(order!!).toString())
-                }
+                val intent = Intent(this, ConfirmOrderActivity::class.java)
+                HeavyDataTransferingHandler.getInstance().saveOrderJson(orderAsJson.toString())
+                //intent.putExtra(CLIENT_NEW_ORDER_KEY, orderAsJson.toString())
                 startActivity(intent)
                 return true
             }
@@ -118,22 +122,58 @@ class OrderDetailActivity : AppCompatActivity() {
         }
     }
 
-    fun populateFields(order: Order) {
+    private fun setupProductsLayout() {
+        val manager = LinearLayoutManager(applicationContext)
+        manager.reverseLayout = true
+        products_list.layoutManager = manager
+    }
+
+    fun populateFields(order: Order, response: JSONObject) {
+        this.orderAsJson = response
         this.order = order
-        val orderNumber = findViewById<TextView>(R.id.order_number)
-        orderNumber.text = String.format("Pedido Nro. %s", order.getNumber().toString())
-        val orderOwner = findViewById<TextView>(R.id.order_owner)
-        val owner = if (order.getOwner() == null) "" else
-            String.format("%s %s", order.getOwner()!!.name, order.getOwner()!!.lastName)
-        orderOwner.text = String.format("%s", owner)
-        val orderType= findViewById<TextView>(R.id.order_type)
-        orderType.text = String.format("%s", order.getType())
-        val orderStatus = findViewById<TextView>(R.id.order_status)
-        orderStatus.text = String.format("%s", getStatusLabel(order.getStatus()))
-        val orderProduct = findViewById<TextView>(R.id.order_product)
-        orderProduct.text = String.format("%s", order.getProduct())
-        val orderPlace = findViewById<TextView>(R.id.order_place)
-        orderPlace.text = String.format("%s", order.getPlace().name)
+
+        if (userType == User.USER_TYPE.DELIVERY) {
+            rl_owner.visibility = View.VISIBLE
+            owner_name.text = order.getOwner()!!.name
+            owner_image.setImageURI(order.getOwner()?.image)
+
+            val priceLabel = "Envío: $%.2f"
+            quotation_price.visibility = View.VISIBLE
+            quotation_price.text = String.format(priceLabel, order.getQuotation())
+
+            var totalPrice = 0.0
+            totalPrice += order.getQuotation()!!
+            for (prod in order.getProducts()) {
+                totalPrice += (prod.quantity * prod.productFetched.price)
+            }
+            val totalPriceLabel = "Total: $%.2f"
+            total_price.visibility = View.VISIBLE
+            total_price.text = String.format(totalPriceLabel, totalPrice)
+        } else if (userType == User.USER_TYPE.CUSTOMER && order.getDelivery() != null) {
+            rl_delivery.visibility = View.VISIBLE
+            delivery_name.text = order.getDelivery()!!.name
+            delivery_image.setImageURI(order.getDelivery()?.image)
+
+            val priceLabel = "Envío: $%.2f"
+            quotation_price.visibility = View.VISIBLE
+            quotation_price.text = String.format(priceLabel, order.getQuotation())
+
+            var totalPrice = 0.0
+            totalPrice += order.getQuotation()!!
+            for (prod in order.getProducts()) {
+                totalPrice += (prod.quantity * prod.productFetched.price)
+            }
+            val totalPriceLabel = "Total: $%.2f"
+            total_price.visibility = View.VISIBLE
+            total_price.text = String.format(totalPriceLabel, totalPrice)
+        }
+
+        order_name.text = order.getName()
+
+        setupProductsLayout()
+        products_list.adapter = OrderDetailProductsAdapter(order.getProducts())
+
+        order_place_name.text = order.getPlace().name
 
         // ui logic
         if (order.getStatus() != Order.STATUS.CANCELLED_STATUS || !order.getIdChat().isNullOrEmpty()) {
@@ -142,15 +182,6 @@ class OrderDetailActivity : AppCompatActivity() {
 
         with(findViewById<Button>(R.id.order_actions_button)) {
             registerForContextMenu(this)
-        }
-    }
-
-    private fun getStatusLabel(status: Order.STATUS): String{
-        return when (status) {
-            Order.STATUS.WAITING_STATUS -> getString(R.string.waiting_status_label)
-            Order.STATUS.TAKEN_STATUS -> getString(R.string.taken_status_label)
-            Order.STATUS.CANCELLED_STATUS -> getString(R.string.cancelled_status_label)
-            Order.STATUS.DELIVERED_STATUS -> getString(R.string.delivered_status_label)
         }
     }
 

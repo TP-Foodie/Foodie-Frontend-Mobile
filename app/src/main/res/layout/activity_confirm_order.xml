@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/confirm_order_context"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <FrameLayout
         android:id="@+id/map_layout"
@@ -20,130 +19,92 @@
             android:layout_height="match_parent"
             tools:context=".ui.ClientMainActivity" />
 
-        <LinearLayout
-            android:id="@+id/order_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="594dp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:id="@+id/dummy"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
-                android:orientation="horizontal" />
-
-            <LinearLayout
-                android:id="@+id/dummy2"
-                android:layout_width="417dp"
-                android:layout_height="325dp">
-
-                <LinearLayout
-                    android:id="@+id/order_price_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@android:drawable/dialog_holo_light_frame"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/order_price"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:textColor="@android:color/background_dark"
-                        android:paddingLeft="5dp"
-                        android:paddingRight="5dp"
-                        android:textSize="20sp" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/delivery_layout"
-                android:layout_width="359dp"
-                android:layout_height="187dp"
-                android:background="@android:drawable/dialog_holo_light_frame"
-                android:orientation="vertical">
-
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:id="@+id/image_layout"
-                        android:layout_width="126dp"
-                        android:layout_height="164dp"
-                        android:orientation="horizontal">
-
-                        <com.facebook.drawee.view.SimpleDraweeView
-                            android:id="@+id/delivery_photo"
-                            android:layout_width="80dp"
-                            android:layout_height="80dp"
-                            android:layout_marginStart="16dp"
-                            android:layout_marginTop="16dp"
-                            android:contentDescription="@string/delivery_photo" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/delivery_info_layout"
-                        android:layout_width="158dp"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical">
-
-                            <LinearLayout
-                                android:id="@+id/dummy_name"
-                                android:layout_width="match_parent"
-                                android:layout_height="55dp"
-                                android:orientation="vertical" />
-
-                            <TextView
-                                android:id="@+id/delivery_name"
-                                android:layout_width="match_parent"
-                                android:layout_height="20dp"
-                                android:layout_gravity="center"
-                                android:paddingLeft="5dp"
-                                android:paddingRight="5dp"
-                                android:textColor="@android:color/background_dark" />
-
-                            <TextView
-                                android:id="@+id/delivery_rep"
-                                android:layout_width="match_parent"
-                                android:layout_height="50dp"
-                                android:layout_gravity="center"
-                                android:paddingLeft="5dp"
-                                android:paddingRight="5dp"
-                                android:textColor="@android:color/background_dark" />
-
-                        </LinearLayout>
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="169dp"
-                        android:orientation="vertical">
-
-                        <LinearLayout
-                            android:id="@+id/dummy_confirm"
-                            android:layout_width="match_parent"
-                            android:layout_height="100dp"
-                            android:orientation="vertical" />
-
-                        <Button
-                            android:id="@+id/confirm_delivery_button"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@android:string/ok" />
-                    </LinearLayout>
-                </LinearLayout>
-
-            </LinearLayout>
-        </LinearLayout>
-
     </FrameLayout>
-</LinearLayout>
+
+    <TextView
+        android:id="@+id/order_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:background="@android:color/white"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp"
+        android:textColor="@android:color/background_dark"
+        android:textSize="20sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/delivery_layout"
+        app:layout_constraintEnd_toEndOf="@id/delivery_layout"
+        app:layout_constraintStart_toStartOf="@id/delivery_layout" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/delivery_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@android:color/white"
+        android:padding="16dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/choose_delivery_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:text="@string/choose_delivery_hint"
+            android:textColor="@android:color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/delivery_image"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/delivery_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:layout_constraintStart_toEndOf="@id/delivery_image"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <RatingBar
+            android:id="@+id/delivery_reputation"
+            style="?android:attr/ratingBarStyleIndicator"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:numStars="5"
+            android:rating="5"
+            android:stepSize="0.5"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/delivery_image"
+            app:layout_constraintTop_toBottomOf="@id/delivery_name" />
+
+        <Button
+            android:id="@+id/btn_confirm_delivery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/confirm_delivery"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/delivery_image" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
