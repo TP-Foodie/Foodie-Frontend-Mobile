@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Foodie</string>
-    <string name="welcome">Bienvenido a Foodie!</string>
     <string name="logo">logo</string>
     <string name="general_error">Ups! un error inesperado ha ocurrido</string>
 
