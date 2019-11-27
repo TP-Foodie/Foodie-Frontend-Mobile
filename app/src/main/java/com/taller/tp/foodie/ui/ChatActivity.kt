@@ -142,7 +142,7 @@ class ChatActivity : AppCompatActivity() {
         }
 
         ProfileService(GetOtherUserForChatRequestHandler(WeakReference(this)))
-            .getOtherUserForChat(otherUserId)
+            .getOtherUser(otherUserId)
     }
 
     private fun getChat() {
