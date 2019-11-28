@@ -1,5 +1,7 @@
 package com.taller.tp.foodie.ui
 
+import android.app.ActivityManager
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
