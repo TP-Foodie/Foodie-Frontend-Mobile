@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:fresco="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/profile_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,8 +10,8 @@
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/profile_image"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,13 +25,11 @@
         android:id="@+id/full_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
         android:textColor="@android:color/white"
         android:textSize="22sp"
         app:layout_constraintStart_toEndOf="@id/profile_image"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/profile_image" />
 
     <RatingBar
@@ -38,12 +37,23 @@
         style="?android:attr/ratingBarStyleIndicator"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:numStars="5"
         android:stepSize="0.5"
+        app:layout_constraintStart_toStartOf="@id/full_name"
+        app:layout_constraintTop_toBottomOf="@id/full_name"/>
+
+    <ImageButton
+        android:id="@+id/profile_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:padding="4dp"
+        android:src="@drawable/ic_gear"
+        app:layout_constraintBottom_toBottomOf="@id/profile_image"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/profile_image"
-        app:layout_constraintTop_toBottomOf="@id/full_name"/>
+        tools:ignore="ContentDescription" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -161,26 +171,5 @@
         </RelativeLayout>
 
     </LinearLayout>
-
-    <Button
-        android:id="@+id/btn_change_profile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="12dp"
-        android:text="@string/btn_change_profile"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toTopOf="@id/btn_signout"
-        app:layout_constraintEnd_toEndOf="@id/btn_signout"
-        app:layout_constraintStart_toStartOf="@id/btn_signout" />
-
-    <Button
-        android:id="@+id/btn_signout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/btn_signout"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

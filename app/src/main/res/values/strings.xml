@@ -32,10 +32,6 @@
     <string name="subscribe">Subscribirse</string>
     <string name="unsubscribe">Desuscribirse</string>
 
-    <!-- Main -->
-    <string name="btn_signout">Sign Out</string>
-
-
     <string name="profile_btn">Perfil</string>
     <string name="map_place_choice">Pedido</string>
     <string name="location">Necesitamos acceder a tu ubicación</string>
@@ -74,7 +70,6 @@
     <string name="place_name_title">Lugar</string>
     <string name="products_title">Productos</string>
     <string name="payment_method_title">Método de Pago</string>
-    <string name="btn_change_profile">Editar</string>
     <string name="btn_confirm_changes">Confirmar</string>
     <string name="order_price_label">$%.2f</string>
     <string name="productos">Productos</string>
@@ -90,5 +85,7 @@
     <string name="pedidos_nav">Pedidos</string>
     <string name="pedir_nav">Pedir</string>
     <string name="perfil_nav">Perfil</string>
+    <string name="editar_perfil">Editar Perfil</string>
+    <string name="cerrar_sesi_n">Cerrar Sesión</string>
 
 </resources>

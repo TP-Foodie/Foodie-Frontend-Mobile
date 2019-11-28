@@ -3,9 +3,7 @@ package com.taller.tp.foodie.ui
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.UserProfile
@@ -34,14 +32,9 @@ class ProfileFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
 
-        btn_change_profile.setOnClickListener {
-            startActivity(Intent(activity?.applicationContext, ChangeProfileActivity::class.java))
-        }
-
-        btn_signout.setOnClickListener {
-            // clean fcm token
-            UserService(CleanFcmTokenRequestHandler(WeakReference(this)))
-                .updateUserFcmToken("")
+        registerForContextMenu(profile_settings)
+        profile_settings.setOnClickListener {
+            activity?.openContextMenu(it)
         }
 
         getUserProfile()
@@ -74,6 +67,37 @@ class ProfileFragment : Fragment() {
         val intent = Intent(activity?.applicationContext, LoginActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
+    }
+
+    override fun onCreateContextMenu(
+        menu: ContextMenu?,
+        v: View?,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
+        super.onCreateContextMenu(menu, v, menuInfo)
+        val inflater = activity?.menuInflater
+        inflater?.inflate(R.menu.profile_settings_menu, menu)
+        onPrepareOptionsMenu(menu)
+    }
+
+    override fun onContextItemSelected(item: MenuItem?): Boolean {
+        when (item!!.itemId) {
+            R.id.edit_profile_option -> {
+                startActivity(
+                    Intent(
+                        activity?.applicationContext,
+                        ChangeProfileActivity::class.java
+                    )
+                )
+            }
+            R.id.logout_option -> {
+                // clean fcm token
+                UserService(CleanFcmTokenRequestHandler(WeakReference(this)))
+                    .updateUserFcmToken("")
+            }
+        }
+
+        return true
     }
 }
 
