@@ -109,7 +109,7 @@ class ConfirmOrderActivity : AppCompatActivity(),
         val delivery = markerPlaceMap[marker]
         val deliveryId = delivery!!.id!!
         val getDeliveryDetail = ConfirmOrderRequestHandler(this).forDetail(deliveryId)
-        ProfileService(getDeliveryDetail).getOtherUserForChat(deliveryId)
+        ProfileService(getDeliveryDetail).getOtherUser(deliveryId)
         return false
     }
 

@@ -31,10 +31,13 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
-        <!--
- Set custom default icon. This is used when no icon is set for incoming notification messages.
-        See README(https://goo.gl/l4GJaQ) for more.
-        -->
+
+        <service android:name="com.taller.tp.foodie.services.TrackingService"></service>
+        <service android:name="com.taller.tp.foodie.ui.TrackingDeliveryService"></service>
+
+
+        <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.
+        See README(https://goo.gl/l4GJaQ) for more. -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_stat_f" />
@@ -55,9 +58,12 @@
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="${MAP_API_KEY}" />
+            android:value="AIzaSyAKGbgumg6fjr4839UFBarjoVS2HOwGCvY" />
 
-        <activity android:name=".ui.OrderDetailActivity" />
+        <activity android:name=".ui.OrderDetailActivity"
+            android:parentActivityName=".ui.OrderDetailActivity" />
+
+        <activity android:name=".ui.FollowDeliveryActivity" />
         <activity android:name=".ui.WelcomeActivity" />
         <activity android:name=".ui.LauncherActivity">
             <intent-filter>

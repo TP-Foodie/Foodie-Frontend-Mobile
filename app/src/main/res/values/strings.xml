@@ -71,6 +71,7 @@
     <string name="products_title">Productos</string>
     <string name="payment_method_title">Método de Pago</string>
     <string name="btn_confirm_changes">Confirmar</string>
+    <string name="follow_deliver">Mapa</string>
     <string name="order_price_label">$%.2f</string>
     <string name="productos">Productos</string>
     <string name="decrement_button">-</string>

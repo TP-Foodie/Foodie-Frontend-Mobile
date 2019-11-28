@@ -1,5 +1,6 @@
 package com.taller.tp.foodie.ui
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -11,6 +12,7 @@ import com.taller.tp.foodie.model.User
 import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import com.taller.tp.foodie.model.requestHandlers.ClientMainUserRequestHandler
 import com.taller.tp.foodie.services.ProfileService
+import com.taller.tp.foodie.services.TrackingService
 import kotlinx.android.synthetic.main.activity_client_main.*
 import java.lang.ref.WeakReference
 
@@ -19,7 +21,24 @@ class ClientMainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         ProfileService(ClientMainUserRequestHandler(WeakReference(this))).getUserProfile()
+
+        if (!isTrackingServiceRunning()) {
+            Intent(this, TrackingService::class.java).also { intent ->
+                applicationContext.startService(intent)
+            }
+        }
     }
+
+    private fun isTrackingServiceRunning(): Boolean {
+        val manager = getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
+        for (service in manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (TrackingService::class.java.simpleName == service.service.className) {
+                return true
+            }
+        }
+        return false
+    }
+
 
     private fun buildListeners() {
         bottom_navigation.setOnNavigationItemSelectedListener { menuItem ->
