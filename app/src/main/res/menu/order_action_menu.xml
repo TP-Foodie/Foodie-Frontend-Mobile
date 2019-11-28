@@ -24,4 +24,10 @@
     <item
         android:id="@+id/follow_delivery"
         android:title="@string/follow_deliver" />
+    <item
+        android:id="@+id/rate_delivery_option"
+        android:title="@string/calificar_delivery" />
+    <item
+        android:id="@+id/rate_owner_option"
+        android:title="@string/calificar_propietario" />
 </menu>

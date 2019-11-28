@@ -88,5 +88,7 @@
     <string name="perfil_nav">Perfil</string>
     <string name="editar_perfil">Editar Perfil</string>
     <string name="cerrar_sesi_n">Cerrar Sesión</string>
+    <string name="calificar_delivery">Calificar Delivery</string>
+    <string name="calificar_propietario">Calificar Propietario</string>
 
 </resources>
