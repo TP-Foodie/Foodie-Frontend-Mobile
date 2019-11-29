@@ -22,8 +22,7 @@ import kotlinx.android.synthetic.main.activity_order_detail.*
 import org.json.JSONObject
 import java.lang.ref.WeakReference
 
-
-class OrderDetailActivity : AppCompatActivity() {
+class OrderDetailActivity : AppCompatActivity(), RateUserListener {
 
     private var order: Order? = null
     private lateinit var orderAsJson: JSONObject
@@ -156,9 +155,14 @@ class OrderDetailActivity : AppCompatActivity() {
     }
 
     private fun rateUserMenuOptionSelected(user: User) {
+        val fm = supportFragmentManager
+        val rateUserDialog = RateUserDialogFragment.newInstance(user, this)
+        rateUserDialog?.show(fm, "fragment_alert")
+    }
+
+    override fun onFinishRateUser(userRated: User, rating: Int) {
         UserRatingService(RateUserRequestHandler(WeakReference(this))).rateUser(
-            user, 3,
-            order!!
+            userRated, rating, order!!
         )
     }
 

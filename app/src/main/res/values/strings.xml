@@ -90,5 +90,6 @@
     <string name="cerrar_sesi_n">Cerrar Sesión</string>
     <string name="calificar_delivery">Calificar Delivery</string>
     <string name="calificar_propietario">Calificar Propietario</string>
+    <string name="calificar">Calificar</string>
 
 </resources>
