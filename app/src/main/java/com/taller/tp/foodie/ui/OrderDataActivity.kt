@@ -2,7 +2,9 @@ package com.taller.tp.foodie.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.RadioGroup
+import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.taller.tp.foodie.R
@@ -39,10 +41,20 @@ class OrderDataActivity : AppCompatActivity() {
         paymentRadio.setOnCheckedChangeListener { _, checkedId ->
             if (checkedId != -1) {
                 when (checkedId) {
-                    R.id.cash_option -> paymentMethod = Order.PAYMENT_METHOD.CPM
-                    R.id.card_option -> paymentMethod = Order.PAYMENT_METHOD.CRPM
-                    R.id.favour_option -> isFavour = true
+                    R.id.cash_option -> {
+                        paymentMethod = Order.PAYMENT_METHOD.CPM
+                        isFavour = false
+                    }
+                    R.id.card_option -> {
+                        paymentMethod = Order.PAYMENT_METHOD.CRPM
+                        isFavour = false
+                    }
+                    R.id.favour_option -> {
+                        paymentMethod = Order.PAYMENT_METHOD.GPPM
+                        isFavour = true
+                    }
                 }
+                updateFavourVisibility()
             }
         }
 
@@ -63,17 +75,32 @@ class OrderDataActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            if (isFavour && order_gratitude_points.text.isNullOrEmpty()){
+                ErrorHandler.handleError(
+                    order_data_layout,
+                    "Por favor indique los puntos de gratitud"
+                )
+                return@setOnClickListener
+            }
+
             val requestHandler = ClientOrderRequestHandler(this)
 
             val orderProduct = OrderService.OrderProductRequest(orderedProducts)
             val orderType = if (isFavour) Order.TYPE.FAVOR_TYPE else Order.TYPE.NORMAL_TYPE
+            val orderGratitudePoints = if (isFavour) Integer.parseInt(order_gratitude_points.text.toString()) else 0
             val orderRequest = OrderService.OrderRequest(
                 order_name.text.trim().toString(),
-                orderType.key, orderProduct, paymentMethod
+                orderType.key, orderProduct, paymentMethod,
+                orderGratitudePoints
             )
 
             OrderService(requestHandler).makeOrder(orderRequest)
         }
+    }
+
+    private fun updateFavourVisibility() {
+        val gratitudePointsRL = findViewById<RelativeLayout>(R.id.rl_gratitude_points)
+        gratitudePointsRL.visibility = if (isFavour) View.VISIBLE else View.INVISIBLE
     }
 
     fun saveAndChooseDelivery(response: JSONObject) {

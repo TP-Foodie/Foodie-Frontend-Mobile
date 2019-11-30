@@ -34,4 +34,11 @@ open class User(val id: String?, val name: String, val image: String?){
         this.reputation = reputation
         return this
     }
+
+    var gratitude_points: Int? = null
+        get() = field
+    fun setGratitudePoints(reputation: Int?) : User {
+        this.gratitude_points = gratitude_points
+        return this
+    }
 }

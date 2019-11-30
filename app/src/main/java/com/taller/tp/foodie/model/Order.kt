@@ -5,18 +5,20 @@ class Order(val id: String){
     private var type: String? = null
     private var number: Int? = null
     private var name: String? = null
-    private lateinit var ordered_products: List<OrderedProduct>
+    private lateinit var orderedProducts: List<OrderedProduct>
     private var owner: User? = null
     private var delivery: DeliveryUser? = null
-    private var id_chat: String? = null
+    private var idChat: String? = null
     private var quotation: Double? = null
-    private var delivery_rated: Boolean? = null
-    private var owner_rated: Boolean? = null
+    private var deliveryRated: Boolean? = null
+    private var ownerRated: Boolean? = null
+    private var gratitudePoints: Int? = null
 //    private var paymentMethod: PAYMENT_METHOD = PAYMENT_METHOD.CPM
 
     enum class PAYMENT_METHOD {
         CPM,
-        CRPM
+        CRPM,
+        GPPM
     }
     enum class STATUS(val key: String) {
         TAKEN_STATUS("TS"),
@@ -98,25 +100,25 @@ class Order(val id: String){
     }
 
     fun setProducts(products: List<OrderedProduct>): Order {
-        this.ordered_products = products
+        this.orderedProducts = products
         return this
     }
 
     fun getProducts(): List<OrderedProduct> {
-        return ordered_products
+        return orderedProducts
     }
 
     fun getPlace(): Place{
-        return ordered_products[0].productFetched.place
+        return orderedProducts[0].productFetched.place
     }
 
     fun setIdChat(idChat: String?): Order {
-        this.id_chat = idChat
+        this.idChat = idChat
         return this
     }
 
     fun getIdChat(): String? {
-        return this.id_chat
+        return this.idChat
     }
 
     fun getQuotation(): Double?{
@@ -129,20 +131,29 @@ class Order(val id: String){
     }
 
     fun setIsDeliveryRated(value: Boolean): Order {
-        this.delivery_rated = value
+        this.deliveryRated = value
         return this
     }
 
     fun setIsOwnerRated(value: Boolean): Order {
-        this.owner_rated = value
+        this.ownerRated = value
         return this
     }
 
+    fun setGratitudePoints(value: Int) : Order {
+        this.gratitudePoints = value
+        return this
+    }
+
+    fun getGratitudePoints() : Int? {
+        return gratitudePoints
+    }
+
     fun isDeliveryRated(): Boolean? {
-        return this.delivery_rated
+        return this.deliveryRated
     }
 
     fun isOwnerRated(): Boolean? {
-        return this.owner_rated
+        return this.ownerRated
     }
 }

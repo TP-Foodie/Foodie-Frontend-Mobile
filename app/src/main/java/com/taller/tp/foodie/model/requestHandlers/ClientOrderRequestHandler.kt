@@ -13,6 +13,10 @@ class ClientOrderRequestHandler(private val activity: OrderDataActivity) : Reque
     override fun begin() {}
 
     override fun onError(error: VolleyError) {
+        if (error.networkResponse.statusCode == 400){
+            ErrorHandler.handleError(activity.findViewById<View>(R.id.order_data_layout), "No posee suficientes puntos de gratitud")
+            return
+        }
         Log.e("ClientOrderReq", "Volley error: " + error.localizedMessage)
         ErrorHandler.handleError(activity.findViewById<View>(R.id.order_data_layout))
     }

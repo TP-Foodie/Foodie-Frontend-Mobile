@@ -151,6 +151,9 @@ class OrderService(private val requestHandler: RequestHandler) {
             order.setIsDeliveryRated(json.getBoolean("delivery_rated"))
             order.setIsOwnerRated(json.getBoolean("owner_rated"))
 
+            // gratitude points
+            order.setGratitudePoints(json.getInt("gratitude_points"))
+
             return order.setProducts(prodsList).setOwner(owner).setDelivery(deliveryUser)
         }
 
@@ -174,6 +177,7 @@ class OrderService(private val requestHandler: RequestHandler) {
             else
                 orderRequest.paymentMethod.name
             jsonOrder.put("payment_method", paymentMethod)
+            jsonOrder.put("gratitude_points", orderRequest.gratitudePoints)
             return jsonOrder
         }
     }
@@ -182,7 +186,8 @@ class OrderService(private val requestHandler: RequestHandler) {
         val name: String,
         val orderType: String,
         val orderProduct: OrderProductRequest,
-        val paymentMethod: Order.PAYMENT_METHOD?
+        val paymentMethod: Order.PAYMENT_METHOD?,
+        val gratitudePoints: Int
     )
 
     class OrderProductRequest(val products: MutableList<OrderedProduct>)
