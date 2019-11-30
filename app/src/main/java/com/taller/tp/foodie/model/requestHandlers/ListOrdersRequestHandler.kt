@@ -1,8 +1,6 @@
 package com.taller.tp.foodie.model.requestHandlers
 
 import android.util.Log
-import android.view.View
-import android.widget.TextView
 import com.android.volley.VolleyError
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.ErrorHandler
@@ -10,18 +8,16 @@ import com.taller.tp.foodie.model.Order
 import com.taller.tp.foodie.services.OrderService
 import com.taller.tp.foodie.services.SERVICE_ARRAY_RESPONSE
 import com.taller.tp.foodie.services.UserService
-import com.taller.tp.foodie.ui.OrdersActivity
+import com.taller.tp.foodie.ui.OrdersFragment
 import org.json.JSONObject
 
 
-class ListOrdersRequestHandler(private val activity: OrdersActivity) : RequestHandler {
+class ListOrdersRequestHandler(private val fragment: OrdersFragment) : RequestHandler {
 
     private enum class OPERATION { LIST_BY_OWNER, LIST_BY_DELIVERY, FILTER_BY_DELIVERY }
     private var op = OPERATION.LIST_BY_OWNER
 
     override fun begin() {
-        val loadingMessage = activity.getString(R.string.loading_orders)
-        activity.findViewById<TextView>(R.id.empty_order_view).setText(loadingMessage)
     }
 
     fun byDelivery(): ListOrdersRequestHandler{
@@ -35,25 +31,25 @@ class ListOrdersRequestHandler(private val activity: OrdersActivity) : RequestHa
 
     override fun onError(error: VolleyError) {
         Log.e("ListOrderssReq", "Volley error: " + error.localizedMessage)
-        ErrorHandler.handleError(activity.findViewById<View>(R.id.orders_context))
+        ErrorHandler.handleError(fragment.activity?.findViewById(R.id.container)!!)
     }
 
     override fun onSuccess(response: JSONObject?) {
         when(op){
             OPERATION.LIST_BY_OWNER -> {
                 val orders: ArrayList<Order> = buildOrderList(response)
-                activity.setOrders(orders)
-                activity.populateOrders()
+                fragment.setOrders(orders)
+                fragment.populateOrders()
             }
             OPERATION.LIST_BY_DELIVERY -> {
                 val orders: ArrayList<Order> = buildOrderList(response)
-                activity.setOrders(orders)
-                activity.askForDelivery()
+                fragment.setOrders(orders)
+                fragment.askForDelivery()
             }
             OPERATION.FILTER_BY_DELIVERY -> {
                 val user = UserService.fromUserJson(response!!)
-                activity.filterOrders(user.id!!)
-                activity.populateOrders()
+                fragment.filterOrders(user.id!!)
+                fragment.populateOrders()
             }
         }
     }
