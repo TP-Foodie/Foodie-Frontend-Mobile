@@ -14,13 +14,15 @@ import com.taller.tp.foodie.model.Order
 import com.taller.tp.foodie.model.User
 import com.taller.tp.foodie.model.common.HeavyDataTransferingHandler
 import com.taller.tp.foodie.model.requestHandlers.OrderDetailRequestHandler
+import com.taller.tp.foodie.model.requestHandlers.RateUserRequestHandler
 import com.taller.tp.foodie.services.OrderService
+import com.taller.tp.foodie.services.UserRatingService
 import com.taller.tp.foodie.ui.ui_adapters.OrderDetailProductsAdapter
 import kotlinx.android.synthetic.main.activity_order_detail.*
 import org.json.JSONObject
+import java.lang.ref.WeakReference
 
-
-class OrderDetailActivity : AppCompatActivity() {
+class OrderDetailActivity : AppCompatActivity(), RateUserListener {
 
     private var order: Order? = null
     private lateinit var orderAsJson: JSONObject
@@ -56,6 +58,8 @@ class OrderDetailActivity : AppCompatActivity() {
         val cancelOption = menu.getItem(3).setVisible(false)
         val chatOption = menu.getItem(4).setVisible(false)
         val followDelivery = menu.getItem(5).setVisible(false)
+        val rateDelivery = menu.getItem(6).setVisible(false)
+        val rateOwner = menu.getItem(7).setVisible(false)
 
         when(order!!.getStatus()){
             Order.STATUS.WAITING_STATUS -> {
@@ -74,8 +78,16 @@ class OrderDetailActivity : AppCompatActivity() {
                     unassignOption.isVisible = true
                 }
             }
-            Order.STATUS.DELIVERED_STATUS, Order.STATUS.CANCELLED_STATUS -> {
+            Order.STATUS.CANCELLED_STATUS -> {
                 chatOption.isVisible = true
+            }
+            Order.STATUS.DELIVERED_STATUS -> {
+                chatOption.isVisible = true
+                if (userType == User.USER_TYPE.CUSTOMER && !order?.isDeliveryRated()!!) {
+                    rateDelivery.isVisible = true
+                } else if (userType == User.USER_TYPE.DELIVERY && !order?.isOwnerRated()!!) {
+                    rateOwner.isVisible = true
+                }
             }
         }
         return true
@@ -130,8 +142,28 @@ class OrderDetailActivity : AppCompatActivity() {
                 startActivity(intent)
                 return true
             }
+            R.id.rate_delivery_option -> {
+                rateUserMenuOptionSelected(order?.getDelivery()!!)
+                return true
+            }
+            R.id.rate_owner_option -> {
+                rateUserMenuOptionSelected(order?.getOwner()!!)
+                return true
+            }
             else -> return false
         }
+    }
+
+    private fun rateUserMenuOptionSelected(user: User) {
+        val fm = supportFragmentManager
+        val rateUserDialog = RateUserDialogFragment.newInstance(user, this)
+        rateUserDialog?.show(fm, "fragment_alert")
+    }
+
+    override fun onFinishRateUser(userRated: User, rating: Int) {
+        UserRatingService(RateUserRequestHandler(WeakReference(this))).rateUser(
+            userRated, rating, order!!
+        )
     }
 
     private fun setupProductsLayout() {
@@ -205,5 +237,10 @@ class OrderDetailActivity : AppCompatActivity() {
             finish()
             startActivity(intent)
         }
+    }
+
+    fun onRateUserSuccess() {
+        order?.setIsOwnerRated(true)
+        order?.setIsDeliveryRated(true)
     }
 }
