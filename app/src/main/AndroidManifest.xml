@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ui.OrderDataActivity"></activity>
+        <activity android:name=".ui.OrderDataActivity" />
         <activity android:name=".ui.ProductsActivity" />
         <activity android:name=".ui.ChangeProfileActivity" />
         <activity android:name=".ui.ChatActivity" />
@@ -68,7 +68,7 @@
         <activity android:name=".ui.LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -79,9 +79,6 @@
         <activity
             android:name=".ui.ClientMainActivity"
             android:label="@string/map_place_choice">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.MainActivity" />
         </activity>
         <activity
             android:name=".ui.ConfirmOrderActivity"
@@ -92,7 +89,7 @@
                 android:value=".ui.ClientMainActivity" />
         </activity>
         <activity
-            android:name=".ui.ProfileActivity"
+            android:name=".ui.ProfileFragment"
             android:label="@string/profile_btn"
             android:parentActivityName=".ui.ClientMainActivity">
             <meta-data
@@ -100,7 +97,7 @@
                 android:value=".ui.ClientMainActivity" />
         </activity>
         <activity
-            android:name=".ui.OrdersActivity"
+            android:name=".ui.OrdersFragment"
             android:label="@string/orders"
             android:parentActivityName=".ui.ClientMainActivity">
             <meta-data
@@ -110,22 +107,9 @@
         <activity
             android:name=".ui.RegisterActivity"
             android:configChanges="orientation"
-            android:parentActivityName=".ui.MainActivity"
             android:screenOrientation="portrait">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.MainActivity" />
         </activity>
-        <activity
-            android:name=".ui.MainActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity> <!-- Android Image Cropper Activity -->
+        <!-- Android Image Cropper Activity -->
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" /> <!-- optional (needed if default theme has no action bar) -->

@@ -75,13 +75,13 @@ class OrderService(private val requestHandler: RequestHandler) {
         client.doPatch(resource, listener, body, errorListener)
     }
 
-    fun listByUser(userType: User.USER_TYPE){
+    fun listByUser(userType: String) {
         requestHandler.begin()
 
         val listener = Response.Listener<JSONObject> { requestHandler.onSuccess(it) }
         val errorListener = Response.ErrorListener { requestHandler.onError(it) }
         // TODO TEMPORAL HASTA Q LO PUEDA FILTRAR EL SERVER
-        if (userType == User.USER_TYPE.DELIVERY)
+        if (userType == User.USER_TYPE.DELIVERY.name)
             client.doGetArray(ORDER_RESOURCE, listener, errorListener)
         else
             client.doGetArray(ORDER_PLACED_RESOURCE, listener, errorListener)
@@ -178,7 +178,8 @@ class OrderService(private val requestHandler: RequestHandler) {
         val name: String,
         val orderType: String,
         val orderProduct: OrderProductRequest,
-        val paymentMethod: Order.PAYMENT_METHOD?)
+        val paymentMethod: Order.PAYMENT_METHOD?
+    )
 
     class OrderProductRequest(val products: MutableList<OrderedProduct>)
 }
