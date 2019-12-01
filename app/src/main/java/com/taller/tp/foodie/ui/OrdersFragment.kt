@@ -26,7 +26,7 @@ class OrdersFragment : Fragment(),
     TabLayout.OnTabSelectedListener {
 
 
-    private enum class TAB { PENDING, COMPLETED }
+    private enum class TAB { PENDING, COMPLETED, FAVOUR }
     private var selectedTab: TAB = TAB.PENDING
     private val pendingStatus = intArrayOf(Order.STATUS.WAITING_STATUS.ordinal,
                                             Order.STATUS.TAKEN_STATUS.ordinal)
@@ -36,6 +36,7 @@ class OrdersFragment : Fragment(),
     private val userType: String = UserBackendDataHandler.getInstance().getUserType()
 
     private var allOrders: List<Order> = ArrayList()
+    private var favours: List<Order> = ArrayList()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -59,13 +60,18 @@ class OrdersFragment : Fragment(),
     }
 
     fun populateOrders() {
-        val orders = allOrders.filter { o ->
+        val orders = arrayListOf<Order>()
+        orders.addAll(allOrders)
+        orders.addAll(favours)
+
+        val filteredOrders = orders.filter { o ->
             when(selectedTab){
-                TAB.PENDING -> pendingStatus.contains(o.getStatus().ordinal)
+                TAB.PENDING -> !o.isFavour() && pendingStatus.contains(o.getStatus().ordinal)
                 TAB.COMPLETED -> completedStatus.contains(o.getStatus().ordinal)
+                TAB.FAVOUR -> o.isFavour() && !completedStatus.contains(o.getStatus().ordinal)
             }
         }
-        val listAdapter = OrderListAdapter(activity!!, orders) { order: Order? ->
+        val listAdapter = OrderListAdapter(activity!!, filteredOrders ) { order: Order? ->
             val detailIntent =
                 Intent(activity?.applicationContext, OrderDetailActivity::class.java).apply {
                 putExtra(DETAIL_ORDER_KEY, order!!.id)
@@ -111,7 +117,8 @@ class OrdersFragment : Fragment(),
     override fun onTabSelected(tab: TabLayout.Tab?) {
         when (tab!!.position) {
             0 -> selectedTab = TAB.PENDING
-            1 -> selectedTab = TAB.COMPLETED
+            1 -> selectedTab = TAB.FAVOUR
+            2 -> selectedTab = TAB.COMPLETED
         }
         populateOrders()
     }
@@ -130,6 +137,14 @@ class OrdersFragment : Fragment(),
         ProfileService(ListOrdersRequestHandler(this).forFilter()).getUserProfile()
     }
 
+    fun getFavours() {
+        val forFavoursRequestHandler = ListOrdersRequestHandler(this).forFavours()
+        OrderService(forFavoursRequestHandler).getFavours()
+    }
+
+    fun addFavours(favours: java.util.ArrayList<Order>) {
+        this.favours = favours
+    }
 
     companion object {
         fun newInstance(): OrdersFragment = OrdersFragment()

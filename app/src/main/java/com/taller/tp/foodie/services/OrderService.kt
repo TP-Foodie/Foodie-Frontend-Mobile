@@ -7,6 +7,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 const val ORDER_RESOURCE = "/orders/"
+const val FAVOURS_RESOURCE = "pending_favors"
 const val ORDER_PLACED_RESOURCE = "/orders/placed"
 const val ORDER_QUOTATION_RESOURCE = "/quotation"
 
@@ -85,7 +86,6 @@ class OrderService(private val requestHandler: RequestHandler) {
             client.doGetArray(ORDER_RESOURCE, listener, errorListener)
         else
             client.doGetArray(ORDER_PLACED_RESOURCE, listener, errorListener)
-
     }
 
     fun find(orderId: String){
@@ -103,6 +103,14 @@ class OrderService(private val requestHandler: RequestHandler) {
         val errorListener = Response.ErrorListener { requestHandler.onError(it) }
         val resource = ORDER_RESOURCE+orderId+ ORDER_QUOTATION_RESOURCE
         client.doGetObject(resource, listener, errorListener)
+    }
+
+    fun getFavours() {
+        requestHandler.begin()
+
+        val listener = Response.Listener<JSONObject> { requestHandler.onSuccess(it) }
+        val errorListener = Response.ErrorListener { requestHandler.onError(it) }
+        client.doGetArray(ORDER_RESOURCE+ FAVOURS_RESOURCE, listener, errorListener)
     }
 
     companion object {

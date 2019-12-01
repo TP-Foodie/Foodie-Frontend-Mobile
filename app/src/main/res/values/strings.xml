@@ -92,5 +92,6 @@
     <string name="calificar_propietario">Calificar Propietario</string>
     <string name="calificar">Calificar</string>
     <string name="order_gratitude_points_title">Puntos de Gratitud</string>
+    <string name="favour_orders">Favores</string>
 
 </resources>

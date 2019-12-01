@@ -14,7 +14,7 @@ import org.json.JSONObject
 
 class ListOrdersRequestHandler(private val fragment: OrdersFragment) : RequestHandler {
 
-    private enum class OPERATION { LIST_BY_OWNER, LIST_BY_DELIVERY, FILTER_BY_DELIVERY }
+    private enum class OPERATION { LIST_BY_OWNER, LIST_BY_DELIVERY, FILTER_BY_DELIVERY, FOR_FAVOURS }
     private var op = OPERATION.LIST_BY_OWNER
 
     override fun begin() {
@@ -39,7 +39,7 @@ class ListOrdersRequestHandler(private val fragment: OrdersFragment) : RequestHa
             OPERATION.LIST_BY_OWNER -> {
                 val orders: ArrayList<Order> = buildOrderList(response)
                 fragment.setOrders(orders)
-                fragment.populateOrders()
+                fragment.getFavours()
             }
             OPERATION.LIST_BY_DELIVERY -> {
                 val orders: ArrayList<Order> = buildOrderList(response)
@@ -49,6 +49,11 @@ class ListOrdersRequestHandler(private val fragment: OrdersFragment) : RequestHa
             OPERATION.FILTER_BY_DELIVERY -> {
                 val user = UserService.fromUserJson(response!!)
                 fragment.filterOrders(user.id!!)
+                fragment.populateOrders()
+            }
+            OPERATION.FOR_FAVOURS -> {
+                val orders: ArrayList<Order> = buildOrderList(response)
+                fragment.addFavours(orders)
                 fragment.populateOrders()
             }
         }
@@ -62,5 +67,10 @@ class ListOrdersRequestHandler(private val fragment: OrdersFragment) : RequestHa
             orders.add(OrderService.fromOrderJson(orderJson, withDetail = false))
         }
         return orders
+    }
+
+    fun forFavours(): ListOrdersRequestHandler {
+        op = OPERATION.FOR_FAVOURS
+        return this
     }
 }
