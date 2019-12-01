@@ -57,6 +57,7 @@ class ProfileFragment : Fragment() {
 
         deliveries.text = data.deliveries_completed.toString()
         sent_msg.text = data.messages_sent.toString()
+        profile_gratitude_points.text = data.gratitude_points.toString()
     }
 
     fun onCleanFcmTokenSuccess() {

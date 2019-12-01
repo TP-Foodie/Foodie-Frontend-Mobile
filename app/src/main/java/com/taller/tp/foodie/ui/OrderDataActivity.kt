@@ -115,4 +115,11 @@ class OrderDataActivity : AppCompatActivity() {
         manager.reverseLayout = true
         products_list.layoutManager = manager
     }
+
+    fun saveAndReturnMain() {
+        val intent = Intent(this, ClientMainActivity::class.java).apply {
+            putExtra(SUCCESSFUL_ORDER_KEY, true)
+        }
+        startActivity(intent)
+    }
 }

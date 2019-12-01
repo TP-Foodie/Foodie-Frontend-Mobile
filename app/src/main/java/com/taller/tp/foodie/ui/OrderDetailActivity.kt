@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
+import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.taller.tp.foodie.R
@@ -222,6 +223,11 @@ class OrderDetailActivity : AppCompatActivity(), RateUserListener {
         // ui logic
         if (order.getStatus() != Order.STATUS.CANCELLED_STATUS || !order.getIdChat().isNullOrEmpty()) {
             order_actions_button.visibility = View.VISIBLE
+        }
+        if (order.isFavour()){
+            val gratitudeLayout = findViewById<RelativeLayout>(R.id.rl_order_gratitude_points)
+            gratitudeLayout.visibility = View.VISIBLE
+            order_gratitude_points.text = order.getGratitudePoints().toString()
         }
 
 

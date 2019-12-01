@@ -152,7 +152,7 @@ class OrderService(private val requestHandler: RequestHandler) {
             order.setIsOwnerRated(json.getBoolean("owner_rated"))
 
             // gratitude points
-            order.setGratitudePoints(json.getInt("gratitude_points"))
+            order.setGratitudePoints(json.optInt("gratitude_points", 0))
 
             return order.setProducts(prodsList).setOwner(owner).setDelivery(deliveryUser)
         }

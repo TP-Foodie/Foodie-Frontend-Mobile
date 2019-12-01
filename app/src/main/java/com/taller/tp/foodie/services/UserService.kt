@@ -48,6 +48,7 @@ class UserService(private val requestHandler: RequestHandler) {
             val phone = json.optString("phone", null)
             val image = json.getString("profile_image")
             val reputation = json.optInt("reputation", 0)
+            val gratitudePoints= json.optInt("gratitude_points", 0)
 
             return User(id, name, image)
                 .setType(type)
@@ -55,6 +56,7 @@ class UserService(private val requestHandler: RequestHandler) {
                 .setLastName(lastName)
                 .setPhone(phone)
                 .setReputation(reputation)
+                .setGratitudePoints(gratitudePoints)
         }
 
         fun isUserLoggedIn(): Boolean {

@@ -156,4 +156,8 @@ class Order(val id: String){
     fun isOwnerRated(): Boolean? {
         return this.ownerRated
     }
+
+    fun isFavour(): Boolean{
+        return TYPE.FAVOR_TYPE.key.equals(type)
+    }
 }

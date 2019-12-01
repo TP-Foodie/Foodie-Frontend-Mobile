@@ -98,27 +98,21 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:buttonTint="@android:color/background_dark"
-                    android:text="@string/cash_method_label"
-                    android:textColor="@android:color/background_dark" />
+                    android:text="@string/cash_method_label"/>
 
                 <RadioButton
                     android:id="@+id/card_option"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:buttonTint="@android:color/background_dark"
-                    android:text="@string/card_method_label"
-                    android:textColor="@android:color/background_dark" />
+                    android:text="@string/card_method_label"/>
 
                 <RadioButton
                     android:id="@+id/favour_option"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:buttonTint="@android:color/background_dark"
-                    android:text="@string/favour_method_label"
-                    android:textColor="@android:color/background_dark" />
+                    android:text="@string/favour_method_label" />
             </RadioGroup>
         </RelativeLayout>
 
