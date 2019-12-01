@@ -6,18 +6,25 @@ import com.android.volley.VolleyError
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.ErrorHandler
 import com.taller.tp.foodie.services.OrderService
+import com.taller.tp.foodie.services.ProfileService
+import com.taller.tp.foodie.services.UserService
 import com.taller.tp.foodie.ui.OrderDetailActivity
 import org.json.JSONObject
 
 
 open class OrderDetailRequestHandler(private val activity: OrderDetailActivity) : RequestHandler {
 
-    private enum class OPERATION { GET, UPDATE }
+    private enum class OPERATION { GET, UPDATE, GET_OWNER }
     private var op = OPERATION.GET
     override fun begin() {}
 
     fun forUpdate() : OrderDetailRequestHandler{
         op = OPERATION.UPDATE
+        return this
+    }
+
+    fun getOwner() : OrderDetailRequestHandler{
+        op = OPERATION.GET_OWNER
         return this
     }
 
@@ -34,6 +41,11 @@ open class OrderDetailRequestHandler(private val activity: OrderDetailActivity) 
             }
             OPERATION.UPDATE -> {
                 activity.onUpdateSuccess()
+            }
+            OPERATION.GET_OWNER -> {
+                val user = UserService.fromUserJson(response!!)
+                activity.setUserData(user)
+                activity.populateOrder()
             }
         }
     }

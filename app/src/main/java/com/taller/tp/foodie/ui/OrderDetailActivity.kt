@@ -17,6 +17,7 @@ import com.taller.tp.foodie.model.common.HeavyDataTransferingHandler
 import com.taller.tp.foodie.model.requestHandlers.OrderDetailRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.RateUserRequestHandler
 import com.taller.tp.foodie.services.OrderService
+import com.taller.tp.foodie.services.ProfileService
 import com.taller.tp.foodie.services.UserRatingService
 import com.taller.tp.foodie.ui.ui_adapters.OrderDetailProductsAdapter
 import kotlinx.android.synthetic.main.activity_order_detail.*
@@ -28,12 +29,13 @@ class OrderDetailActivity : AppCompatActivity(), RateUserListener {
     private var order: Order? = null
     private lateinit var orderAsJson: JSONObject
     private lateinit var userType: User.USER_TYPE
+    private var userId: String? = null
 
     private var updateIsUnassign = false
 
     private fun loadUserType() {
-        val intentUserType = intent.getStringExtra(CLIENT_TYPE_KEY)
-        this.userType = User.USER_TYPE.valueOf(intentUserType)
+        val handler = OrderDetailRequestHandler(this).getOwner()
+        ProfileService(handler).getUserProfile()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -44,12 +46,13 @@ class OrderDetailActivity : AppCompatActivity(), RateUserListener {
 
         val actionsButton = findViewById<Button>(R.id.order_actions_button)
         actionsButton.setOnClickListener { openContextMenu(it) }
+    }
 
+    fun populateOrder(){
         val orderId = intent.getStringExtra(DETAIL_ORDER_KEY)
         if (orderId != null) {
             OrderService(OrderDetailRequestHandler(this)).find(orderId)
         }
-
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
@@ -62,7 +65,42 @@ class OrderDetailActivity : AppCompatActivity(), RateUserListener {
         val rateDelivery = menu.getItem(6).setVisible(false)
         val rateOwner = menu.getItem(7).setVisible(false)
 
-        when(order!!.getStatus()){
+        if (order!!.isFavour()){
+            optionsFavourMenu(cancelOption,
+                assignOption,
+                chatOption,
+                followDelivery,
+                deliverOption,
+                unassignOption,
+                rateDelivery,
+                rateOwner
+            )
+        } else {
+            optionsOrderMenu(
+                cancelOption,
+                assignOption,
+                chatOption,
+                followDelivery,
+                deliverOption,
+                unassignOption,
+                rateDelivery,
+                rateOwner
+            )
+        }
+        return true
+    }
+
+    private fun optionsOrderMenu(
+        cancelOption: MenuItem,
+        assignOption: MenuItem,
+        chatOption: MenuItem,
+        followDelivery: MenuItem,
+        deliverOption: MenuItem,
+        unassignOption: MenuItem,
+        rateDelivery: MenuItem,
+        rateOwner: MenuItem
+    ) {
+        when (order!!.getStatus()) {
             Order.STATUS.WAITING_STATUS -> {
                 if (userType == User.USER_TYPE.CUSTOMER) {
                     cancelOption.isVisible = true
@@ -91,7 +129,48 @@ class OrderDetailActivity : AppCompatActivity(), RateUserListener {
                 }
             }
         }
-        return true
+    }
+
+    private fun optionsFavourMenu(
+        cancelOption: MenuItem,
+        assignOption: MenuItem,
+        chatOption: MenuItem,
+        followDelivery: MenuItem,
+        deliverOption: MenuItem,
+        unassignOption: MenuItem,
+        rateDelivery: MenuItem,
+        rateOwner: MenuItem
+    ) {
+        val isOwner = order!!.getOwner()!!.id.equals(userId)
+        when (order!!.getStatus()) {
+            Order.STATUS.WAITING_STATUS -> {
+                if (isOwner)
+                    cancelOption.isVisible = true
+                else
+                    assignOption.isVisible = true
+            }
+            Order.STATUS.TAKEN_STATUS -> {
+                chatOption.isVisible = true
+                if (isOwner) {
+                    cancelOption.isVisible = true
+                    followDelivery.isVisible = true
+                } else {
+                    deliverOption.isVisible = true
+                    unassignOption.isVisible = true
+                }
+            }
+            Order.STATUS.CANCELLED_STATUS -> {
+                chatOption.isVisible = true
+            }
+            Order.STATUS.DELIVERED_STATUS -> {
+                chatOption.isVisible = true
+                if (isOwner && !order?.isDeliveryRated()!!) {
+                    rateDelivery.isVisible = true
+                } else if (!isOwner && !order?.isOwnerRated()!!) {
+                    rateOwner.isVisible = true
+                }
+            }
+        }
     }
 
     override fun onCreateContextMenu(
@@ -248,5 +327,10 @@ class OrderDetailActivity : AppCompatActivity(), RateUserListener {
     fun onRateUserSuccess() {
         order?.setIsOwnerRated(true)
         order?.setIsDeliveryRated(true)
+    }
+
+    fun setUserData(user: User) {
+        this.userType = user.type
+        this.userId = user.id
     }
 }

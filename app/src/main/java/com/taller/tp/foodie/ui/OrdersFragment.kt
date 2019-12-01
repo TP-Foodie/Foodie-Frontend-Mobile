@@ -54,8 +54,10 @@ class OrdersFragment : Fragment(),
 
     private fun loadOrdersData() {
         val listOrdersRequestHandler = ListOrdersRequestHandler(this)
-        if (userType == User.USER_TYPE.DELIVERY.name)
+        if (userType == User.USER_TYPE.DELIVERY.name){
             listOrdersRequestHandler.byDelivery()
+            favour_order_tab.visibility = View.INVISIBLE
+        }
         OrderService(listOrdersRequestHandler).listByUser(userType)
     }
 
