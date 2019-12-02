@@ -11,11 +11,16 @@ import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.taller.tp.foodie.R
+import com.taller.tp.foodie.model.Chat
+import com.taller.tp.foodie.model.ChatFetched
 import com.taller.tp.foodie.model.Order
 import com.taller.tp.foodie.model.User
 import com.taller.tp.foodie.model.common.HeavyDataTransferingHandler
+import com.taller.tp.foodie.model.requestHandlers.AssignOrderChatRequestHandler
+import com.taller.tp.foodie.model.requestHandlers.CreateChatRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.OrderDetailRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.RateUserRequestHandler
+import com.taller.tp.foodie.services.ChatService
 import com.taller.tp.foodie.services.OrderService
 import com.taller.tp.foodie.services.ProfileService
 import com.taller.tp.foodie.services.UserRatingService
@@ -30,6 +35,7 @@ class OrderDetailActivity : AppCompatActivity(), RateUserListener {
     private lateinit var orderAsJson: JSONObject
     private lateinit var userType: User.USER_TYPE
     private var userId: String? = null
+    private var isFavour: Boolean = false
 
     private var updateIsUnassign = false
 
@@ -65,7 +71,7 @@ class OrderDetailActivity : AppCompatActivity(), RateUserListener {
         val rateDelivery = menu.getItem(6).setVisible(false)
         val rateOwner = menu.getItem(7).setVisible(false)
 
-        if (order!!.isFavour()){
+        if (isFavour){
             optionsFavourMenu(cancelOption,
                 assignOption,
                 chatOption,
@@ -198,11 +204,17 @@ class OrderDetailActivity : AppCompatActivity(), RateUserListener {
                 return true
             }
             R.id.assign_order_option -> {
-                val intent = Intent(this, ConfirmOrderActivity::class.java)
-                HeavyDataTransferingHandler.getInstance().saveOrderJson(orderAsJson.toString())
-                //intent.putExtra(CLIENT_NEW_ORDER_KEY, orderAsJson.toString())
-                startActivity(intent)
-                return true
+                if (isFavour){
+                    val handler = OrderDetailRequestHandler(this).forUpdateFavour()
+                    OrderService(handler).confirmOrder(order!!, userId!!)
+                    return true
+                }else {
+                    val intent = Intent(this, ConfirmOrderActivity::class.java)
+                    HeavyDataTransferingHandler.getInstance().saveOrderJson(orderAsJson.toString())
+                    //intent.putExtra(CLIENT_NEW_ORDER_KEY, orderAsJson.toString())
+                    startActivity(intent)
+                    return true
+                }
             }
             R.id.cancel_order_option -> {
                 OrderService(OrderDetailRequestHandler(this).forUpdate())
@@ -307,6 +319,7 @@ class OrderDetailActivity : AppCompatActivity(), RateUserListener {
             val gratitudeLayout = findViewById<RelativeLayout>(R.id.rl_order_gratitude_points)
             gratitudeLayout.visibility = View.VISIBLE
             order_gratitude_points.text = order.getGratitudePoints().toString()
+            isFavour = true
         }
 
 
@@ -332,5 +345,15 @@ class OrderDetailActivity : AppCompatActivity(), RateUserListener {
     fun setUserData(user: User) {
         this.userType = user.type
         this.userId = user.id
+    }
+
+    fun createChat(order: Order?) {
+        val chat = Chat(order?.getOwner()?.id!!, order.getDelivery()?.id!!, order.id)
+        val handler = OrderDetailRequestHandler(this).forChatCreation()
+        ChatService(handler).createChat(chat)
+    }
+
+    fun assignChat(chat: ChatFetched) {
+        OrderService(OrderDetailRequestHandler(this)).assignChat(chat)
     }
 }

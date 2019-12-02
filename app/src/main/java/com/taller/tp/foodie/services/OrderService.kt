@@ -24,10 +24,10 @@ class OrderService(private val requestHandler: RequestHandler) {
         client.doPost(ORDER_RESOURCE, listener, toOrderRequestJson(orderRequest), errorListener)
     }
 
-    fun confirmOrder(order: Order, deliveryUser: DeliveryUser) {
+    fun confirmOrder(order: Order, deliveryId: String) {
         val jsonRequest = JSONObject()
         jsonRequest.put("status",Order.STATUS.TAKEN_STATUS.key)
-        jsonRequest.put("delivery", deliveryUser.id)
+        jsonRequest.put("delivery", deliveryId)
         jsonRequest.put("quotation", order.getQuotation())
         update(order, jsonRequest)
     }
