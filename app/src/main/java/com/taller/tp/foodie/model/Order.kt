@@ -54,7 +54,7 @@ class Order(val id: String){
         return status!!
     }
 
-    fun setOwner(owner: User): Order{
+    fun setOwner(owner: User?): Order{
         this.owner = owner
         return this
     }

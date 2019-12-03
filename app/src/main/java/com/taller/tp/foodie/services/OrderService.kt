@@ -7,8 +7,6 @@ import org.json.JSONArray
 import org.json.JSONObject
 
 const val ORDER_RESOURCE = "/orders/"
-const val FAVOURS_RESOURCE = "pending_favors"
-const val ORDER_PLACED_RESOURCE = "/orders/placed"
 const val ORDER_QUOTATION_RESOURCE = "/quotation"
 
 class OrderService(private val requestHandler: RequestHandler) {
@@ -76,16 +74,12 @@ class OrderService(private val requestHandler: RequestHandler) {
         client.doPatch(resource, listener, body, errorListener)
     }
 
-    fun listByUser(userType: String) {
+    fun listByUser() {
         requestHandler.begin()
 
         val listener = Response.Listener<JSONObject> { requestHandler.onSuccess(it) }
         val errorListener = Response.ErrorListener { requestHandler.onError(it) }
-        // TODO TEMPORAL HASTA Q LO PUEDA FILTRAR EL SERVER
-        if (userType == User.USER_TYPE.DELIVERY.name)
-            client.doGetArray(ORDER_RESOURCE, listener, errorListener)
-        else
-            client.doGetArray(ORDER_PLACED_RESOURCE, listener, errorListener)
+        client.doGetObject(ORDER_RESOURCE + "list", listener, errorListener)
     }
 
     fun find(orderId: String){
@@ -105,14 +99,6 @@ class OrderService(private val requestHandler: RequestHandler) {
         client.doGetObject(resource, listener, errorListener)
     }
 
-    fun getFavours() {
-        requestHandler.begin()
-
-        val listener = Response.Listener<JSONObject> { requestHandler.onSuccess(it) }
-        val errorListener = Response.ErrorListener { requestHandler.onError(it) }
-        client.doGetArray(ORDER_RESOURCE+ FAVOURS_RESOURCE, listener, errorListener)
-    }
-
     companion object {
         fun fromOrderJson(json:JSONObject, withDetail: Boolean = true) : Order {
             // General
@@ -130,9 +116,17 @@ class OrderService(private val requestHandler: RequestHandler) {
                 deliveryUser = DeliveryUser(delivery.id!!, delivery.name, delivery.image)
             }
 
+            // Owner
+            var owner: User? = null
+            if (json.has("owner")){
+                val ownerJson = json.getJSONObject("owner")
+                owner = UserService.fromUserJson(ownerJson)
+            }
+
             val order = Order(id).setType(orderType)
                 .setStatus(status).setNumber(number).setDelivery(deliveryUser)
-                .setName(name)
+                .setName(name).setOwner(owner)
+
 
             if (!withDetail)
                 return order
@@ -143,10 +137,6 @@ class OrderService(private val requestHandler: RequestHandler) {
                 val orderedProd = productsJson.getJSONObject(i)
                 prodsList.add(ProductsService.fromOrderedProductJson(orderedProd))
             }
-
-            // Owner
-            val ownerJson = json.getJSONObject("owner")
-            val owner = UserService.fromUserJson(ownerJson)
 
             // Chat
             order.setIdChat(json.getString("id_chat"))
@@ -162,7 +152,7 @@ class OrderService(private val requestHandler: RequestHandler) {
             // gratitude points
             order.setGratitudePoints(json.optInt("gratitude_points", 0))
 
-            return order.setProducts(prodsList).setOwner(owner).setDelivery(deliveryUser)
+            return order.setProducts(prodsList).setDelivery(deliveryUser)
         }
 
         private fun toOrderRequestJson(orderRequest: OrderRequest) : JSONObject{
