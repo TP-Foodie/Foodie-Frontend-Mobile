@@ -147,6 +147,10 @@ class OrderService(private val requestHandler: RequestHandler) {
             if (!json.isNull("quotation"))
                 order.setQuotation(json.getDouble("quotation"))
 
+            // reputation
+            order.setIsDeliveryRated(json.getBoolean("delivery_rated"))
+            order.setIsOwnerRated(json.getBoolean("owner_rated"))
+
             return order.setProducts(prodsList).setOwner(owner).setDelivery(deliveryUser)
         }
 
