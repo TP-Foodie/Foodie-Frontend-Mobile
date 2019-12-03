@@ -56,6 +56,7 @@ class OrderDetailActivity : AppCompatActivity() {
         val cancelOption = menu.getItem(3).setVisible(false)
         val chatOption = menu.getItem(4).setVisible(false)
         val followDelivery = menu.getItem(5).setVisible(false)
+        val navigationDelivery = menu.getItem(6).setVisible(false)
 
         when(order!!.getStatus()){
             Order.STATUS.WAITING_STATUS -> {
@@ -72,6 +73,7 @@ class OrderDetailActivity : AppCompatActivity() {
                 } else {
                     deliverOption.isVisible = true
                     unassignOption.isVisible = true
+                    navigationDelivery.isVisible = true
                 }
             }
             Order.STATUS.DELIVERED_STATUS, Order.STATUS.CANCELLED_STATUS -> {
@@ -127,6 +129,12 @@ class OrderDetailActivity : AppCompatActivity() {
             R.id.follow_delivery -> {
                 val intent = Intent(applicationContext, FollowDeliveryActivity::class.java)
                 intent.putExtra("delivery_id", order!!.getDelivery()!!.id)
+                startActivity(intent)
+                return true
+            }
+            R.id.delivery_navigation_option -> {
+                val intent = Intent(applicationContext, DeliveryNavigationActivity::class.java)
+                intent.putExtra(DeliveryNavigationActivity.ORDER_ID, order?.id)
                 startActivity(intent)
                 return true
             }

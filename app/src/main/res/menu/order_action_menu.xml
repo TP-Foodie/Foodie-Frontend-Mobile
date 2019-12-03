@@ -24,4 +24,7 @@
     <item
         android:id="@+id/follow_delivery"
         android:title="@string/follow_deliver" />
+    <item
+        android:id="@+id/delivery_navigation_option"
+        android:title="@string/navegacion_option" />
 </menu>
