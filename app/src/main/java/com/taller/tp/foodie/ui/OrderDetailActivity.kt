@@ -7,15 +7,22 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Button
+import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.taller.tp.foodie.R
+import com.taller.tp.foodie.model.Chat
+import com.taller.tp.foodie.model.ChatFetched
 import com.taller.tp.foodie.model.Order
 import com.taller.tp.foodie.model.User
 import com.taller.tp.foodie.model.common.HeavyDataTransferingHandler
+import com.taller.tp.foodie.model.requestHandlers.AssignOrderChatRequestHandler
+import com.taller.tp.foodie.model.requestHandlers.CreateChatRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.OrderDetailRequestHandler
 import com.taller.tp.foodie.model.requestHandlers.RateUserRequestHandler
+import com.taller.tp.foodie.services.ChatService
 import com.taller.tp.foodie.services.OrderService
+import com.taller.tp.foodie.services.ProfileService
 import com.taller.tp.foodie.services.UserRatingService
 import com.taller.tp.foodie.ui.ui_adapters.OrderDetailProductsAdapter
 import kotlinx.android.synthetic.main.activity_order_detail.*
@@ -27,12 +34,14 @@ class OrderDetailActivity : AppCompatActivity(), RateUserListener {
     private var order: Order? = null
     private lateinit var orderAsJson: JSONObject
     private lateinit var userType: User.USER_TYPE
+    private var userId: String? = null
+    private var isFavour: Boolean = false
 
     private var updateIsUnassign = false
 
     private fun loadUserType() {
-        val intentUserType = intent.getStringExtra(CLIENT_TYPE_KEY)
-        this.userType = User.USER_TYPE.valueOf(intentUserType)
+        val handler = OrderDetailRequestHandler(this).getOwner()
+        ProfileService(handler).getUserProfile()
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,12 +52,13 @@ class OrderDetailActivity : AppCompatActivity(), RateUserListener {
 
         val actionsButton = findViewById<Button>(R.id.order_actions_button)
         actionsButton.setOnClickListener { openContextMenu(it) }
+    }
 
+    fun populateOrder(){
         val orderId = intent.getStringExtra(DETAIL_ORDER_KEY)
         if (orderId != null) {
             OrderService(OrderDetailRequestHandler(this)).find(orderId)
         }
-
     }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
@@ -61,7 +71,42 @@ class OrderDetailActivity : AppCompatActivity(), RateUserListener {
         val rateDelivery = menu.getItem(6).setVisible(false)
         val rateOwner = menu.getItem(7).setVisible(false)
 
-        when(order!!.getStatus()){
+        if (isFavour){
+            optionsFavourMenu(cancelOption,
+                assignOption,
+                chatOption,
+                followDelivery,
+                deliverOption,
+                unassignOption,
+                rateDelivery,
+                rateOwner
+            )
+        } else {
+            optionsOrderMenu(
+                cancelOption,
+                assignOption,
+                chatOption,
+                followDelivery,
+                deliverOption,
+                unassignOption,
+                rateDelivery,
+                rateOwner
+            )
+        }
+        return true
+    }
+
+    private fun optionsOrderMenu(
+        cancelOption: MenuItem,
+        assignOption: MenuItem,
+        chatOption: MenuItem,
+        followDelivery: MenuItem,
+        deliverOption: MenuItem,
+        unassignOption: MenuItem,
+        rateDelivery: MenuItem,
+        rateOwner: MenuItem
+    ) {
+        when (order!!.getStatus()) {
             Order.STATUS.WAITING_STATUS -> {
                 if (userType == User.USER_TYPE.CUSTOMER) {
                     cancelOption.isVisible = true
@@ -90,7 +135,48 @@ class OrderDetailActivity : AppCompatActivity(), RateUserListener {
                 }
             }
         }
-        return true
+    }
+
+    private fun optionsFavourMenu(
+        cancelOption: MenuItem,
+        assignOption: MenuItem,
+        chatOption: MenuItem,
+        followDelivery: MenuItem,
+        deliverOption: MenuItem,
+        unassignOption: MenuItem,
+        rateDelivery: MenuItem,
+        rateOwner: MenuItem
+    ) {
+        val isOwner = order!!.getOwner()!!.id.equals(userId)
+        when (order!!.getStatus()) {
+            Order.STATUS.WAITING_STATUS -> {
+                if (isOwner)
+                    cancelOption.isVisible = true
+                else
+                    assignOption.isVisible = true
+            }
+            Order.STATUS.TAKEN_STATUS -> {
+                chatOption.isVisible = true
+                if (isOwner) {
+                    cancelOption.isVisible = true
+                    followDelivery.isVisible = true
+                } else {
+                    deliverOption.isVisible = true
+                    unassignOption.isVisible = true
+                }
+            }
+            Order.STATUS.CANCELLED_STATUS -> {
+                chatOption.isVisible = true
+            }
+            Order.STATUS.DELIVERED_STATUS -> {
+                chatOption.isVisible = true
+                if (isOwner && !order?.isDeliveryRated()!!) {
+                    rateDelivery.isVisible = true
+                } else if (!isOwner && !order?.isOwnerRated()!!) {
+                    rateOwner.isVisible = true
+                }
+            }
+        }
     }
 
     override fun onCreateContextMenu(
@@ -118,11 +204,17 @@ class OrderDetailActivity : AppCompatActivity(), RateUserListener {
                 return true
             }
             R.id.assign_order_option -> {
-                val intent = Intent(this, ConfirmOrderActivity::class.java)
-                HeavyDataTransferingHandler.getInstance().saveOrderJson(orderAsJson.toString())
-                //intent.putExtra(CLIENT_NEW_ORDER_KEY, orderAsJson.toString())
-                startActivity(intent)
-                return true
+                if (isFavour){
+                    val handler = OrderDetailRequestHandler(this).forUpdateFavour()
+                    OrderService(handler).confirmOrder(order!!, userId!!)
+                    return true
+                }else {
+                    val intent = Intent(this, ConfirmOrderActivity::class.java)
+                    HeavyDataTransferingHandler.getInstance().saveOrderJson(orderAsJson.toString())
+                    //intent.putExtra(CLIENT_NEW_ORDER_KEY, orderAsJson.toString())
+                    startActivity(intent)
+                    return true
+                }
             }
             R.id.cancel_order_option -> {
                 OrderService(OrderDetailRequestHandler(this).forUpdate())
@@ -223,6 +315,12 @@ class OrderDetailActivity : AppCompatActivity(), RateUserListener {
         if (order.getStatus() != Order.STATUS.CANCELLED_STATUS || !order.getIdChat().isNullOrEmpty()) {
             order_actions_button.visibility = View.VISIBLE
         }
+        if (order.isFavour()){
+            val gratitudeLayout = findViewById<RelativeLayout>(R.id.rl_order_gratitude_points)
+            gratitudeLayout.visibility = View.VISIBLE
+            order_gratitude_points.text = order.getGratitudePoints().toString()
+            isFavour = true
+        }
 
 
         with(findViewById<Button>(R.id.order_actions_button)) {
@@ -242,5 +340,20 @@ class OrderDetailActivity : AppCompatActivity(), RateUserListener {
     fun onRateUserSuccess() {
         order?.setIsOwnerRated(true)
         order?.setIsDeliveryRated(true)
+    }
+
+    fun setUserData(user: User) {
+        this.userType = user.type
+        this.userId = user.id
+    }
+
+    fun createChat(order: Order?) {
+        val chat = Chat(order?.getOwner()?.id!!, order.getDelivery()?.id!!, order.id)
+        val handler = OrderDetailRequestHandler(this).forChatCreation()
+        ChatService(handler).createChat(chat)
+    }
+
+    fun assignChat(chat: ChatFetched) {
+        OrderService(OrderDetailRequestHandler(this)).assignChat(chat)
     }
 }

@@ -18,6 +18,12 @@
             android:text="@string/pending_orders" />
 
         <com.google.android.material.tabs.TabItem
+            android:id="@+id/favour_order_tab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/favour_orders" />
+
+        <com.google.android.material.tabs.TabItem
             android:id="@+id/completed_order_tab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

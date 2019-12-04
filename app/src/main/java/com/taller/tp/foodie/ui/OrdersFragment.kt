@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
+import com.google.android.material.tabs.TabItem
 import com.google.android.material.tabs.TabLayout
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.Order
@@ -17,7 +18,6 @@ import com.taller.tp.foodie.model.User
 import com.taller.tp.foodie.model.common.UserBackendDataHandler
 import com.taller.tp.foodie.model.requestHandlers.ListOrdersRequestHandler
 import com.taller.tp.foodie.services.OrderService
-import com.taller.tp.foodie.services.ProfileService
 import kotlinx.android.synthetic.main.fragment_orders.*
 
 const val DETAIL_ORDER_KEY = "DETAIL_ORDER_KEY"
@@ -26,14 +26,14 @@ class OrdersFragment : Fragment(),
     TabLayout.OnTabSelectedListener {
 
 
-    private enum class TAB { PENDING, COMPLETED }
-    private var selectedTab: TAB = TAB.PENDING
+    private enum class TAB { PENDING, COMPLETED, FAVOUR }
     private val pendingStatus = intArrayOf(Order.STATUS.WAITING_STATUS.ordinal,
                                             Order.STATUS.TAKEN_STATUS.ordinal)
     private val completedStatus = intArrayOf(Order.STATUS.DELIVERED_STATUS.ordinal,
                                                 Order.STATUS.CANCELLED_STATUS.ordinal)
 
     private val userType: String = UserBackendDataHandler.getInstance().getUserType()
+    private var userId: String? = null
 
     private var allOrders: List<Order> = ArrayList()
 
@@ -53,32 +53,7 @@ class OrdersFragment : Fragment(),
 
     private fun loadOrdersData() {
         val listOrdersRequestHandler = ListOrdersRequestHandler(this)
-        if (userType == User.USER_TYPE.DELIVERY.name)
-            listOrdersRequestHandler.byDelivery()
-        OrderService(listOrdersRequestHandler).listByUser(userType)
-    }
-
-    fun populateOrders() {
-        val orders = allOrders.filter { o ->
-            when(selectedTab){
-                TAB.PENDING -> pendingStatus.contains(o.getStatus().ordinal)
-                TAB.COMPLETED -> completedStatus.contains(o.getStatus().ordinal)
-            }
-        }
-        val listAdapter = OrderListAdapter(activity!!, orders) { order: Order? ->
-            val detailIntent =
-                Intent(activity?.applicationContext, OrderDetailActivity::class.java).apply {
-                putExtra(DETAIL_ORDER_KEY, order!!.id)
-                    putExtra(CLIENT_TYPE_KEY, userType)
-            }
-            startActivity(detailIntent)
-        }
-
-        with(order_rv) {
-            adapter = listAdapter
-            emptyView = findViewById<View>(R.id.empty_order_view)
-            this.onItemClickListener = listAdapter
-        }
+        OrderService(listOrdersRequestHandler).listByUser()
     }
 
     @SuppressLint("ResourceType")
@@ -110,24 +85,71 @@ class OrdersFragment : Fragment(),
 
     override fun onTabSelected(tab: TabLayout.Tab?) {
         when (tab!!.position) {
-            0 -> selectedTab = TAB.PENDING
-            1 -> selectedTab = TAB.COMPLETED
+            0 -> populateList(TAB.PENDING)
+            1 -> populateList(TAB.FAVOUR)
+            2 -> populateList(TAB.COMPLETED)
         }
-        populateOrders()
+
     }
 
-    fun setOrders(orders: List<Order>) {
+    private fun populateList(tab: TAB){
+        val filteredOrders: List<Order>
+        if (userType == User.USER_TYPE.CUSTOMER.name){
+            filteredOrders = filterByCustomer(tab, allOrders, userId!!)
+        } else {
+            filteredOrders = filterByDelivery(tab, allOrders)
+        }
+
+        val listAdapter = OrderListAdapter(activity!!, filteredOrders ) { order: Order? ->
+            val detailIntent =
+                Intent(activity?.applicationContext, OrderDetailActivity::class.java).apply {
+                    putExtra(DETAIL_ORDER_KEY, order!!.id)
+                    putExtra(CLIENT_TYPE_KEY, userType)
+                }
+            startActivity(detailIntent)
+        }
+
+        with(order_rv) {
+            adapter = listAdapter
+            emptyView = findViewById<View>(R.id.empty_order_view)
+            this.onItemClickListener = listAdapter
+        }
+    }
+
+    fun populateData(userId: String, orders: List<Order>) {
+        this.userId = userId
         allOrders = orders
+        populateList(TAB.PENDING)
     }
 
-    fun filterOrders(deliveryId: String) {
-        val filtered = allOrders.filter { order ->
-            order.getDelivery() != null && order.getDelivery()!!.id == deliveryId
+    private fun filterByCustomer(
+        tab: TAB,
+        orders: List<Order>,
+        userId: String
+    ): List<Order> {
+        return orders.filter { o ->
+            val userIsOwner = userId == o.getOwner()?.id
+            val userCarryFavour =
+                o.isFavour() && o.getDelivery() != null && userId == o.getDelivery()?.id
+            when (tab) {
+                TAB.PENDING -> userIsOwner && pendingStatus.contains(o.getStatus().ordinal)
+                TAB.COMPLETED -> (userIsOwner || userCarryFavour) && completedStatus.contains(o.getStatus().ordinal)
+                TAB.FAVOUR -> pendingStatus.contains(o.getStatus().ordinal)
+            }
         }
-        setOrders(filtered)
     }
-    fun askForDelivery() {
-        ProfileService(ListOrdersRequestHandler(this).forFilter()).getUserProfile()
+
+    private fun filterByDelivery(
+        tab: TAB,
+        orders: List<Order>
+    ): List<Order> {
+        return orders.filter { o ->
+            when (tab) {
+                TAB.PENDING -> pendingStatus.contains(o.getStatus().ordinal)
+                TAB.COMPLETED -> completedStatus.contains(o.getStatus().ordinal)
+                TAB.FAVOUR -> false
+            }
+        }
     }
 
 

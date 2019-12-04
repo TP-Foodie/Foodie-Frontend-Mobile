@@ -71,7 +71,7 @@ class ConfirmOrderActivity : AppCompatActivity(),
         val marker = lastSelectedMarker!!
         val deliveryUser = markerPlaceMap[marker]
         val assignDelivery = AssignOrderDeliveryRequestHandler(this)
-        OrderService(assignDelivery).confirmOrder(pendingOrder!!, deliveryUser!!)
+        OrderService(assignDelivery).confirmOrder(pendingOrder!!, deliveryUser!!.id!!)
     }
 
     override fun onMapReady(googleMap: GoogleMap) {

@@ -98,28 +98,52 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:buttonTint="@android:color/background_dark"
-                    android:text="@string/cash_method_label"
-                    android:textColor="@android:color/background_dark" />
+                    android:text="@string/cash_method_label"/>
 
                 <RadioButton
                     android:id="@+id/card_option"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:buttonTint="@android:color/background_dark"
-                    android:text="@string/card_method_label"
-                    android:textColor="@android:color/background_dark" />
+                    android:text="@string/card_method_label"/>
 
                 <RadioButton
                     android:id="@+id/favour_option"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:buttonTint="@android:color/background_dark"
-                    android:text="@string/favour_method_label"
-                    android:textColor="@android:color/background_dark" />
+                    android:text="@string/favour_method_label" />
             </RadioGroup>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_gratitude_points"
+            android:layout_width="match_parent"
+            android:visibility="invisible"
+            android:layout_height="130dp">
+
+            <TextView
+                android:id="@+id/order_gratitude_points_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="12dp"
+                android:text="@string/order_gratitude_points_title"
+                android:textSize="14sp" />
+
+            <EditText
+                android:id="@+id/order_gratitude_points"
+                style="@style/Widget.AppCompat.EditText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/order_gratitude_points_title"
+                android:layout_alignParentStart="true"
+                android:layout_marginStart="0dp"
+                android:importantForAutofill="no"
+                android:inputType="number"
+                android:textColor="@android:color/white"
+                android:textAlignment="textEnd"
+                tools:ignore="LabelFor" />
 
         </RelativeLayout>
 

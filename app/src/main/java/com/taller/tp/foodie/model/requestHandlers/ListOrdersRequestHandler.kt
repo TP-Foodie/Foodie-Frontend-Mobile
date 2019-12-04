@@ -6,59 +6,32 @@ import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.ErrorHandler
 import com.taller.tp.foodie.model.Order
 import com.taller.tp.foodie.services.OrderService
-import com.taller.tp.foodie.services.SERVICE_ARRAY_RESPONSE
-import com.taller.tp.foodie.services.UserService
 import com.taller.tp.foodie.ui.OrdersFragment
+import org.json.JSONArray
 import org.json.JSONObject
 
 
 class ListOrdersRequestHandler(private val fragment: OrdersFragment) : RequestHandler {
 
-    private enum class OPERATION { LIST_BY_OWNER, LIST_BY_DELIVERY, FILTER_BY_DELIVERY }
-    private var op = OPERATION.LIST_BY_OWNER
 
     override fun begin() {
     }
 
-    fun byDelivery(): ListOrdersRequestHandler{
-        op = OPERATION.LIST_BY_DELIVERY
-        return this
-    }
-    fun forFilter(): ListOrdersRequestHandler{
-        op = OPERATION.FILTER_BY_DELIVERY
-        return this
-    }
-
     override fun onError(error: VolleyError) {
-        Log.e("ListOrderssReq", "Volley error: " + error.localizedMessage)
+        Log.e("ListOrdersReq", "Volley error: " + error.localizedMessage)
         ErrorHandler.handleError(fragment.activity?.findViewById(R.id.container)!!)
     }
 
     override fun onSuccess(response: JSONObject?) {
-        when(op){
-            OPERATION.LIST_BY_OWNER -> {
-                val orders: ArrayList<Order> = buildOrderList(response)
-                fragment.setOrders(orders)
-                fragment.populateOrders()
-            }
-            OPERATION.LIST_BY_DELIVERY -> {
-                val orders: ArrayList<Order> = buildOrderList(response)
-                fragment.setOrders(orders)
-                fragment.askForDelivery()
-            }
-            OPERATION.FILTER_BY_DELIVERY -> {
-                val user = UserService.fromUserJson(response!!)
-                fragment.filterOrders(user.id!!)
-                fragment.populateOrders()
-            }
-        }
+        val userId = response!!.getString("user_id")
+        val orders: ArrayList<Order> = buildOrderList(response.getJSONArray("orders"))
+        fragment.populateData(userId, orders)
     }
 
-    private fun buildOrderList(response: JSONObject?): ArrayList<Order> {
-        val ordersResponse = response!!.getJSONArray(SERVICE_ARRAY_RESPONSE)
+    private fun buildOrderList(response: JSONArray): ArrayList<Order> {
         val orders: ArrayList<Order> = ArrayList()
-        for (i in 0 until ordersResponse.length()) {
-            val orderJson = ordersResponse.getJSONObject(i)
+        for (i in 0 until response.length()) {
+            val orderJson = response.getJSONObject(i)
             orders.add(OrderService.fromOrderJson(orderJson, withDetail = false))
         }
         return orders
