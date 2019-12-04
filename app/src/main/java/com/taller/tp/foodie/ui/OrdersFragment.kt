@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
+import com.google.android.material.tabs.TabItem
 import com.google.android.material.tabs.TabLayout
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.Order
@@ -52,8 +53,6 @@ class OrdersFragment : Fragment(),
 
     private fun loadOrdersData() {
         val listOrdersRequestHandler = ListOrdersRequestHandler(this)
-        if (userType == User.USER_TYPE.DELIVERY.name)
-            favour_order_tab.visibility = View.INVISIBLE
         OrderService(listOrdersRequestHandler).listByUser()
     }
 
