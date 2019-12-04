@@ -30,4 +30,7 @@
     <item
         android:id="@+id/rate_owner_option"
         android:title="@string/calificar_propietario" />
+    <item
+        android:id="@+id/delivery_navigation_option"
+        android:title="@string/navegacion_option" />
 </menu>

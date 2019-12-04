@@ -16,6 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".ui.DeliveryNavigationActivity"></activity>
         <activity android:name=".ui.OrderDataActivity" />
         <activity android:name=".ui.ProductsActivity" />
         <activity android:name=".ui.ChangeProfileActivity" />
@@ -31,13 +32,12 @@
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
             </intent-filter>
         </service>
-
-        <service android:name="com.taller.tp.foodie.services.TrackingService"></service>
-        <service android:name="com.taller.tp.foodie.ui.TrackingDeliveryService"></service>
-
-
-        <!-- Set custom default icon. This is used when no icon is set for incoming notification messages.
-        See README(https://goo.gl/l4GJaQ) for more. -->
+        <service android:name=".services.TrackingService" />
+        <service android:name=".ui.TrackingDeliveryService" />
+        <!--
+ Set custom default icon. This is used when no icon is set for incoming notification messages.
+        See README(https://goo.gl/l4GJaQ) for more.
+        -->
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@drawable/ic_stat_f" />
@@ -60,15 +60,16 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAKGbgumg6fjr4839UFBarjoVS2HOwGCvY" />
 
-        <activity android:name=".ui.OrderDetailActivity"
+        <activity
+            android:name=".ui.OrderDetailActivity"
             android:parentActivityName=".ui.OrderDetailActivity" />
-
         <activity android:name=".ui.FollowDeliveryActivity" />
         <activity android:name=".ui.WelcomeActivity" />
         <activity android:name=".ui.LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -78,8 +79,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.ClientMainActivity"
-            android:label="@string/map_place_choice">
-        </activity>
+            android:label="@string/map_place_choice"></activity>
         <activity
             android:name=".ui.ConfirmOrderActivity"
             android:label="@string/confirm_order"
@@ -107,9 +107,7 @@
         <activity
             android:name=".ui.RegisterActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait">
-        </activity>
-        <!-- Android Image Cropper Activity -->
+            android:screenOrientation="portrait"></activity> <!-- Android Image Cropper Activity -->
         <activity
             android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
             android:theme="@style/Base.Theme.AppCompat" /> <!-- optional (needed if default theme has no action bar) -->

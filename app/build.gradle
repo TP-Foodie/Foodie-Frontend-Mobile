@@ -95,6 +95,8 @@ dependencies {
 
     // Json serializer/deserializer from Objecto to JSON and viceversa
     implementation 'com.google.code.gson:gson:2.8.6'
+
+    implementation 'com.google.maps.android:android-maps-utils:0.5'
 }
 
 // Add to the bottom of the file

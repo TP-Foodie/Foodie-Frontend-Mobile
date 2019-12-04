@@ -88,6 +88,8 @@
     <string name="perfil_nav">Perfil</string>
     <string name="editar_perfil">Editar Perfil</string>
     <string name="cerrar_sesi_n">Cerrar Sesión</string>
+    <string name="navegacion_option">Navegación</string>
+    <string name="centrar_camara">Centrar</string>
     <string name="calificar_delivery">Calificar Delivery</string>
     <string name="calificar_propietario">Calificar Propietario</string>
     <string name="calificar">Calificar</string>

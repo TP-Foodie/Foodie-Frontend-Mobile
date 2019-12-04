@@ -8,6 +8,7 @@ import org.json.JSONObject
 
 const val ORDER_RESOURCE = "/orders/"
 const val ORDER_QUOTATION_RESOURCE = "/quotation"
+const val ORDER_DIRECTIONS_RESOURCE = "/directions"
 
 class OrderService(private val requestHandler: RequestHandler) {
 
@@ -96,6 +97,17 @@ class OrderService(private val requestHandler: RequestHandler) {
         val listener = Response.Listener<JSONObject> { requestHandler.onSuccess(it) }
         val errorListener = Response.ErrorListener { requestHandler.onError(it) }
         val resource = ORDER_RESOURCE+orderId+ ORDER_QUOTATION_RESOURCE
+        client.doGetObject(resource, listener, errorListener)
+    }
+
+    fun getDirections(orderId: String) {
+        requestHandler.begin()
+
+        val listener = Response.Listener<JSONObject> { requestHandler.onSuccess(it) }
+        val errorListener = Response.ErrorListener { requestHandler.onError(it) }
+
+        val resource = ORDER_RESOURCE + orderId + ORDER_DIRECTIONS_RESOURCE
+
         client.doGetObject(resource, listener, errorListener)
     }
 

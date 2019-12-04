@@ -70,6 +70,7 @@ class OrderDetailActivity : AppCompatActivity(), RateUserListener {
         val followDelivery = menu.getItem(5).setVisible(false)
         val rateDelivery = menu.getItem(6).setVisible(false)
         val rateOwner = menu.getItem(7).setVisible(false)
+        val navigationDelivery = menu.getItem(8).setVisible(false)
 
         if (isFavour){
             optionsFavourMenu(cancelOption,
@@ -121,6 +122,7 @@ class OrderDetailActivity : AppCompatActivity(), RateUserListener {
                 } else {
                     deliverOption.isVisible = true
                     unassignOption.isVisible = true
+                    navigationDelivery.isVisible = true
                 }
             }
             Order.STATUS.CANCELLED_STATUS -> {
@@ -231,6 +233,12 @@ class OrderDetailActivity : AppCompatActivity(), RateUserListener {
             R.id.follow_delivery -> {
                 val intent = Intent(applicationContext, FollowDeliveryActivity::class.java)
                 intent.putExtra("delivery_id", order!!.getDelivery()!!.id)
+                startActivity(intent)
+                return true
+            }
+            R.id.delivery_navigation_option -> {
+                val intent = Intent(applicationContext, DeliveryNavigationActivity::class.java)
+                intent.putExtra(DeliveryNavigationActivity.ORDER_ID, order?.id)
                 startActivity(intent)
                 return true
             }
