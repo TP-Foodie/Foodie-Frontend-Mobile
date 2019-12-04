@@ -10,6 +10,8 @@ class Order(val id: String){
     private var delivery: DeliveryUser? = null
     private var id_chat: String? = null
     private var quotation: Double? = null
+    private var delivery_rated: Boolean? = null
+    private var owner_rated: Boolean? = null
 //    private var paymentMethod: PAYMENT_METHOD = PAYMENT_METHOD.CPM
 
     enum class PAYMENT_METHOD {
@@ -124,5 +126,23 @@ class Order(val id: String){
     fun setQuotation(quotation: Double): Order{
         this.quotation = quotation
         return this
+    }
+
+    fun setIsDeliveryRated(value: Boolean): Order {
+        this.delivery_rated = value
+        return this
+    }
+
+    fun setIsOwnerRated(value: Boolean): Order {
+        this.owner_rated = value
+        return this
+    }
+
+    fun isDeliveryRated(): Boolean? {
+        return this.delivery_rated
+    }
+
+    fun isOwnerRated(): Boolean? {
+        return this.owner_rated
     }
 }
