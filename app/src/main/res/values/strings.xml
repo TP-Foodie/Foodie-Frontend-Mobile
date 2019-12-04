@@ -89,5 +89,6 @@
     <string name="editar_perfil">Editar Perfil</string>
     <string name="cerrar_sesi_n">Cerrar Sesión</string>
     <string name="navegacion_option">Navegación</string>
+    <string name="centrar_camara">Centrar</string>
 
 </resources>
