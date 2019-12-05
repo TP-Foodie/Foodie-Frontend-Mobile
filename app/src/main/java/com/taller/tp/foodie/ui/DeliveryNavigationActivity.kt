@@ -37,6 +37,8 @@ class DeliveryNavigationActivity : AppCompatActivity() {
 
     private lateinit var lines: MutableList<Polyline>
 
+    private var deliveryMarker: Marker? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_delivery_navigation)
@@ -70,7 +72,9 @@ class DeliveryNavigationActivity : AppCompatActivity() {
                     map.moveCamera(CameraUpdateFactory.newLatLngZoom(current, 19f))
                 }
 
-                map.addMarker(
+                // set delivery marker
+                deliveryMarker?.remove()
+                deliveryMarker = map.addMarker(
                     MarkerOptions().position(current)
                         .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
                         .infoWindowAnchor(0.5F, 0F)

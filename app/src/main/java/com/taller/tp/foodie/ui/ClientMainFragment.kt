@@ -130,7 +130,7 @@ class ClientMainFragment : Fragment(),
         lastSelectedMarker = marker
 
         val place = markerPlaceMap[marker]
-        if (place != null) {
+        if (place != null && place_name != null) {
             place_name.visibility = View.VISIBLE
             place_name.text = place.name
             place_image.visibility = View.VISIBLE
@@ -159,18 +159,24 @@ class ClientMainFragment : Fragment(),
         if (hasLocationPermission()) {
             mMap.isMyLocationEnabled = true
         } else {
-            EasyPermissions.requestPermissions(
-                this, getString(R.string.location),
-                REQUEST_CODE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
-            )
+            if (activity != null) {
+                EasyPermissions.requestPermissions(
+                    activity!!, getString(R.string.location),
+                    REQUEST_CODE_LOCATION, Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            }
         }
     }
 
     private fun hasLocationPermission(): Boolean {
-        return EasyPermissions.hasPermissions(
-            activity?.applicationContext!!,
-            Manifest.permission.ACCESS_FINE_LOCATION
-        )
+        if (activity != null) {
+            return EasyPermissions.hasPermissions(
+                activity?.applicationContext!!,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            )
+        } else {
+            return false
+        }
     }
 
     override fun onMarkerDragStart(marker: Marker) {

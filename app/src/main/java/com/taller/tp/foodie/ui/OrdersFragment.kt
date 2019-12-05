@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
-import com.google.android.material.tabs.TabItem
 import com.google.android.material.tabs.TabLayout
 import com.taller.tp.foodie.R
 import com.taller.tp.foodie.model.Order
@@ -100,19 +99,21 @@ class OrdersFragment : Fragment(),
             filteredOrders = filterByDelivery(tab, allOrders)
         }
 
-        val listAdapter = OrderListAdapter(activity!!, filteredOrders ) { order: Order? ->
-            val detailIntent =
-                Intent(activity?.applicationContext, OrderDetailActivity::class.java).apply {
-                    putExtra(DETAIL_ORDER_KEY, order!!.id)
-                    putExtra(CLIENT_TYPE_KEY, userType)
-                }
-            startActivity(detailIntent)
-        }
+        if (activity != null) {
+            val listAdapter = OrderListAdapter(activity!!, filteredOrders) { order: Order? ->
+                val detailIntent =
+                    Intent(activity?.applicationContext, OrderDetailActivity::class.java).apply {
+                        putExtra(DETAIL_ORDER_KEY, order!!.id)
+                        putExtra(CLIENT_TYPE_KEY, userType)
+                    }
+                startActivity(detailIntent)
+            }
 
-        with(order_rv) {
-            adapter = listAdapter
-            emptyView = findViewById<View>(R.id.empty_order_view)
-            this.onItemClickListener = listAdapter
+            with(order_rv) {
+                adapter = listAdapter
+                emptyView = findViewById<View>(R.id.empty_order_view)
+                this.onItemClickListener = listAdapter
+            }
         }
     }
 

@@ -48,16 +48,18 @@ class ProfileFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     fun fillProfile(data: UserProfile) {
-        full_name.text = data.name + " " + data.last_name
-        profile_image.setImageURI(data.profile_image)
-        reputation.rating = data.reputation
+        if (full_name != null) {
+            full_name.text = data.name + " " + data.last_name
+            profile_image.setImageURI(data.profile_image)
+            reputation.rating = data.reputation
 
-        email.text = data.email
-        phone.text = data.phone
+            email.text = data.email
+            phone.text = data.phone
 
-        deliveries.text = data.deliveries_completed.toString()
-        sent_msg.text = data.messages_sent.toString()
-        profile_gratitude_points.text = data.gratitude_points.toString()
+            deliveries.text = data.deliveries_completed.toString()
+            sent_msg.text = data.messages_sent.toString()
+            profile_gratitude_points.text = data.gratitude_points.toString()
+        }
     }
 
     fun onCleanFcmTokenSuccess() {
