@@ -24,7 +24,7 @@
 
     <!-- Welcome Slides -->
     <string name="first_welcome_title">Bienvenido a Foodie!</string>
-    <string name="first_welcome_description">Foodie es la aplicacion que te permite \'chamuyar algo aca\'!</string>
+    <string name="first_welcome_description">Foodie es la aplicacion que te permite acceder al pedido que quieras de manera más simple!</string>
     <string name="second_welcome_title">Podés elegir entre ser Cliente o Delivery</string>
     <string name="chip_customer_type">Cliente</string>
     <string name="chip_delivery_type">Delivery</string>
