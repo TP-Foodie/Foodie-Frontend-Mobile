@@ -20,7 +20,7 @@ jobs:
 after_success:
 - sh ./scripts/set_tags.sh
 before_install:
-  - openssl aes-128-cbc -K $enc_keystore_key -iv $enc_keystore_pass -in key.jks.enc -out app/keystore.jks -d
+  - openssl aes-128-cbc -K $enc_keystore_key -iv $enc_keystore_pass -in keystore.jks.enc -out app/keystore.jks -d
 deploy:
   provider: releases
   api_key:
