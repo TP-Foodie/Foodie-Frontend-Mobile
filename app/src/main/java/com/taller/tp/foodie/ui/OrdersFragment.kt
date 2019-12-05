@@ -157,4 +157,9 @@ class OrdersFragment : Fragment(),
     companion object {
         fun newInstance(): OrdersFragment = OrdersFragment()
     }
+
+    override fun onResume() {
+        super.onResume()
+        loadOrdersData()
+    }
 }

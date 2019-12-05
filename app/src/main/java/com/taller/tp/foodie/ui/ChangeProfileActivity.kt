@@ -12,7 +12,6 @@ import com.taller.tp.foodie.model.common.ImageStringConversor
 import com.taller.tp.foodie.model.common.auth.AuthErrors
 import com.taller.tp.foodie.model.requestHandlers.ChangeProfileRequestHandler
 import com.taller.tp.foodie.services.UserService
-import com.taller.tp.foodie.utils.emailIsValid
 import com.taller.tp.foodie.utils.lastNameIsValid
 import com.taller.tp.foodie.utils.nameIsValid
 import com.taller.tp.foodie.utils.phoneIsValid
@@ -30,7 +29,7 @@ class ChangeProfileActivity : AppCompatActivity() {
         // update fields
         const val NAME_FIELD = "name"
         const val LAST_NAME_FIELD = "last_name"
-        const val EMAIL_FIELD = "email"
+        //const val EMAIL_FIELD = "email"
         const val PHONE_FIELD = "phone"
         const val PROFILE_IMAGE_FIELD = "profile_image"
     }
@@ -59,7 +58,7 @@ class ChangeProfileActivity : AppCompatActivity() {
             val validName = validateName()
             val validLastName = validateLastName()
             val validPhone = validatePhone()
-            val validEmail = validateEmail()
+            //val validEmail = validateEmail()
 
             val data = mutableMapOf<String, String>()
             if (validName) {
@@ -83,12 +82,14 @@ class ChangeProfileActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            /*
             if (validEmail) {
                 data[EMAIL_FIELD] = email_field.text?.trim().toString()
             } else if (email_field.text?.trim().toString().isNotEmpty()) {
                 email_field_layout.error = AuthErrors.INVALID_EMAIL_ERROR
                 return@setOnClickListener
             }
+             */
 
             val image = profileImage
             if (image != null) {
@@ -137,6 +138,7 @@ class ChangeProfileActivity : AppCompatActivity() {
         return true
     }
 
+    /*
     private fun validateEmail(): Boolean {
         email_field_layout.error = null
 
@@ -146,6 +148,7 @@ class ChangeProfileActivity : AppCompatActivity() {
 
         return true
     }
+     */
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)

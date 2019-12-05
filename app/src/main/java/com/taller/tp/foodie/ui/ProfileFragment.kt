@@ -102,5 +102,10 @@ class ProfileFragment : Fragment() {
 
         return true
     }
+
+    override fun onResume() {
+        super.onResume()
+        getUserProfile()
+    }
 }
 
