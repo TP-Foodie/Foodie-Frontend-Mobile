@@ -91,7 +91,8 @@ class OrderDetailActivity : AppCompatActivity(), RateUserListener {
                 deliverOption,
                 unassignOption,
                 rateDelivery,
-                rateOwner
+                rateOwner,
+                navigationDelivery
             )
         }
         return true
@@ -105,7 +106,8 @@ class OrderDetailActivity : AppCompatActivity(), RateUserListener {
         deliverOption: MenuItem,
         unassignOption: MenuItem,
         rateDelivery: MenuItem,
-        rateOwner: MenuItem
+        rateOwner: MenuItem,
+        navigationDelivery: MenuItem
     ) {
         when (order!!.getStatus()) {
             Order.STATUS.WAITING_STATUS -> {
